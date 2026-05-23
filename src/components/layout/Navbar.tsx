@@ -57,7 +57,7 @@ export function Navbar() {
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <img
               src={opencompFavicon}
-              alt=""
+              alt="OpenComp icon"
               className="h-8 w-8 rounded-lg object-contain"
             />
             <img

@@ -50,7 +50,7 @@ export function AuthModal() {
                 <div className="flex items-center gap-2">
                   <img
                     src={opencompFavicon}
-                    alt=""
+                    alt="OpenComp icon"
                     className="h-8 w-8 rounded-lg object-contain"
                   />
                   <div>

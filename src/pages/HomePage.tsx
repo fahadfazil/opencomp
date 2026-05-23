@@ -480,7 +480,7 @@ export function HomePage() {
           <div className="flex items-center gap-2">
             <img
               src={opencompFavicon}
-              alt=""
+              alt="OpenComp icon"
               className="h-6 w-6 rounded-md object-contain"
             />
             <img

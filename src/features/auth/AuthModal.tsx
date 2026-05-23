@@ -4,6 +4,7 @@ import { useState } from 'react'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import { useUIStore } from '@/store'
 import { signInWithOAuth } from '@/services/authService'
+import { BRAND_COLORS } from '@/constants/brandColors'
 
 type ProviderIconProps = {
   className?: string
@@ -35,7 +36,7 @@ function LinkedInIcon({ className }: ProviderIconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
-        fill="#0A66C2"
+        fill={BRAND_COLORS.linkedin}
         d="M19 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.34 18H5.67V9.42h2.67V18zM7 8.25a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zM18 18h-2.66v-4.17c0-1-.02-2.28-1.39-2.28-1.39 0-1.6 1.09-1.6 2.2V18H9.68V9.42h2.56v1.17h.04a2.81 2.81 0 0 1 2.53-1.39c2.7 0 3.2 1.78 3.2 4.08V18z"
       />
     </svg>
@@ -153,7 +154,10 @@ export function AuthModal() {
                   onClick={() => handleLogin('linkedin')}
                   className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface-container border border-outline-variant rounded-xl hover:border-primary/30 hover:bg-surface-container-high transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#0A66C2]/20 flex items-center justify-center">
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: `${BRAND_COLORS.linkedin}33` }}
+                  >
                     <LinkedInIcon className="h-[18px] w-[18px] transition-all group-hover:scale-105" />
                   </div>
                   <span className="text-body-md text-on-surface font-medium">

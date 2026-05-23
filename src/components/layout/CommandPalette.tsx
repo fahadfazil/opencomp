@@ -150,7 +150,7 @@ export function CommandPalette() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
-            className="fixed top-[15vh] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[101] px-4"
+            className="fixed top-[15vh] inset-x-0 mx-auto w-full max-w-2xl z-[101] px-4"
           >
             <div className="glass-card border border-white/10 shadow-2xl overflow-hidden">
               {/* Input */}

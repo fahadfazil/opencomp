@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://opencomp.in/assets/opencomp-logo-sgAtSmvG.png" alt="OpenComp" width="100%" />
+<img src="https://opencomp.in/assets/opencomp-logo-sgAtSmvG.png" alt="OpenComp" height="30px" />
 
 # OpenComp
 

@@ -5,6 +5,8 @@ import {
 } from 'recharts'
 import type { TrendPoint } from '@/types'
 
+const CHART_MONO_FONT = 'var(--font-mono)'
+
 // ============================================================
 // Custom Tooltip
 // ============================================================
@@ -65,13 +67,13 @@ export function SalaryTrendChart({
           <>
             <XAxis
               dataKey="period"
-              tick={{ fill: '#90909a', fontSize: 10, fontFamily: 'JetBrains Mono' }}
+              tick={{ fill: '#90909a', fontSize: 10, fontFamily: CHART_MONO_FONT }}
               tickLine={false}
               axisLine={{ stroke: 'rgba(255,255,255,0.05)' }}
               interval={2}
             />
             <YAxis
-              tick={{ fill: '#90909a', fontSize: 10, fontFamily: 'JetBrains Mono' }}
+              tick={{ fill: '#90909a', fontSize: 10, fontFamily: CHART_MONO_FONT }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `₹${v}L`}
@@ -121,12 +123,12 @@ export function SalaryDistributionChart({
         <CartesianGrid strokeDasharray="2 2" stroke="rgba(255,255,255,0.04)" vertical={false} />
         <XAxis
           dataKey="label"
-          tick={{ fill: '#90909a', fontSize: 10, fontFamily: 'JetBrains Mono' }}
+          tick={{ fill: '#90909a', fontSize: 10, fontFamily: CHART_MONO_FONT }}
           tickLine={false}
           axisLine={false}
         />
         <YAxis
-          tick={{ fill: '#90909a', fontSize: 10, fontFamily: 'JetBrains Mono' }}
+          tick={{ fill: '#90909a', fontSize: 10, fontFamily: CHART_MONO_FONT }}
           tickLine={false}
           axisLine={false}
           tickFormatter={(v) => `₹${v}L`}
@@ -137,7 +139,7 @@ export function SalaryDistributionChart({
             y={userSalary}
             stroke="#d1d0ff"
             strokeDasharray="4 4"
-            label={{ value: 'YOU', position: 'right', fill: '#d1d0ff', fontSize: 9, fontFamily: 'JetBrains Mono' }}
+            label={{ value: 'YOU', position: 'right', fill: '#d1d0ff', fontSize: 9, fontFamily: CHART_MONO_FONT }}
           />
         )}
         <Bar dataKey="value" radius={[3, 3, 0, 0]} maxBarSize={50}>
@@ -172,7 +174,7 @@ export function CultureRadar({ data, height = 200, color = '#cbd2ff' }: CultureR
         <PolarGrid stroke="rgba(255,255,255,0.08)" />
         <PolarAngleAxis
           dataKey="subject"
-          tick={{ fill: '#90909a', fontSize: 10, fontFamily: 'JetBrains Mono' }}
+          tick={{ fill: '#90909a', fontSize: 10, fontFamily: CHART_MONO_FONT }}
         />
         <PolarRadiusAxis angle={90} domain={[0, 5]} tick={false} axisLine={false} />
         <Radar
@@ -246,7 +248,7 @@ export function CityComparisonChart({ cities, maxValue, height = 200 }: CityComp
       <BarChart data={data} layout="vertical" margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
         <XAxis
           type="number"
-          tick={{ fill: '#90909a', fontSize: 10, fontFamily: 'JetBrains Mono' }}
+          tick={{ fill: '#90909a', fontSize: 10, fontFamily: CHART_MONO_FONT }}
           tickLine={false}
           axisLine={false}
           tickFormatter={(v) => `₹${v}L`}
@@ -255,7 +257,7 @@ export function CityComparisonChart({ cities, maxValue, height = 200 }: CityComp
         <YAxis
           type="category"
           dataKey="label"
-          tick={{ fill: '#c6c5d1', fontSize: 11, fontFamily: 'JetBrains Mono' }}
+          tick={{ fill: '#c6c5d1', fontSize: 11, fontFamily: CHART_MONO_FONT }}
           tickLine={false}
           axisLine={false}
           width={80}

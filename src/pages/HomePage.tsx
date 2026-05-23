@@ -500,11 +500,6 @@ export function HomePage() {
               alt="OpenComp icon"
               className="h-6 w-6 shrink-0 rounded-md object-contain"
             />
-            <img
-              src={opencompLogo}
-              alt="OpenComp"
-              className="h-6 w-auto max-w-[7rem] shrink-0 object-contain"
-            />
             <span className="text-center text-body-md text-on-surface-variant md:text-left">
               · Open-source workplace intelligence for India
             </span>

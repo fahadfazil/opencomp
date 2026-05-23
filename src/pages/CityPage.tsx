@@ -176,8 +176,8 @@ export function CityPage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
         {/* Salary Trend */}
-        <div className="md:col-span-8">
-          <GlassCard className="p-6">
+        <div className="md:col-span-8 flex flex-col">
+          <GlassCard className="p-6 flex-1">
             <div className="flex items-center justify-between mb-6">
               <MonoLabel>SALARY TREND — {city.name.toUpperCase()}</MonoLabel>
               <Badge variant="secondary" dot size="sm">{content.salary_trend_badge}</Badge>
@@ -187,7 +187,7 @@ export function CityPage() {
         </div>
 
         {/* Affordability */}
-        <div className="md:col-span-4">
+        <div className="md:col-span-4 flex flex-col">
           <GlassCard className="p-6 h-full">
             <MonoLabel className="mb-4 block">AFFORDABILITY</MonoLabel>
             {cityAreas.length > 0 ? (
@@ -245,8 +245,8 @@ export function CityPage() {
         </div>
 
         {/* City Comparison */}
-        <div className="md:col-span-6">
-          <GlassCard className="p-6">
+        <div className={cn('flex flex-col', cityAreas.length > 0 ? 'md:col-span-6' : 'md:col-span-12')}>
+          <GlassCard className="p-6 flex-1">
             <MonoLabel className="mb-4 block">CITY SALARY COMPARISON</MonoLabel>
             <CityComparisonChart
               cities={comparisonData}
@@ -258,8 +258,8 @@ export function CityPage() {
 
         {/* Area Intelligence */}
         {cityAreas.length > 0 && (
-          <div className="md:col-span-6">
-            <GlassCard className="p-6">
+          <div className="md:col-span-6 flex flex-col">
+            <GlassCard className="p-6 flex-1">
               <MonoLabel className="mb-4 block">AREA INTELLIGENCE</MonoLabel>
               <div className="space-y-4">
                 {cityAreas.map(area => (
@@ -321,8 +321,8 @@ export function CityPage() {
 
         {/* Top Employers */}
         {topCompanies.length > 0 && (
-          <div className="md:col-span-6">
-            <GlassCard className="p-6">
+          <div className={cn('flex flex-col', livabilityScores.length > 0 ? 'md:col-span-6' : 'md:col-span-12')}>
+            <GlassCard className="p-6 flex-1">
               <MonoLabel className="mb-4 block">TOP EMPLOYERS IN {city.name.toUpperCase()}</MonoLabel>
               <div className="space-y-3">
                 {topCompanies.slice(0, 6).map((company, i) => (
@@ -355,8 +355,8 @@ export function CityPage() {
 
         {/* Air Quality & Livability */}
         {livabilityScores.length > 0 && (
-          <div className="md:col-span-6">
-            <GlassCard className="p-6">
+          <div className={cn('flex flex-col', topCompanies.length > 0 ? 'md:col-span-6' : 'md:col-span-12')}>
+            <GlassCard className="p-6 flex-1">
               <MonoLabel className="mb-4 block">LIVABILITY SCORES</MonoLabel>
               <div className="space-y-4">
                 {livabilityScores.map(item => {

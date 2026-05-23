@@ -1,16 +1,17 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  ArrowLeft, MapPin, Train, Wind, Coffee, Star,
-  Building2, TrendingUp, Home, ShieldCheck, Footprints
+  ArrowLeft, MapPin, Train, Coffee,
+  Building2, ShieldCheck, Footprints
 } from 'lucide-react'
 import {
-  GlassCard, MonoLabel, Badge, StatCard, RatingBar, Button
+  GlassCard, MonoLabel, Badge, StatCard, Button
 } from '@/components/ui'
-import { SalaryTrendChart, SalaryDistributionChart, CityComparisonChart } from '@/components/charts'
-import { MOCK_CITIES, MOCK_COMPANIES, MOCK_OFFICE_AREAS, SALARY_TREND_DATA } from '@/data/mockData'
+import { SalaryTrendChart, CityComparisonChart } from '@/components/charts'
+import { SALARY_TREND_DATA } from '@/data/mockData'
 import { formatLPA, formatMonthlyRent } from '@/utils'
 import { cn } from '@/utils'
+import { useCities, useCity, useCompanies, useOfficeAreas } from '@/hooks'
 
 const AREA_METRIC_ICONS: Record<string, React.ElementType> = {
   commute: Train,
@@ -22,8 +23,10 @@ const AREA_METRIC_ICONS: Record<string, React.ElementType> = {
 export function CityPage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-
-  const city = MOCK_CITIES.find(c => c.slug === slug)
+  const { data: city } = useCity(slug ?? '')
+  const { data: cities = [] } = useCities()
+  const { data: companies = [] } = useCompanies()
+  const { data: officeAreas = [] } = useOfficeAreas()
 
   if (!city) {
     return (
@@ -36,13 +39,13 @@ export function CityPage() {
     )
   }
 
-  const cityAreas = MOCK_OFFICE_AREAS.filter(a => a.city_id === city.id)
-  const topCompanies = MOCK_COMPANIES.filter(c => c.headquarters === city.name)
-  const citySalaryRanking = [...MOCK_CITIES]
+  const cityAreas = officeAreas.filter(a => a.city_id === city.id)
+  const topCompanies = companies.filter(c => c.headquarters === city.name)
+  const citySalaryRanking = [...cities]
     .sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa)
   const cityRank = citySalaryRanking.findIndex(c => c.id === city.id) + 1
 
-  const comparisonData = MOCK_CITIES.slice(0, 6).map(c => ({
+  const comparisonData = cities.slice(0, 6).map(c => ({
     id: c.id,
     name: c.name,
     value: c.avg_salary_lpa,

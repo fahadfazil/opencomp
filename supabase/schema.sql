@@ -123,6 +123,59 @@ CREATE TABLE IF NOT EXISTS public.office_areas (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS public.perks (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  company_id TEXT NOT NULL REFERENCES public.companies(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  category TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.office_facilities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  office_area_id TEXT NOT NULL REFERENCES public.office_areas(id) ON DELETE CASCADE,
+  company_id TEXT REFERENCES public.companies(id) ON DELETE SET NULL,
+  facility_name TEXT NOT NULL,
+  facility_type TEXT,
+  score INTEGER DEFAULT 50 CHECK (score BETWEEN 0 AND 100),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.workplace_scores (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  company_id TEXT NOT NULL REFERENCES public.companies(id) ON DELETE CASCADE,
+  city_id TEXT REFERENCES public.cities(id) ON DELETE SET NULL,
+  role_id TEXT REFERENCES public.roles(id) ON DELETE SET NULL,
+  work_mode TEXT CHECK (work_mode IN ('remote', 'hybrid', 'onsite')),
+  sample_size INTEGER DEFAULT 0,
+  salary_mean DECIMAL(7,2) DEFAULT 0,
+  salary_stddev DECIMAL(7,2) DEFAULT 1,
+  opencomp_score DECIMAL(5,2) DEFAULT 0,
+  percentile_p25 DECIMAL(7,2),
+  percentile_p50 DECIMAL(7,2),
+  percentile_p75 DECIMAL(7,2),
+  percentile_p90 DECIMAL(7,2),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (company_id, city_id, role_id, work_mode)
+);
+
+CREATE TABLE IF NOT EXISTS public.area_intelligence (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  office_area_id TEXT NOT NULL REFERENCES public.office_areas(id) ON DELETE CASCADE,
+  city_id TEXT NOT NULL REFERENCES public.cities(id) ON DELETE CASCADE,
+  office_density INTEGER DEFAULT 0,
+  affordability_index DECIMAL(5,2) DEFAULT 0,
+  commute_index DECIMAL(5,2) DEFAULT 0,
+  food_index DECIMAL(5,2) DEFAULT 0,
+  safety_index DECIMAL(5,2) DEFAULT 0,
+  walkability_index DECIMAL(5,2) DEFAULT 0,
+  avg_aqi INTEGER DEFAULT 0,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE (office_area_id)
+);
+
 -- ================================================
 -- INDEXES
 -- ================================================
@@ -137,6 +190,10 @@ CREATE INDEX IF NOT EXISTS idx_companies_score ON public.companies(opencomp_scor
 CREATE INDEX IF NOT EXISTS idx_companies_name_trgm ON public.companies USING gin (name gin_trgm_ops);
 CREATE INDEX IF NOT EXISTS idx_roles_slug ON public.roles(slug);
 CREATE INDEX IF NOT EXISTS idx_culture_reviews_company ON public.culture_reviews(company_id);
+CREATE INDEX IF NOT EXISTS idx_perks_company ON public.perks(company_id);
+CREATE INDEX IF NOT EXISTS idx_office_facilities_area ON public.office_facilities(office_area_id);
+CREATE INDEX IF NOT EXISTS idx_workplace_scores_company_city_role ON public.workplace_scores(company_id, city_id, role_id);
+CREATE INDEX IF NOT EXISTS idx_area_intelligence_city ON public.area_intelligence(city_id);
 
 -- ================================================
 -- VIEWS
@@ -182,12 +239,20 @@ ALTER TABLE public.companies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.office_areas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.perks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.office_facilities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.workplace_scores ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.area_intelligence ENABLE ROW LEVEL SECURITY;
 
 -- Public read access
 CREATE POLICY "Public read companies" ON public.companies FOR SELECT USING (true);
 CREATE POLICY "Public read cities" ON public.cities FOR SELECT USING (true);
 CREATE POLICY "Public read roles" ON public.roles FOR SELECT USING (true);
 CREATE POLICY "Public read office_areas" ON public.office_areas FOR SELECT USING (true);
+CREATE POLICY "Public read perks" ON public.perks FOR SELECT USING (true);
+CREATE POLICY "Public read office_facilities" ON public.office_facilities FOR SELECT USING (true);
+CREATE POLICY "Public read workplace_scores" ON public.workplace_scores FOR SELECT USING (true);
+CREATE POLICY "Public read area_intelligence" ON public.area_intelligence FOR SELECT USING (true);
 
 -- Salary entries: public aggregated read, auth insert
 CREATE POLICY "Public read salary_entries" ON public.salary_entries FOR SELECT USING (true);

@@ -1,4 +1,4 @@
-import type { Company, City, Role, SalaryEntry, GlobalStats, OfficeArea } from '@/types'
+import type { Company, City, Role, GlobalStats, OfficeArea } from '@/types'
 
 export const MOCK_GLOBAL_STATS: GlobalStats = {
   total_contributors: 12847,

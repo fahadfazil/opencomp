@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {
-  Search, Bell, Settings, Menu, X, GitBranch,
-  TrendingUp, MapPin, Building2, Briefcase, PlusCircle,
-  ChevronDown, Star, Users, BarChart3
+  Search, Bell, Menu, X, GitBranch,
+  MapPin, Building2, Briefcase, PlusCircle, BarChart3
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/utils'
 import { useAuthStore, useUIStore } from '@/store'
-import { Button, Badge } from '@/components/ui'
+import { Button } from '@/components/ui'
 
 const NAV_ITEMS = [
   { label: 'Intelligence', href: '/', icon: BarChart3 },
@@ -19,7 +18,6 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const location = useLocation()
-  const navigate = useNavigate()
   const { user } = useAuthStore()
   const { setAuthModalOpen, setContributeModalOpen, toggleCommandPalette } = useUIStore()
   const [scrolled, setScrolled] = useState(false)

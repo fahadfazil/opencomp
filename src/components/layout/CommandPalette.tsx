@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Building2, MapPin, Briefcase, ArrowRight, X, TrendingUp } from 'lucide-react'
+import { Search, Building2, MapPin, Briefcase, ArrowRight, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/utils'
 import { useUIStore } from '@/store'
-import { MOCK_COMPANIES, MOCK_CITIES, MOCK_ROLES } from '@/data/mockData'
+import { useCities, useCompanies, useRoles } from '@/hooks'
 import type { SearchResult } from '@/types'
 
 const QUICK_LINKS = [
@@ -14,10 +14,14 @@ const QUICK_LINKS = [
   { label: 'Razorpay', type: 'company', href: '/companies/razorpay' },
 ]
 
-function buildSearchIndex(): SearchResult[] {
+function buildSearchIndex(
+  companies: Array<{ id: string; name: string; industry: string; headquarters: string; avg_salary_lpa: number; slug: string }>,
+  cities: Array<{ id: string; name: string; state: string; avg_salary_lpa: number; total_entries: number; slug: string }>,
+  roles: Array<{ id: string; title: string; category: string; avg_salary_lpa: number; yoy_growth_pct: number; slug: string }>
+): SearchResult[] {
   const results: SearchResult[] = []
 
-  MOCK_COMPANIES.forEach(c => {
+  companies.forEach(c => {
     results.push({
       id: c.id,
       type: 'company',
@@ -27,7 +31,7 @@ function buildSearchIndex(): SearchResult[] {
     })
   })
 
-  MOCK_CITIES.forEach(c => {
+  cities.forEach(c => {
     results.push({
       id: c.id,
       type: 'city',
@@ -37,7 +41,7 @@ function buildSearchIndex(): SearchResult[] {
     })
   })
 
-  MOCK_ROLES.forEach(r => {
+  roles.forEach(r => {
     results.push({
       id: r.id,
       type: 'role',
@@ -49,9 +53,6 @@ function buildSearchIndex(): SearchResult[] {
 
   return results
 }
-
-const ALL_RESULTS = buildSearchIndex()
-
 const typeConfig = {
   company: {
     icon: Building2,
@@ -78,29 +79,25 @@ const typeConfig = {
 
 export function CommandPalette() {
   const { commandPaletteOpen, toggleCommandPalette } = useUIStore()
+  const { data: companies = [] } = useCompanies()
+  const { data: cities = [] } = useCities()
+  const { data: roles = [] } = useRoles()
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(0)
   const navigate = useNavigate()
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const allResults = useMemo(
+    () => buildSearchIndex(companies, cities, roles),
+    [companies, cities, roles]
+  )
+
   const results = query.length > 1
-    ? ALL_RESULTS.filter(r =>
+    ? allResults.filter(r =>
         r.name.toLowerCase().includes(query.toLowerCase()) ||
         r.subtitle.toLowerCase().includes(query.toLowerCase())
       ).slice(0, 8)
     : []
-
-  useEffect(() => {
-    if (commandPaletteOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50)
-      setQuery('')
-      setSelected(0)
-    }
-  }, [commandPaletteOpen])
-
-  useEffect(() => {
-    setSelected(0)
-  }, [query])
 
   const handleSelect = (result: SearchResult) => {
     const config = typeConfig[result.type]
@@ -151,8 +148,12 @@ export function CommandPalette() {
                 <Search size={18} className="text-outline shrink-0" />
                 <input
                   ref={inputRef}
+                  autoFocus
                   value={query}
-                  onChange={e => setQuery(e.target.value)}
+                  onChange={e => {
+                    setQuery(e.target.value)
+                    setSelected(0)
+                  }}
                   onKeyDown={handleKeyDown}
                   placeholder="Search company, role, or city..."
                   className="flex-1 bg-transparent text-on-surface placeholder:text-outline outline-none text-body-lg"

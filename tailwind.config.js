@@ -53,12 +53,12 @@ export default {
         'label-md': ['12px', { lineHeight: '1', letterSpacing: '0.05em', fontWeight: '500' }],
       },
       borderRadius: {
-        DEFAULT: '4px',
         sm: '2px',
+        DEFAULT: '4px',
         md: '6px',
         lg: '8px',
         xl: '12px',
-        '2xl': '16px',
+        full: '9999px',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

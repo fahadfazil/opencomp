@@ -5,7 +5,8 @@ import { Building2, Briefcase, DollarSign, Star, MessageSquare, CheckCircle, Che
 import { GlassCard, Button, MonoLabel, Badge } from '../components/ui'
 import { useContributionStore, useAuthStore } from '../store'
 import { cn } from '../utils'
-import { MOCK_COMPANIES, MOCK_ROLES } from '../data/mockData'
+import { useCompanies, useRoles } from '@/hooks'
+import { submitContribution } from '@/services/contributionsService'
 
 const STEPS = [
   { id: 1, label: 'Company', icon: Building2 },
@@ -77,8 +78,9 @@ function RatingStars({ value, onChange }: { value: number; onChange: (v: number)
 
 function Step1({ onNext }: { onNext: () => void }) {
   const { formData, updateFormData } = useContributionStore()
+  const { data: companies = [] } = useCompanies()
   const [query, setQuery] = useState(formData.company_name || '')
-  const filtered = MOCK_COMPANIES.filter(c =>
+  const filtered = companies.filter(c =>
     c.name.toLowerCase().includes(query.toLowerCase())
   ).slice(0, 6)
 
@@ -138,8 +140,9 @@ function Step1({ onNext }: { onNext: () => void }) {
 
 function Step2({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { formData, updateFormData } = useContributionStore()
+  const { data: roles = [] } = useRoles()
   const [query, setQuery] = useState(formData.role_title || '')
-  const filtered = MOCK_ROLES.filter(r =>
+  const filtered = roles.filter(r =>
     r.title.toLowerCase().includes(query.toLowerCase())
   ).slice(0, 6)
 
@@ -363,17 +366,22 @@ function Step5({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
 
 function Step6({ onBack }: { onBack: () => void }) {
   const { formData, resetForm } = useContributionStore()
+  const { user } = useAuthStore()
   const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
 
   const handleSubmit = async () => {
+    if (!user) return
     setSubmitting(true)
-    await new Promise(r => setTimeout(r, 2000))
-    setSubmitting(false)
-    setDone(true)
-    resetForm()
-    setTimeout(() => navigate('/'), 3000)
+    try {
+      await submitContribution(formData, user.id)
+      setDone(true)
+      resetForm()
+      setTimeout(() => navigate('/'), 3000)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (done) {

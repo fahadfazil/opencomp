@@ -24,7 +24,7 @@ function GitHubIcon({ className }: ProviderIconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
-        fill="currentColor"
+        fill="#E6EDF3"
         d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.43 7.88 10.96.58.1.8-.25.8-.57v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.7.08-.69.08-.69 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.67 1.25 3.32.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.25.44-2.27 1.18-3.07-.12-.29-.52-1.47.11-3.06 0 0 .96-.31 3.14 1.17a10.93 10.93 0 0 1 5.72 0c2.18-1.48 3.14-1.17 3.14-1.17.63 1.6.23 2.77.11 3.06.73.8 1.18 1.82 1.18 3.07 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.07.78 2.16v3.2c0 .31.21.67.81.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"
       />
     </svg>
@@ -35,7 +35,7 @@ function LinkedInIcon({ className }: ProviderIconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
-        fill="currentColor"
+        fill="#0A66C2"
         d="M19 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.34 18H5.67V9.42h2.67V18zM7 8.25a1.55 1.55 0 1 1 0-3.1 1.55 1.55 0 0 1 0 3.1zM18 18h-2.66v-4.17c0-1-.02-2.28-1.39-2.28-1.39 0-1.6 1.09-1.6 2.2V18H9.68V9.42h2.56v1.17h.04a2.81 2.81 0 0 1 2.53-1.39c2.7 0 3.2 1.78 3.2 4.08V18z"
       />
     </svg>
@@ -141,7 +141,7 @@ export function AuthModal() {
                   className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface-container border border-outline-variant rounded-xl hover:border-primary/30 hover:bg-surface-container-high transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                    <GitHubIcon className="h-[18px] w-[18px] text-on-surface-variant transition-all group-hover:scale-105" />
+                    <GitHubIcon className="h-[18px] w-[18px] transition-all group-hover:scale-105" />
                   </div>
                   <span className="text-body-md text-on-surface font-medium">
                     Continue with GitHub
@@ -154,7 +154,7 @@ export function AuthModal() {
                   className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface-container border border-outline-variant rounded-xl hover:border-primary/30 hover:bg-surface-container-high transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="w-8 h-8 rounded-lg bg-[#0077B5]/20 flex items-center justify-center">
-                    <LinkedInIcon className="h-[18px] w-[18px] text-[#0077B5] transition-all group-hover:scale-105" />
+                    <LinkedInIcon className="h-[18px] w-[18px] transition-all group-hover:scale-105" />
                   </div>
                   <span className="text-body-md text-on-surface font-medium">
                     Continue with LinkedIn

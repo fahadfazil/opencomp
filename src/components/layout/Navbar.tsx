@@ -173,7 +173,7 @@ export function Navbar() {
                     type="button"
                     onClick={() => setProfileMenuOpen((prev) => !prev)}
                     className="w-8 h-8 rounded-full overflow-hidden border border-white/20 cursor-pointer"
-                    aria-haspopup="menu"
+                    aria-haspopup="true"
                     aria-expanded={profileMenuOpen}
                     aria-label={profileMenuOpen ? 'Close profile menu' : 'Open profile menu'}
                   >
@@ -192,6 +192,7 @@ export function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.15 }}
+                        role="menu"
                         className="absolute right-0 mt-2 w-44 rounded-xl border border-white/10 bg-surface-container shadow-lg p-2 z-50"
                       >
                         <Button
@@ -199,6 +200,7 @@ export function Navbar() {
                           size="sm"
                           onClick={handleSignOut}
                           loading={signingOut}
+                          role="menuitem"
                           className="w-full justify-start"
                         >
                           Sign Out

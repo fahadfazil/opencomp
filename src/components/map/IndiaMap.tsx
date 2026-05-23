@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import mapboxgl from 'mapbox-gl'
 import { Map, Marker, NavigationControl } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useNavigate } from 'react-router-dom'
@@ -7,8 +6,6 @@ import { formatLPA } from '@/utils'
 import { useCities } from '@/hooks'
 import { INDIA_MAP_CENTER, INDIA_MAP_STYLE, INDIA_MAP_ZOOM } from '@/constants/map'
 import type { City } from '@/types'
-
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN ?? ''
 
 interface IndiaMapProps {
   onCityClick?: (city: City) => void
@@ -53,7 +50,7 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
         <div>
           <p className="font-mono text-label-md text-primary mb-2">MAPBOX TOKEN REQUIRED</p>
           <p className="text-body-md text-on-surface-variant">
-            Add VITE_MAPBOX_TOKEN in your environment to render the interactive India map.
+            Add VITE_MAPBOX_TOKEN in your environment (see `.env.example`) to render the interactive India map.
           </p>
         </div>
       </div>
@@ -71,14 +68,17 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
         }}
         style={{ width: '100%', height: '100%' }}
         mapStyle={INDIA_MAP_STYLE}
+        keyboard
         dragRotate={false}
         touchPitch={false}
       >
         <NavigationControl position="top-right" showCompass={false} />
 
         {cities.map((city) => {
-          const range = Math.max(1, salaryRange.max - salaryRange.min)
-          const normalized = (city.avg_salary_lpa - salaryRange.min) / range
+          const rawRange = salaryRange.max - salaryRange.min
+          const normalized = rawRange <= 0
+            ? 0.5
+            : (city.avg_salary_lpa - salaryRange.min) / rawRange
           const dotSize = 8 + normalized * 12
           const heatSize = 30 + normalized * 40
           const isHighlighted = city.id === highlightCityId

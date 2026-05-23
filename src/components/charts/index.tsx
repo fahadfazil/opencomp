@@ -16,6 +16,11 @@ interface GlassTooltipProps {
   suffix?: string
 }
 
+/**
+ * Subset of Recharts tooltip props used by this component.
+ * Full API: https://recharts.org/en-US/api/Tooltip
+ */
+// Recharts passes tooltip render props (`active`, `payload`, `label`) to custom tooltip components.
 function GlassTooltip({ active, payload, label, prefix = '₹', suffix = 'L' }: GlassTooltipProps) {
   if (!active || !payload?.length) return null
   return (

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Building2, MapPin, Briefcase, ArrowRight, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -13,6 +13,8 @@ const QUICK_LINKS = [
   { label: 'CRED', type: 'company', href: '/companies/cred' },
   { label: 'Razorpay', type: 'company', href: '/companies/razorpay' },
 ]
+
+const FOCUS_DELAY_MS = 60
 
 function buildSearchIndex(
   companies: Array<{ id: string; name: string; industry: string; headquarters: string; avg_salary_lpa: number; slug: string }>,
@@ -99,6 +101,14 @@ export function CommandPalette() {
       ).slice(0, 8)
     : []
 
+  useEffect(() => {
+    if (commandPaletteOpen) {
+      // Delay focus slightly so the overlay transition renders first and screen readers can announce context.
+      const timeoutId = window.setTimeout(() => inputRef.current?.focus(), FOCUS_DELAY_MS)
+      return () => window.clearTimeout(timeoutId)
+    }
+  }, [commandPaletteOpen])
+
   const handleSelect = (result: SearchResult) => {
     const config = typeConfig[result.type]
     navigate(config.href(result.slug))
@@ -148,7 +158,6 @@ export function CommandPalette() {
                 <Search size={18} className="text-outline shrink-0" />
                 <input
                   ref={inputRef}
-                  autoFocus
                   value={query}
                   onChange={e => {
                     setQuery(e.target.value)

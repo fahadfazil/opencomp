@@ -13,6 +13,16 @@ import { formatNumber } from '@/utils'
 import { useUIStore } from '@/store'
 import { cn } from '@/utils'
 import { useCompanies, useGlobalStats } from '@/hooks'
+import type { GlobalStats } from '@/types'
+
+const EMPTY_GLOBAL_STATS: GlobalStats = {
+  total_contributors: 0,
+  total_data_points: 0,
+  companies_tracked: 0,
+  cities_covered: 0,
+  avg_salary_india: 0,
+  yoy_salary_growth: 0,
+}
 
 // Animated counter hook
 function useCounter(target: number, duration = 2000) {
@@ -42,11 +52,7 @@ export function HomePage() {
   const { data: globalStats } = useGlobalStats()
   const { data: companiesData } = useCompanies()
 
-  const stats = globalStats ?? {
-    total_contributors: 0,
-    total_data_points: 0,
-    companies_tracked: 0,
-  }
+  const stats = globalStats ?? EMPTY_GLOBAL_STATS
   const companies = companiesData ?? []
 
   const contributorsCount = useCounter(stats.total_contributors)
@@ -383,9 +389,9 @@ export function HomePage() {
           </div>
           <div className="flex gap-6 pt-2">
             {[
-              { label: 'GitHub Stars', value: '4.2k', icon: Star },
-              { label: 'Contributors', value: '218', icon: Users },
-              { label: 'License', value: 'MIT', icon: FileText },
+              { label: 'Contributors', value: formatNumber(stats.total_contributors), icon: Users },
+              { label: 'Tracked Companies', value: formatNumber(stats.companies_tracked), icon: Star },
+              { label: 'Data Points', value: formatNumber(stats.total_data_points), icon: FileText },
             ].map(item => (
               <div key={item.label}>
                 <div className="font-bold text-on-surface flex items-center gap-1.5">

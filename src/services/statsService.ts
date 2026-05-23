@@ -15,7 +15,13 @@ export async function getGlobalStats(): Promise<GlobalStats> {
     supabase.from('salary_entries').select('*', { count: 'exact', head: true }),
   ])
 
-  if (!companiesCount || !citiesCount || !contributorsCount || !salaryEntriesCount) {
+  if (
+    companiesCount === null ||
+    citiesCount === null ||
+    contributorsCount === null ||
+    salaryEntriesCount === null
+  ) {
+    console.warn('Falling back to mock global stats due to unavailable Supabase counts')
     return MOCK_GLOBAL_STATS
   }
 

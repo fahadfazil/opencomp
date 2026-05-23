@@ -10,6 +10,11 @@ import { SALARY_TREND_DATA } from '@/data/mockData'
 import { formatLPA, cn } from '@/utils'
 import { useCities, useRole, useRoles } from '@/hooks'
 
+// Baseline city salary (LPA) used to normalize cross-city role estimates.
+const CITY_BASELINE_SALARY = 22
+// Conservative city adjustment multiplier to avoid over-estimating city-transformed salaries.
+const ROLE_CITY_SALARY_MULTIPLIER = 0.9
+
 export function RolesPage() {
   const navigate = useNavigate()
   const { data: roles = [] } = useRoles()
@@ -142,11 +147,16 @@ export function RolePage() {
     )
   }
 
-  const cityData = cities.slice(0, 6).map(c => ({
-    id: c.id,
-    name: c.name,
-    value: Math.round(role.avg_salary_lpa * (c.avg_salary_lpa / 22) * 0.9),
-  })).sort((a, b) => b.value - a.value)
+  const cityData = cities.slice(0, 6).map(c => {
+    const citySalary = Math.max(c.avg_salary_lpa, 1)
+    return {
+      id: c.id,
+      name: c.name,
+      value: Math.round(
+        role.avg_salary_lpa * (citySalary / CITY_BASELINE_SALARY) * ROLE_CITY_SALARY_MULTIPLIER
+      ),
+    }
+  }).sort((a, b) => b.value - a.value)
 
   return (
     <div className="min-h-screen pt-24 pb-16 max-w-[1440px] mx-auto px-6 md:px-8">

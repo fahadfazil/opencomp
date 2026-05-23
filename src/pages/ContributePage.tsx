@@ -370,15 +370,26 @@ function Step6({ onBack }: { onBack: () => void }) {
   const navigate = useNavigate()
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const handleSubmit = async () => {
-    if (!user) return
+    if (!user) {
+      setSubmitError('Please sign in to submit your contribution.')
+      return
+    }
+    setSubmitError(null)
     setSubmitting(true)
     try {
       await submitContribution(formData, user.id)
       setDone(true)
       resetForm()
       setTimeout(() => navigate('/'), 3000)
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : 'Failed to submit contribution. Please verify required fields and retry.'
+      )
     } finally {
       setSubmitting(false)
     }
@@ -421,6 +432,9 @@ function Step6({ onBack }: { onBack: () => void }) {
           </div>
         ))}
       </div>
+      {submitError && (
+        <p className="text-body-md text-error">{submitError}</p>
+      )}
       <div className="flex gap-3">
         <Button variant="ghost" className="flex-1" onClick={onBack} disabled={submitting}><ChevronLeft size={16} /> Back</Button>
         <Button variant="primary" className="flex-1" onClick={handleSubmit} disabled={submitting}>

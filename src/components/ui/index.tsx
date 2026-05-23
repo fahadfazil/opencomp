@@ -143,7 +143,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-primary to-primary-container text-white hover:opacity-90',
+    primary: 'bg-gradient-to-r from-primary to-primary-container text-black hover:opacity-90',
     secondary: 'bg-secondary/10 text-secondary border border-secondary/20 hover:bg-secondary/20',
     ghost: 'bg-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high',
     outline: 'bg-transparent text-on-surface border border-outline-variant hover:bg-surface-container',

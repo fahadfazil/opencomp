@@ -29,7 +29,7 @@ function StepIndicator({ current }: { current: number }) {
             <div className="flex flex-col items-center gap-1">
               <div className={cn(
                 'w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300',
-                done ? 'bg-primary text-background' : active ? 'bg-primary/20 border border-primary text-primary' : 'bg-surface-container border border-outline-variant text-on-surface-variant'
+                done ? 'bg-primary text-black' : active ? 'bg-primary/20 border border-primary text-primary' : 'bg-surface-container border border-outline-variant text-on-surface-variant'
               )}>
                 <Icon size={15} />
               </div>

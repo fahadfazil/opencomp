@@ -1,6 +1,24 @@
 import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
 import type { CompScore } from '@/types'
+
+// Extend twMerge so custom font-size utilities (text-body-md, text-body-lg, etc.)
+// are recognized as font-size class group members and no longer conflict with
+// text-color utilities such as text-black.
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [
+        'text-display-lg',
+        'text-headline-lg',
+        'text-headline-md',
+        'text-body-lg',
+        'text-body-md',
+        'text-label-md',
+      ],
+    },
+  },
+})
 
 // ============================================================
 // Tailwind class utility

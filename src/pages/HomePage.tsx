@@ -26,9 +26,20 @@ const EMPTY_GLOBAL_STATS: GlobalStats = {
   yoy_salary_growth: 0,
 }
 
+const HERO_MAP_FILTER_CLASSES = 'grayscale-[0.5] contrast-125'
+const HERO_MAP_OPACITY_KEYFRAMES = [0.22, 0.34, 0.22]
+const HERO_MAP_SCALE_KEYFRAMES = [1.06, 1.1, 1.06]
+const HERO_MAP_DRIFT_X_KEYFRAMES = [0, -14, 0]
+const HERO_MAP_DRIFT_Y_KEYFRAMES = [0, 8, 0]
+
 const HERO_MAP_ANIMATION = {
   initial: { opacity: 0.24, scale: 1.06 },
-  animate: { opacity: [0.22, 0.34, 0.22], scale: [1.06, 1.1, 1.06], x: [0, -14, 0], y: [0, 8, 0] },
+  animate: {
+    opacity: HERO_MAP_OPACITY_KEYFRAMES,
+    scale: HERO_MAP_SCALE_KEYFRAMES,
+    x: HERO_MAP_DRIFT_X_KEYFRAMES,
+    y: HERO_MAP_DRIFT_Y_KEYFRAMES,
+  },
   transition: { duration: 22, repeat: Infinity, ease: 'easeInOut' as const },
 }
 
@@ -79,7 +90,7 @@ export function HomePage() {
             initial={HERO_MAP_ANIMATION.initial}
             animate={HERO_MAP_ANIMATION.animate}
             transition={HERO_MAP_ANIMATION.transition}
-            className="absolute inset-0 w-full h-full object-cover grayscale-[0.5] contrast-125"
+            className={cn('absolute inset-0 w-full h-full object-cover', HERO_MAP_FILTER_CLASSES)}
           />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />

@@ -1,13 +1,19 @@
 import { supabase } from '@/lib/supabase'
-import { MOCK_GLOBAL_STATS } from '@/data/mockData'
+import { getSupplementalGlobalStats } from '@/services/contentService'
 import type { GlobalStats } from '@/types'
 
 export async function getGlobalStats(): Promise<GlobalStats> {
+  const supplementalStats = await getSupplementalGlobalStats()
+
+  if (supplementalStats) {
+    return supplementalStats
+  }
+
   const [
-    { count: companiesCount },
-    { count: citiesCount },
-    { count: contributorsCount },
-    { count: salaryEntriesCount },
+    { count: companiesCount, error: companiesError },
+    { count: citiesCount, error: citiesError },
+    { count: contributorsCount, error: contributorsError },
+    { count: salaryEntriesCount, error: salaryEntriesError },
   ] = await Promise.all([
     supabase.from('companies').select('*', { count: 'exact', head: true }),
     supabase.from('cities').select('*', { count: 'exact', head: true }),
@@ -15,22 +21,18 @@ export async function getGlobalStats(): Promise<GlobalStats> {
     supabase.from('salary_entries').select('*', { count: 'exact', head: true }),
   ])
 
-  if (
-    companiesCount === null ||
-    citiesCount === null ||
-    contributorsCount === null ||
-    salaryEntriesCount === null
-  ) {
-    console.warn('Falling back to mock global stats due to unavailable Supabase counts')
-    return MOCK_GLOBAL_STATS
+  const queryError = companiesError || citiesError || contributorsError || salaryEntriesError
+
+  if (queryError) {
+    throw queryError
   }
 
   return {
-    total_contributors: contributorsCount,
-    total_data_points: salaryEntriesCount,
-    companies_tracked: companiesCount,
-    cities_covered: citiesCount,
-    avg_salary_india: MOCK_GLOBAL_STATS.avg_salary_india,
-    yoy_salary_growth: MOCK_GLOBAL_STATS.yoy_salary_growth,
+    total_contributors: contributorsCount ?? 0,
+    total_data_points: salaryEntriesCount ?? 0,
+    companies_tracked: companiesCount ?? 0,
+    cities_covered: citiesCount ?? 0,
+    avg_salary_india: 0,
+    yoy_salary_growth: 0,
   }
 }

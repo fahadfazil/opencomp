@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase'
-import { MOCK_COMPANIES } from '@/data/mockData'
 import type { Company } from '@/types'
 
 export async function getCompanies(): Promise<Company[]> {
@@ -8,11 +7,11 @@ export async function getCompanies(): Promise<Company[]> {
     .select('*')
     .order('opencomp_score', { ascending: false })
 
-  if (error || !data || data.length === 0) {
-    return MOCK_COMPANIES
+  if (error) {
+    throw error
   }
 
-  return data as Company[]
+  return (data ?? []) as Company[]
 }
 
 export async function getCompanyBySlug(slug: string): Promise<Company | null> {
@@ -22,9 +21,9 @@ export async function getCompanyBySlug(slug: string): Promise<Company | null> {
     .eq('slug', slug)
     .maybeSingle()
 
-  if (error || !data) {
-    return MOCK_COMPANIES.find((company) => company.slug === slug) ?? null
+  if (error) {
+    throw error
   }
 
-  return data as Company
+  return (data as Company | null) ?? null
 }

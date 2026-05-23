@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase'
-import { MOCK_ROLES } from '@/data/mockData'
 import type { Role } from '@/types'
 
 export async function getRoles(): Promise<Role[]> {
@@ -8,11 +7,11 @@ export async function getRoles(): Promise<Role[]> {
     .select('*')
     .order('avg_salary_lpa', { ascending: false })
 
-  if (error || !data || data.length === 0) {
-    return MOCK_ROLES
+  if (error) {
+    throw error
   }
 
-  return data as Role[]
+  return (data ?? []) as Role[]
 }
 
 export async function getRoleBySlug(slug: string): Promise<Role | null> {
@@ -22,9 +21,9 @@ export async function getRoleBySlug(slug: string): Promise<Role | null> {
     .eq('slug', slug)
     .maybeSingle()
 
-  if (error || !data) {
-    return MOCK_ROLES.find((role) => role.slug === slug) ?? null
+  if (error) {
+    throw error
   }
 
-  return data as Role
+  return (data as Role | null) ?? null
 }

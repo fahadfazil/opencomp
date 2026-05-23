@@ -8,16 +8,28 @@ import {
   GlassCard, MonoLabel, Badge, StatCard, Button
 } from '@/components/ui'
 import { SalaryTrendChart, CityComparisonChart } from '@/components/charts'
-import { SALARY_TREND_DATA } from '@/data/mockData'
 import { formatLPA, formatMonthlyRent } from '@/utils'
 import { cn } from '@/utils'
-import { useCities, useCity, useCompanies, useOfficeAreas } from '@/hooks'
+import { useCities, useCity, useCityPageContent, useCompanies, useOfficeAreas } from '@/hooks'
+import type { CityPageContent } from '@/types'
 
 const AREA_METRIC_ICONS: Record<string, React.ElementType> = {
   commute: Train,
   food: Coffee,
   safety: ShieldCheck,
   walkability: Footprints,
+}
+
+const EMPTY_CITY_PAGE_CONTENT: CityPageContent = {
+  stat_trend: 0,
+  salary_trend_badge: '0% YOY',
+  salary_trend: [],
+  affordability_summary: {
+    avg_1bhk: '₹0/mo',
+    avg_2bhk: '₹0/mo',
+    rent_salary_pct: '0%',
+  },
+  livability_scores: [],
 }
 
 export function CityPage() {
@@ -27,6 +39,9 @@ export function CityPage() {
   const { data: cities = [] } = useCities()
   const { data: companies = [] } = useCompanies()
   const { data: officeAreas = [] } = useOfficeAreas()
+  const { data: pageContent } = useCityPageContent()
+
+  const content = pageContent ?? EMPTY_CITY_PAGE_CONTENT
 
   if (!city) {
     return (
@@ -108,7 +123,7 @@ export function CityPage() {
         <StatCard
           label="AVG SALARY"
           value={formatLPA(city.avg_salary_lpa)}
-          trend={11.2}
+          trend={content.stat_trend}
           accentColor="#9ad2c3"
         />
         <StatCard
@@ -136,9 +151,9 @@ export function CityPage() {
           <GlassCard className="p-6">
             <div className="flex items-center justify-between mb-6">
               <MonoLabel>SALARY TREND — {city.name.toUpperCase()}</MonoLabel>
-              <Badge variant="secondary" dot size="sm">+11.2% YOY</Badge>
+              <Badge variant="secondary" dot size="sm">{content.salary_trend_badge}</Badge>
             </div>
-            <SalaryTrendChart data={SALARY_TREND_DATA} height={180} />
+            <SalaryTrendChart data={content.salary_trend} height={180} />
           </GlassCard>
         </div>
 
@@ -185,15 +200,15 @@ export function CityPage() {
               <div className="space-y-3">
                 <div className="p-3 bg-surface-container/60 rounded-lg">
                   <div className="font-mono text-[10px] text-on-surface-variant mb-1">AVG 1 BHK RENT</div>
-                  <div className="font-mono text-xl text-primary">₹24k/mo</div>
+                  <div className="font-mono text-xl text-primary">{content.affordability_summary.avg_1bhk}</div>
                 </div>
                 <div className="p-3 bg-surface-container/60 rounded-lg">
                   <div className="font-mono text-[10px] text-on-surface-variant mb-1">AVG 2 BHK RENT</div>
-                  <div className="font-mono text-xl text-secondary">₹38k/mo</div>
+                  <div className="font-mono text-xl text-secondary">{content.affordability_summary.avg_2bhk}</div>
                 </div>
                 <div className="p-3 bg-surface-container/60 rounded-lg">
                   <div className="font-mono text-[10px] text-on-surface-variant mb-1">RENT/SALARY %</div>
-                  <div className="font-mono text-xl text-tertiary">22%</div>
+                  <div className="font-mono text-xl text-tertiary">{content.affordability_summary.rent_salary_pct}</div>
                 </div>
               </div>
             )}
@@ -213,7 +228,7 @@ export function CityPage() {
         </div>
 
         {/* Area Intelligence */}
-        {cityAreas.length > 0 && (
+        {(cityAreas.length > 0 || content.livability_scores.length > 0) && (
           <div className="md:col-span-6">
             <GlassCard className="p-6">
               <MonoLabel className="mb-4 block">AREA INTELLIGENCE</MonoLabel>
@@ -315,12 +330,15 @@ export function CityPage() {
             <GlassCard className="p-6">
               <MonoLabel className="mb-4 block">LIVABILITY SCORES</MonoLabel>
               <div className="space-y-4">
-                {[
-                  { label: 'Air Quality Index', value: cityAreas[0].avg_aqi, max: 200, unit: 'AQI', invert: true },
-                  { label: 'Walkability', value: cityAreas[0].walkability_score, max: 100, unit: '/100' },
-                  { label: 'Food & Dining', value: cityAreas[0].food_score, max: 100, unit: '/100' },
-                  { label: 'Safety Score', value: cityAreas[0].safety_score, max: 100, unit: '/100' },
-                ].map(item => {
+                {(cityAreas.length > 0
+                  ? [
+                      { label: 'Air Quality Index', value: cityAreas[0].avg_aqi, max: 200, unit: 'AQI', invert: true },
+                      { label: 'Walkability', value: cityAreas[0].walkability_score, max: 100, unit: '/100' },
+                      { label: 'Food & Dining', value: cityAreas[0].food_score, max: 100, unit: '/100' },
+                      { label: 'Safety Score', value: cityAreas[0].safety_score, max: 100, unit: '/100' },
+                    ]
+                  : content.livability_scores
+                ).map(item => {
                   const displayVal = item.invert
                     ? Math.max(0, 100 - (item.value / item.max) * 100)
                     : (item.value / item.max) * 100

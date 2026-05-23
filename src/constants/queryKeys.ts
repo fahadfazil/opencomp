@@ -1,4 +1,5 @@
 export const queryKeys = {
+  content: (key: string) => ['content', key] as const,
   globalStats: ['global-stats'] as const,
   companies: ['companies'] as const,
   companyBySlug: (slug: string) => ['company', slug] as const,

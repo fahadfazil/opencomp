@@ -27,20 +27,23 @@ const EMPTY_GLOBAL_STATS: GlobalStats = {
 }
 
 const HERO_MAP_FILTER_CLASSES = 'grayscale-[0.5] contrast-125'
+const HERO_MAP_INITIAL_OPACITY = 0.22
+const HERO_MAP_INITIAL_SCALE = 1.06
+const HERO_MAP_ANIMATION_DURATION = 22
 const HERO_MAP_OPACITY_KEYFRAMES = [0.22, 0.34, 0.22]
 const HERO_MAP_SCALE_KEYFRAMES = [1.06, 1.1, 1.06]
 const HERO_MAP_DRIFT_X_KEYFRAMES = [0, -14, 0]
 const HERO_MAP_DRIFT_Y_KEYFRAMES = [0, 8, 0]
 
 const HERO_MAP_ANIMATION = {
-  initial: { opacity: 0.24, scale: 1.06 },
+  initial: { opacity: HERO_MAP_INITIAL_OPACITY, scale: HERO_MAP_INITIAL_SCALE },
   animate: {
     opacity: HERO_MAP_OPACITY_KEYFRAMES,
     scale: HERO_MAP_SCALE_KEYFRAMES,
     x: HERO_MAP_DRIFT_X_KEYFRAMES,
     y: HERO_MAP_DRIFT_Y_KEYFRAMES,
   },
-  transition: { duration: 22, repeat: Infinity, ease: 'easeInOut' as const },
+  transition: { duration: HERO_MAP_ANIMATION_DURATION, repeat: Infinity, ease: 'easeInOut' as const },
 }
 
 // Animated counter hook

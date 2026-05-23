@@ -26,6 +26,12 @@ const EMPTY_GLOBAL_STATS: GlobalStats = {
   yoy_salary_growth: 0,
 }
 
+const HERO_MAP_ANIMATION = {
+  initial: { opacity: 0.24, scale: 1.06 },
+  animate: { opacity: [0.22, 0.34, 0.22], scale: [1.06, 1.1, 1.06], x: [0, -14, 0], y: [0, 8, 0] },
+  transition: { duration: 22, repeat: Infinity, ease: 'easeInOut' as const },
+}
+
 // Animated counter hook
 function useCounter(target: number, duration = 2000) {
   const [count, setCount] = useState(0)
@@ -70,9 +76,9 @@ export function HomePage() {
           <motion.img
             src={indiaMapHeatmap}
             alt="India salary intelligence heatmap"
-            initial={{ opacity: 0.24, scale: 1.06 }}
-            animate={{ opacity: [0.22, 0.34, 0.22], scale: [1.06, 1.1, 1.06], x: [0, -14, 0], y: [0, 8, 0] }}
-            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+            initial={HERO_MAP_ANIMATION.initial}
+            animate={HERO_MAP_ANIMATION.animate}
+            transition={HERO_MAP_ANIMATION.transition}
             className="absolute inset-0 w-full h-full object-cover grayscale-[0.5] contrast-125"
           />
           {/* Gradient overlay */}

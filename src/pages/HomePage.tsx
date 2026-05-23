@@ -68,7 +68,7 @@ function useCounter(target: number, duration = 2000) {
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { toggleCommandPalette, setContributeModalOpen } = useUIStore()
+  const { toggleCommandPalette } = useUIStore()
   const { data: globalStats } = useGlobalStats()
   const { data: companiesData } = useCompanies()
   const { data: homeContent } = useHomeContent()
@@ -483,7 +483,7 @@ export function HomePage() {
               size="lg"
               icon={<PlusCircle size={18} />}
               className="bg-primary text-on-primary hover:bg-primary/90"
-              onClick={() => setContributeModalOpen(true)}
+              onClick={() => navigate('/contribute')}
             >
               Contribute Salary Data
             </Button>

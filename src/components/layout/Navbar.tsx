@@ -63,7 +63,7 @@ export function Navbar() {
             <img
               src={opencompLogo}
               alt="OpenComp"
-              className="h-7 w-auto object-contain"
+              className="h-7 w-[8.75rem] object-cover object-center"
             />
           </Link>
 

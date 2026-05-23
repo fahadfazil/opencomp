@@ -228,7 +228,7 @@ export function CityPage() {
         </div>
 
         {/* Area Intelligence */}
-        {(cityAreas.length > 0 || content.livability_scores.length > 0) && (
+        {cityAreas.length > 0 && (
           <div className="md:col-span-6">
             <GlassCard className="p-6">
               <MonoLabel className="mb-4 block">AREA INTELLIGENCE</MonoLabel>
@@ -325,7 +325,7 @@ export function CityPage() {
         )}
 
         {/* Air Quality & Livability */}
-        {cityAreas.length > 0 && (
+        {(cityAreas.length > 0 || content.livability_scores.length > 0) && (
           <div className="md:col-span-6">
             <GlassCard className="p-6">
               <MonoLabel className="mb-4 block">LIVABILITY SCORES</MonoLabel>

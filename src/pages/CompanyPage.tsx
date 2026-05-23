@@ -62,6 +62,9 @@ export function CompanyPage() {
   }
 
   const salaryDistributionMultipliers = content.salary_distribution_multipliers
+  const departmentMaxSalary = content.department_breakdown.length > 0
+    ? Math.max(...content.department_breakdown.map((department) => department.avg))
+    : 0
   const companyPercentiles = {
     p10: company.avg_salary_lpa * salaryDistributionMultipliers.p10,
     p25: company.avg_salary_lpa * salaryDistributionMultipliers.p25,
@@ -216,35 +219,38 @@ export function CompanyPage() {
         <div className="md:col-span-4">
           <GlassCard className="p-6 h-full">
             <MonoLabel className="mb-4 block">BY DEPARTMENT</MonoLabel>
-            <div className="space-y-3">
-              {content.department_breakdown.map(dept => {
-                const maxSalary = Math.max(...content.department_breakdown.map(d => d.avg), 1)
-                const pct = (dept.avg / maxSalary) * 100
-                return (
-                  <div key={dept.dept}>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-body-md text-on-surface">{dept.dept}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-label-md text-on-surface">
-                          {formatLPA(dept.avg)}
-                        </span>
-                        <span className="font-mono text-[9px] text-on-surface-variant">
-                          n={dept.count}
-                        </span>
+            {departmentMaxSalary > 0 ? (
+              <div className="space-y-3">
+                {content.department_breakdown.map(dept => {
+                  const pct = (dept.avg / departmentMaxSalary) * 100
+                  return (
+                    <div key={dept.dept}>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-body-md text-on-surface">{dept.dept}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-label-md text-on-surface">
+                            {formatLPA(dept.avg)}
+                          </span>
+                          <span className="font-mono text-[9px] text-on-surface-variant">
+                            n={dept.count}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-1 bg-surface-container-high rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${pct}%` }}
+                          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
+                        />
                       </div>
                     </div>
-                    <div className="h-1 bg-surface-container-high rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${pct}%` }}
-                        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="text-body-md text-on-surface-variant">Department analytics will appear once data is available.</div>
+            )}
           </GlassCard>
         </div>
 

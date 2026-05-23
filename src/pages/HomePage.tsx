@@ -17,6 +17,8 @@ import type { GlobalStats } from '@/types'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
 
+const GITHUB_REPO_URL = 'https://github.com/fahadfazil/opencomp'
+
 const EMPTY_GLOBAL_STATS: GlobalStats = {
   total_contributors: 0,
   total_data_points: 0,
@@ -377,7 +379,7 @@ export function HomePage() {
               variant="outline"
               size="lg"
               icon={<GitBranch size={18} />}
-              onClick={() => window.open('https://github.com', '_blank')}
+              onClick={() => window.open(GITHUB_REPO_URL, '_blank', 'noopener,noreferrer')}
             >
               View on GitHub
             </Button>
@@ -477,24 +479,28 @@ export function HomePage() {
       {/* Footer */}
       <footer className="border-t border-white/5 py-10 px-6 md:px-8 max-w-[1440px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
             <img
               src={opencompFavicon}
               alt="OpenComp icon"
-              className="h-6 w-6 rounded-md object-contain"
+              className="h-6 w-6 shrink-0 rounded-md object-contain"
             />
             <img
               src={opencompLogo}
               alt="OpenComp"
-              className="h-5 w-[6.25rem] object-cover object-center"
+              className="h-6 w-auto max-w-[7rem] shrink-0 object-contain"
             />
-            <span className="text-on-surface-variant text-body-md">· Open-source workplace intelligence for India</span>
+            <span className="text-center text-body-md text-on-surface-variant md:text-left">
+              · Open-source workplace intelligence for India
+            </span>
           </div>
           <div className="flex items-center gap-6">
             {['About', 'Privacy', 'Open Data', 'API', 'GitHub'].map(item => (
               <a
                 key={item}
-                href="#"
+                href={item === 'GitHub' ? GITHUB_REPO_URL : '#'}
+                target={item === 'GitHub' ? '_blank' : undefined}
+                rel={item === 'GitHub' ? 'noopener noreferrer' : undefined}
                 className="font-mono text-label-md text-on-surface-variant hover:text-primary transition-colors"
               >
                 {item}

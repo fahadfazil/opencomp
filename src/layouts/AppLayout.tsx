@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { CommandPalette } from '@/components/layout/CommandPalette'
+import { SeoMeta } from '@/components/seo/SeoMeta'
 import { AuthModal } from '@/features/auth/AuthModal'
 import { HomePage } from '@/pages/HomePage'
 import { CompaniesPage } from '@/pages/CompaniesPage'
@@ -13,6 +14,7 @@ import { ContributePage } from '@/pages/ContributePage'
 export function AppLayout() {
   return (
     <div className="min-h-screen bg-background text-on-surface">
+      <SeoMeta />
       <Navbar />
       <CommandPalette />
       <AuthModal />

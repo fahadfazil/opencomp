@@ -74,7 +74,6 @@ CREATE TABLE IF NOT EXISTS public.roles (
   p25_salary_lpa DECIMAL(6,2) DEFAULT 0,
   p75_salary_lpa DECIMAL(6,2) DEFAULT 0,
   total_entries INTEGER DEFAULT 0,
-  yoy_growth DECIMAL(5,2) DEFAULT 0,
   yoy_growth_pct DECIMAL(5,2) DEFAULT 0,
   remote_premium_pct DECIMAL(5,2) DEFAULT 0,
   demand_score INTEGER DEFAULT 50,
@@ -383,17 +382,17 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO public.roles (
   id, title, slug, category, avg_salary_lpa, median_salary_lpa, p25_salary_lpa,
-  p75_salary_lpa, total_entries, yoy_growth_pct, remote_premium_pct, yoy_growth, created_at
+  p75_salary_lpa, total_entries, yoy_growth_pct, remote_premium_pct, created_at
 )
 VALUES
-  ('swe', 'Software Engineer', 'software-engineer', 'Engineering', 22.4, 20.0, 14.0, 30.0, 48200, 12.4, 18.2, 12.4, '2024-01-01T00:00:00Z'),
-  ('sde2', 'Senior Software Engineer', 'senior-software-engineer', 'Engineering', 38.6, 36.0, 28.0, 50.0, 38400, 14.8, 22.1, 14.8, '2024-01-01T00:00:00Z'),
-  ('em', 'Engineering Manager', 'engineering-manager', 'Engineering Leadership', 58.2, 56.0, 44.0, 75.0, 12800, 9.2, 15.4, 9.2, '2024-01-01T00:00:00Z'),
-  ('pm', 'Product Manager', 'product-manager', 'Product', 36.8, 34.0, 25.0, 48.0, 18600, 11.6, 12.8, 11.6, '2024-01-01T00:00:00Z'),
-  ('ds', 'Data Scientist', 'data-scientist', 'Data & Analytics', 28.4, 26.0, 18.0, 40.0, 14200, 16.2, 24.6, 16.2, '2024-01-01T00:00:00Z'),
-  ('de', 'Data Engineer', 'data-engineer', 'Data & Analytics', 26.2, 24.0, 17.0, 36.0, 11800, 18.4, 26.8, 18.4, '2024-01-01T00:00:00Z'),
-  ('ml', 'ML Engineer', 'ml-engineer', 'AI/ML', 42.6, 40.0, 30.0, 58.0, 8400, 28.4, 32.1, 28.4, '2024-01-01T00:00:00Z'),
-  ('devops', 'DevOps Engineer', 'devops-engineer', 'Infrastructure', 24.8, 23.0, 16.0, 34.0, 9600, 10.8, 20.4, 10.8, '2024-01-01T00:00:00Z')
+  ('swe', 'Software Engineer', 'software-engineer', 'Engineering', 22.4, 20.0, 14.0, 30.0, 48200, 12.4, 18.2, '2024-01-01T00:00:00Z'),
+  ('sde2', 'Senior Software Engineer', 'senior-software-engineer', 'Engineering', 38.6, 36.0, 28.0, 50.0, 38400, 14.8, 22.1, '2024-01-01T00:00:00Z'),
+  ('em', 'Engineering Manager', 'engineering-manager', 'Engineering Leadership', 58.2, 56.0, 44.0, 75.0, 12800, 9.2, 15.4, '2024-01-01T00:00:00Z'),
+  ('pm', 'Product Manager', 'product-manager', 'Product', 36.8, 34.0, 25.0, 48.0, 18600, 11.6, 12.8, '2024-01-01T00:00:00Z'),
+  ('ds', 'Data Scientist', 'data-scientist', 'Data & Analytics', 28.4, 26.0, 18.0, 40.0, 14200, 16.2, 24.6, '2024-01-01T00:00:00Z'),
+  ('de', 'Data Engineer', 'data-engineer', 'Data & Analytics', 26.2, 24.0, 17.0, 36.0, 11800, 18.4, 26.8, '2024-01-01T00:00:00Z'),
+  ('ml', 'ML Engineer', 'ml-engineer', 'AI/ML', 42.6, 40.0, 30.0, 58.0, 8400, 28.4, 32.1, '2024-01-01T00:00:00Z'),
+  ('devops', 'DevOps Engineer', 'devops-engineer', 'Infrastructure', 24.8, 23.0, 16.0, 34.0, 9600, 10.8, 20.4, '2024-01-01T00:00:00Z')
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   slug = EXCLUDED.slug,
@@ -405,7 +404,6 @@ ON CONFLICT (id) DO UPDATE SET
   total_entries = EXCLUDED.total_entries,
   yoy_growth_pct = EXCLUDED.yoy_growth_pct,
   remote_premium_pct = EXCLUDED.remote_premium_pct,
-  yoy_growth = EXCLUDED.yoy_growth,
   created_at = EXCLUDED.created_at;
 
 INSERT INTO public.office_areas (

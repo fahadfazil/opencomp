@@ -14,8 +14,13 @@ async function getContent<T>(key: string): Promise<T | null> {
     .eq('key', key)
     .maybeSingle()
 
-  if (error || !data) {
+  if (error) {
     console.warn(`Unable to load Supabase app content for key "${key}"`, error)
+    return null
+  }
+
+  if (!data) {
+    console.warn(`Supabase app content key "${key}" was not found`)
     return null
   }
 

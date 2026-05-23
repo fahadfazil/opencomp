@@ -21,10 +21,15 @@ export async function getGlobalStats(): Promise<GlobalStats> {
     supabase.from('salary_entries').select('*', { count: 'exact', head: true }),
   ])
 
-  const queryError = companiesError || citiesError || contributorsError || salaryEntriesError
+  const queryErrors = [
+    companiesError,
+    citiesError,
+    contributorsError,
+    salaryEntriesError,
+  ].filter((error): error is NonNullable<typeof error> => error !== null)
 
-  if (queryError) {
-    throw queryError
+  if (queryErrors.length > 0) {
+    throw new Error(queryErrors.map((error) => error.message).join('; '))
   }
 
   return {

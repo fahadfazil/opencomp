@@ -5,5 +5,9 @@ export const BRAND_COLORS = {
   googleYellow: '#FBBC05',
   github: '#E6EDF3',
   linkedin: '#0A66C2',
-  alpha20: '33',
+  opacity20Hex: '33',
 } as const
+
+export function withHexOpacity(color: string, opacityHex: string) {
+  return `${color}${opacityHex}`
+}

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import { useUIStore } from '@/store'
 import { signInWithOAuth } from '@/services/authService'
-import { BRAND_COLORS } from '@/constants/brandColors'
+import { BRAND_COLORS, withHexOpacity } from '@/constants/brandColors'
 
 type ProviderIconProps = {
   className?: string
@@ -156,7 +156,7 @@ export function AuthModal() {
                 >
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: `${BRAND_COLORS.linkedin}${BRAND_COLORS.alpha20}` }}
+                    style={{ backgroundColor: withHexOpacity(BRAND_COLORS.linkedin, BRAND_COLORS.opacity20Hex) }}
                   >
                     <LinkedInIcon className="h-[18px] w-[18px] transition-all group-hover:scale-105" />
                   </div>

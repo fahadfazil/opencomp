@@ -5,7 +5,6 @@ import {
   TrendingUp, Award, Activity, GitBranch, BookOpen, Star, Users, FileText,
   ChevronRight, Zap, PlusCircle
 } from 'lucide-react'
-import { IndiaMap } from '@/components/map/IndiaMap'
 import { SalaryTrendChart } from '@/components/charts'
 import { GlassCard, MonoLabel, Badge, LiveIndicator, Button } from '@/components/ui'
 import { TRENDING_INSIGHTS, SALARY_TREND_DATA } from '@/data/mockData'
@@ -16,6 +15,7 @@ import { useCompanies, useGlobalStats } from '@/hooks'
 import type { GlobalStats } from '@/types'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
+import indiaMapHeatmap from '@/assets/india-map-hero.png'
 
 const EMPTY_GLOBAL_STATS: GlobalStats = {
   total_contributors: 0,
@@ -67,9 +67,14 @@ export function HomePage() {
       <section className="relative min-h-screen flex flex-col">
         {/* Map Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-30">
-            <IndiaMap compact />
-          </div>
+          <motion.img
+            src={indiaMapHeatmap}
+            alt="India salary intelligence heatmap"
+            initial={{ opacity: 0.24, scale: 1.06 }}
+            animate={{ opacity: [0.22, 0.34, 0.22], scale: [1.06, 1.1, 1.06], x: [0, -14, 0], y: [0, 8, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute inset-0 w-full h-full object-cover grayscale-[0.5] contrast-125"
+          />
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background" />

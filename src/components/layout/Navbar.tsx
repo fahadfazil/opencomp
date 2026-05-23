@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Search, Bell, Menu, X, MapPin,
   Building2, Briefcase, PlusCircle, BarChart3
@@ -19,8 +19,9 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const location = useLocation()
+  const navigate = useNavigate()
   const { user } = useAuthStore()
-  const { setAuthModalOpen, setContributeModalOpen, toggleCommandPalette } = useUIStore()
+  const { setAuthModalOpen, toggleCommandPalette } = useUIStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -113,7 +114,7 @@ export function Navbar() {
                   variant="secondary"
                   size="sm"
                   icon={<PlusCircle size={14} />}
-                  onClick={() => setContributeModalOpen(true)}
+                  onClick={() => navigate('/contribute')}
                   className="hidden md:flex"
                 >
                   Contribute
@@ -145,7 +146,7 @@ export function Navbar() {
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => setContributeModalOpen(true)}
+                  onClick={() => navigate('/contribute')}
                   className="bg-primary text-on-primary hover:bg-primary/90"
                 >
                   Contribute
@@ -209,7 +210,7 @@ export function Navbar() {
                   variant="primary"
                   size="sm"
                   className="flex-1 bg-primary text-on-primary hover:bg-primary/90"
-                  onClick={() => { setContributeModalOpen(true); setMobileOpen(false) }}
+                  onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
                 >
                   Contribute
                 </Button>

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/banner.png" alt="OpenComp" width="100%" />
+<img src="/assets/opencomp-logo-sgAtSmvG.png" alt="OpenComp" width="100%" />
 
 # OpenComp
 
@@ -13,7 +13,7 @@ Anonymous, community-owned salary data and company culture insights — built fo
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB?style=flat-square&logo=react)](https://react.dev)
 [![Powered by Supabase](https://img.shields.io/badge/Powered%20by-Supabase-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com)
 
-[Live Demo](https://opencomp.onrender.com) · [Submit Your Data](https://opencomp.onrender.com/contribute) · [Report an Issue](https://github.com/fahadfazil/opencomp/issues)
+[Live Demo](https://opencomp.in) · [Submit Your Data](https://opencomp.onrender.com/contribute) · [Report an Issue](https://github.com/fahadfazil/opencomp/issues)
 
 </div>
 

@@ -147,7 +147,7 @@ export function Navbar() {
                   variant="primary"
                   size="sm"
                   onClick={() => navigate('/contribute')}
-                  className="bg-primary text-white hover:bg-primary/90"
+                  
                 >
                   Contribute
                 </Button>
@@ -209,7 +209,7 @@ export function Navbar() {
                 <Button
                   variant="primary"
                   size="sm"
-                  className="flex-1 bg-primary text-white hover:bg-primary/90"
+                  className="flex-1"
                   onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
                 >
                   Contribute

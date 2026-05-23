@@ -468,6 +468,7 @@ export function HomePage() {
               variant="primary"
               size="lg"
               icon={<PlusCircle size={18} />}
+              className="bg-primary text-on-primary hover:bg-primary/90"
               onClick={() => setContributeModalOpen(true)}
             >
               Contribute Salary Data

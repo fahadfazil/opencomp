@@ -146,6 +146,7 @@ export function Navbar() {
                   variant="primary"
                   size="sm"
                   onClick={() => setContributeModalOpen(true)}
+                  className="bg-primary text-on-primary hover:bg-primary/90"
                 >
                   Contribute
                 </Button>
@@ -207,7 +208,7 @@ export function Navbar() {
                 <Button
                   variant="primary"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 bg-primary text-on-primary hover:bg-primary/90"
                   onClick={() => { setContributeModalOpen(true); setMobileOpen(false) }}
                 >
                   Contribute

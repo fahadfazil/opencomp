@@ -36,12 +36,15 @@ export function Navbar() {
 
       if (error) {
         setSignOutError(error.message || 'Failed to sign out. Please try again.')
+        setMobileOpen(false)
         return
       }
 
       setMobileOpen(false)
-    } catch {
+    } catch (err) {
+      console.error('Sign-out failed:', err)
       setSignOutError('Failed to sign out. Please try again.')
+      setMobileOpen(false)
     } finally {
       setSigningOut(false)
     }
@@ -195,7 +198,11 @@ export function Navbar() {
           </div>
         </div>
         {signOutError && (
-          <p className="max-w-[1440px] mx-auto px-6 md:px-8 pb-3 text-body-md text-error">
+          <p
+            role="alert"
+            aria-live="polite"
+            className="max-w-[1440px] mx-auto px-6 md:px-8 pb-3 text-body-md text-error"
+          >
             {signOutError}
           </p>
         )}

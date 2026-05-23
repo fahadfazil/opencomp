@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/utils'
 import { useAuthStore, useUIStore } from '@/store'
 import { Button } from '@/components/ui'
-import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
 
 const NAV_ITEMS = [
@@ -55,11 +54,6 @@ export function Navbar() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-8 h-16 flex items-center justify-between gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img
-              src={opencompFavicon}
-              alt="OpenComp icon"
-              className="h-8 w-8 rounded-lg object-contain"
-            />
             <img
               src={opencompLogo}
               alt="OpenComp"

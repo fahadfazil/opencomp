@@ -3,7 +3,7 @@ import { extendTailwindMerge } from 'tailwind-merge'
 import type { CompScore } from '@/types'
 
 // Extend twMerge so custom font-size utilities (text-body-md, text-body-lg, etc.)
-// are recognised as font-size class group members and no longer conflict with
+// are recognized as font-size class group members and no longer conflict with
 // text-color utilities such as text-black.
 const twMerge = extendTailwindMerge({
   extend: {

@@ -448,7 +448,6 @@ function Step6({ onBack }: { onBack: () => void }) {
 export function ContributePage() {
   const { user } = useAuthStore()
   const { setAuthModalOpen } = useUIStore()
-  const navigate = useNavigate()
   const [step, setStep] = useState(1)
 
   if (!user) {

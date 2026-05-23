@@ -67,7 +67,7 @@
   }
 
   .gradient-btn {
-    @apply bg-gradient-to-r from-primary to-primary-container text-on-primary font-semibold;
+    @apply bg-gradient-to-r from-primary to-primary-container text-white font-semibold;
   }
 
   .mono-label {

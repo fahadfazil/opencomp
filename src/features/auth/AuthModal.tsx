@@ -13,10 +13,10 @@ type ProviderIconProps = {
 function GoogleIcon({ className }: ProviderIconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path fill="#EA4335" d="M12 10.2v3.95h5.5c-.22 1.27-.96 2.35-2.07 3.07l3.35 2.6c1.95-1.8 3.08-4.45 3.08-7.62 0-.72-.06-1.41-.2-2H12z" />
-      <path fill="#34A853" d="M12 22c2.79 0 5.13-.93 6.84-2.53l-3.35-2.6c-.93.62-2.12 1-3.5 1-2.69 0-4.97-1.82-5.79-4.26H2.76v2.69A10 10 0 0 0 12 22z" />
-      <path fill="#FBBC05" d="M6.21 13.61A5.96 5.96 0 0 1 5.9 12c0-.56.1-1.1.31-1.61V7.7H2.76A10 10 0 0 0 2 12c0 1.61.39 3.13 1.07 4.3l3.14-2.69z" />
-      <path fill="#4285F4" d="M12 6.13c1.52 0 2.88.52 3.95 1.54l2.97-2.97C17.13 3.05 14.79 2 12 2A10 10 0 0 0 2.76 7.7l3.45 2.69C7.03 7.95 9.31 6.13 12 6.13z" />
+      <path fill={BRAND_COLORS.googleRed} d="M12 10.2v3.95h5.5c-.22 1.27-.96 2.35-2.07 3.07l3.35 2.6c1.95-1.8 3.08-4.45 3.08-7.62 0-.72-.06-1.41-.2-2H12z" />
+      <path fill={BRAND_COLORS.googleGreen} d="M12 22c2.79 0 5.13-.93 6.84-2.53l-3.35-2.6c-.93.62-2.12 1-3.5 1-2.69 0-4.97-1.82-5.79-4.26H2.76v2.69A10 10 0 0 0 12 22z" />
+      <path fill={BRAND_COLORS.googleYellow} d="M6.21 13.61A5.96 5.96 0 0 1 5.9 12c0-.56.1-1.1.31-1.61V7.7H2.76A10 10 0 0 0 2 12c0 1.61.39 3.13 1.07 4.3l3.14-2.69z" />
+      <path fill={BRAND_COLORS.googleBlue} d="M12 6.13c1.52 0 2.88.52 3.95 1.54l2.97-2.97C17.13 3.05 14.79 2 12 2A10 10 0 0 0 2.76 7.7l3.45 2.69C7.03 7.95 9.31 6.13 12 6.13z" />
     </svg>
   )
 }
@@ -25,7 +25,7 @@ function GitHubIcon({ className }: ProviderIconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
-        fill="#E6EDF3"
+        fill={BRAND_COLORS.github}
         d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.43 7.88 10.96.58.1.8-.25.8-.57v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.7.08-.69.08-.69 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.67 1.25 3.32.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.25.44-2.27 1.18-3.07-.12-.29-.52-1.47.11-3.06 0 0 .96-.31 3.14 1.17a10.93 10.93 0 0 1 5.72 0c2.18-1.48 3.14-1.17 3.14-1.17.63 1.6.23 2.77.11 3.06.73.8 1.18 1.82 1.18 3.07 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.07.78 2.16v3.2c0 .31.21.67.81.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"
       />
     </svg>
@@ -156,7 +156,7 @@ export function AuthModal() {
                 >
                   <div
                     className="w-8 h-8 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: `${BRAND_COLORS.linkedin}33` }}
+                    style={{ backgroundColor: `${BRAND_COLORS.linkedin}${BRAND_COLORS.alpha20}` }}
                   >
                     <LinkedInIcon className="h-[18px] w-[18px] transition-all group-hover:scale-105" />
                   </div>

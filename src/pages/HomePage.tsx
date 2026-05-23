@@ -468,7 +468,7 @@ export function HomePage() {
             <img
               src={opencompLogo}
               alt="OpenComp"
-              className="h-5 w-auto object-contain"
+              className="h-5 w-[6.25rem] object-cover object-center"
             />
             <span className="text-on-surface-variant text-body-md">· Open-source workplace intelligence for India</span>
           </div>

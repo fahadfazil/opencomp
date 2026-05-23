@@ -9,6 +9,7 @@ import { cn } from '@/utils'
 import { useAuthStore, useUIStore } from '@/store'
 import { Button } from '@/components/ui'
 import opencompLogo from '@/assets/opencomp-logo.png'
+import { signOut } from '@/services/authService'
 
 const NAV_ITEMS = [
   { label: 'Intelligence', href: '/', icon: BarChart3 },
@@ -24,6 +25,19 @@ export function Navbar() {
   const { setAuthModalOpen, toggleCommandPalette } = useUIStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+
+  const handleSignOut = async () => {
+    setSigningOut(true)
+    const { error } = await signOut()
+    setSigningOut(false)
+
+    if (error) {
+      return
+    }
+
+    setMobileOpen(false)
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
@@ -119,6 +133,15 @@ export function Navbar() {
                 >
                   Contribute
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  loading={signingOut}
+                  className="hidden md:flex"
+                >
+                  Sign Out
+                </Button>
                 <button className="text-on-surface-variant hover:text-primary transition-colors relative">
                   <Bell size={18} />
                   <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-secondary rounded-full" />
@@ -198,22 +221,46 @@ export function Navbar() {
               })}
 
               <div className="pt-3 border-t border-white/8 flex gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => { setAuthModalOpen(true); setMobileOpen(false) }}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  className="flex-1 bg-primary text-on-primary hover:bg-primary/90"
-                  onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
-                >
-                  Contribute
-                </Button>
+                {user ? (
+                  <>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="flex-1 bg-primary text-on-primary hover:bg-primary/90"
+                      onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
+                    >
+                      Contribute
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={handleSignOut}
+                      loading={signingOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => { setAuthModalOpen(true); setMobileOpen(false) }}
+                    >
+                      Sign In
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="flex-1 bg-primary text-on-primary hover:bg-primary/90"
+                      onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
+                    >
+                      Contribute
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </motion.div>

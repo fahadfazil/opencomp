@@ -1,5 +1,5 @@
 import {
-  LineChart, Line, AreaChart, Area, BarChart, Bar, RadarChart, Radar,
+  AreaChart, Area, BarChart, Bar, RadarChart, Radar,
   PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
   XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, Cell
 } from 'recharts'
@@ -8,12 +8,25 @@ import type { TrendPoint } from '@/types'
 // ============================================================
 // Custom Tooltip
 // ============================================================
-function GlassTooltip({ active, payload, label, prefix = '₹', suffix = 'L' }: any) {
+interface GlassTooltipProps {
+  active?: boolean
+  payload?: Array<{ color: string; value: number | string }>
+  label?: string
+  prefix?: string
+  suffix?: string
+}
+
+/**
+ * Subset of Recharts tooltip props used by this component.
+ * Full API: https://recharts.org/en-US/api/Tooltip
+ */
+// Recharts passes tooltip render props (`active`, `payload`, `label`) to custom tooltip components.
+function GlassTooltip({ active, payload, label, prefix = '₹', suffix = 'L' }: GlassTooltipProps) {
   if (!active || !payload?.length) return null
   return (
     <div className="glass-panel rounded-lg px-3 py-2.5 border border-white/10 shadow-xl">
       <div className="font-mono text-[10px] text-on-surface-variant mb-1">{label}</div>
-      {payload.map((entry: any, i: number) => (
+      {payload.map((entry, i: number) => (
         <div key={i} className="font-mono text-sm font-bold" style={{ color: entry.color }}>
           {prefix}{entry.value}{suffix}
         </div>

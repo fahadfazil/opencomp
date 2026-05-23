@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { MapPin, TrendingUp, Train } from 'lucide-react'
-import { GlassCard, MonoLabel, Badge, StatCard, Button } from '@/components/ui'
+import { MapPin, Train } from 'lucide-react'
+import { GlassCard, MonoLabel, Badge, Button } from '@/components/ui'
 import { IndiaMap } from '@/components/map/IndiaMap'
-import { MOCK_CITIES } from '@/data/mockData'
 import { formatLPA, formatNumber, cn } from '@/utils'
 import type { City } from '@/types'
+import { useCities } from '@/hooks'
 
 export function CitiesPage() {
   const navigate = useNavigate()
+  const { data: cities = [] } = useCities()
   const [selectedCity, setSelectedCity] = useState<City | null>(null)
   const [sortBy, setSortBy] = useState<'salary' | 'entries' | 'rank'>('salary')
 
-  const sorted = [...MOCK_CITIES].sort((a, b) => {
+  const sorted = [...cities].sort((a, b) => {
     if (sortBy === 'salary') return b.avg_salary_lpa - a.avg_salary_lpa
     if (sortBy === 'entries') return b.total_entries - a.total_entries
     return (a.tech_hub_rank || 99) - (b.tech_hub_rank || 99)
@@ -31,7 +32,7 @@ export function CitiesPage() {
           India Salary Heatmap
         </h1>
         <p className="text-on-surface-variant text-body-lg">
-          Interactive geographic salary intelligence across {MOCK_CITIES.length} cities
+          Interactive geographic salary intelligence across {cities.length} cities
         </p>
       </div>
 
@@ -107,7 +108,7 @@ export function CitiesPage() {
           <GlassCard className="p-4">
             <MonoLabel className="mb-3 block" color="secondary">TOP SALARY CITIES</MonoLabel>
             <div className="space-y-2">
-              {MOCK_CITIES.sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (
+              {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (
                 <button
                   key={city.id}
                   className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container transition-colors text-left"

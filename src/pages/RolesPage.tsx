@@ -3,19 +3,26 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Briefcase, TrendingUp, Wifi, ArrowLeft } from 'lucide-react'
 import {
-  GlassCard, MonoLabel, Badge, StatCard, RatingBar, Button
+  GlassCard, MonoLabel, Badge, StatCard, Button
 } from '@/components/ui'
 import { SalaryDistributionChart, SalaryTrendChart, CityComparisonChart } from '@/components/charts'
-import { MOCK_ROLES, MOCK_CITIES, SALARY_TREND_DATA } from '@/data/mockData'
-import { formatLPA, formatPercent, cn } from '@/utils'
+import { SALARY_TREND_DATA } from '@/data/mockData'
+import { formatLPA, cn } from '@/utils'
+import { useCities, useRole, useRoles } from '@/hooks'
+
+// Baseline city salary (LPA) used to normalize cross-city role estimates.
+const CITY_BASELINE_SALARY = 22
+// Conservative city adjustment multiplier to avoid over-estimating city-transformed salaries.
+const ROLE_CITY_SALARY_MULTIPLIER = 0.9
 
 export function RolesPage() {
   const navigate = useNavigate()
+  const { data: roles = [] } = useRoles()
   const [category, setCategory] = useState('All')
 
-  const categories = ['All', ...Array.from(new Set(MOCK_ROLES.map(r => r.category)))]
+  const categories = ['All', ...Array.from(new Set(roles.map(r => r.category)))]
 
-  const filtered = MOCK_ROLES.filter(r => category === 'All' || r.category === category)
+  const filtered = roles.filter(r => category === 'All' || r.category === category)
     .sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa)
 
   return (
@@ -26,7 +33,7 @@ export function RolesPage() {
           <MonoLabel color="tertiary">ROLE INTELLIGENCE</MonoLabel>
         </div>
         <h1 className="text-4xl font-bold tracking-tight mb-2">
-          Salary data for {MOCK_ROLES.length} tech roles
+          Salary data for {roles.length} tech roles
         </h1>
         <p className="text-on-surface-variant text-body-lg">
           Percentile breakdowns, YoY growth, and remote premium analysis
@@ -126,8 +133,8 @@ export function RolesPage() {
 export function RolePage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-
-  const role = MOCK_ROLES.find(r => r.slug === slug)
+  const { data: role } = useRole(slug ?? '')
+  const { data: cities = [] } = useCities()
 
   if (!role) {
     return (
@@ -140,11 +147,16 @@ export function RolePage() {
     )
   }
 
-  const cityData = MOCK_CITIES.slice(0, 6).map(c => ({
-    id: c.id,
-    name: c.name,
-    value: Math.round(role.avg_salary_lpa * (c.avg_salary_lpa / 22) * 0.85 + Math.random() * 5),
-  })).sort((a, b) => b.value - a.value)
+  const cityData = cities.slice(0, 6).map(c => {
+    const citySalary = Math.max(c.avg_salary_lpa, 1)
+    return {
+      id: c.id,
+      name: c.name,
+      value: Math.round(
+        role.avg_salary_lpa * (citySalary / CITY_BASELINE_SALARY) * ROLE_CITY_SALARY_MULTIPLIER
+      ),
+    }
+  }).sort((a, b) => b.value - a.value)
 
   return (
     <div className="min-h-screen pt-24 pb-16 max-w-[1440px] mx-auto px-6 md:px-8">

@@ -2,19 +2,29 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  TrendingUp, Wifi, Award, MapPin, ArrowRight,
-  Users, Database, Activity, GitBranch, BookOpen,
+  TrendingUp, Award, Activity, GitBranch, BookOpen, Star, Users, FileText,
   ChevronRight, Zap, PlusCircle
 } from 'lucide-react'
 import { IndiaMap } from '@/components/map/IndiaMap'
 import { SalaryTrendChart } from '@/components/charts'
-import { GlassCard, MonoLabel, Badge, LiveIndicator, StatCard, Button } from '@/components/ui'
-import { MOCK_GLOBAL_STATS, MOCK_COMPANIES, TRENDING_INSIGHTS, SALARY_TREND_DATA } from '@/data/mockData'
-import { formatNumber, formatLPA } from '@/utils'
+import { GlassCard, MonoLabel, Badge, LiveIndicator, Button } from '@/components/ui'
+import { TRENDING_INSIGHTS, SALARY_TREND_DATA } from '@/data/mockData'
+import { formatNumber } from '@/utils'
 import { useUIStore } from '@/store'
 import { cn } from '@/utils'
+import { useCompanies, useGlobalStats } from '@/hooks'
+import type { GlobalStats } from '@/types'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
+
+const EMPTY_GLOBAL_STATS: GlobalStats = {
+  total_contributors: 0,
+  total_data_points: 0,
+  companies_tracked: 0,
+  cities_covered: 0,
+  avg_salary_india: 0,
+  yoy_salary_growth: 0,
+}
 
 // Animated counter hook
 function useCounter(target: number, duration = 2000) {
@@ -41,10 +51,15 @@ function useCounter(target: number, duration = 2000) {
 export function HomePage() {
   const navigate = useNavigate()
   const { toggleCommandPalette, setContributeModalOpen } = useUIStore()
+  const { data: globalStats } = useGlobalStats()
+  const { data: companiesData } = useCompanies()
 
-  const contributorsCount = useCounter(MOCK_GLOBAL_STATS.total_contributors)
-  const dataPointsCount = useCounter(MOCK_GLOBAL_STATS.total_data_points)
-  const companiesCount = useCounter(MOCK_GLOBAL_STATS.companies_tracked)
+  const stats = globalStats ?? EMPTY_GLOBAL_STATS
+  const companies = companiesData ?? []
+
+  const contributorsCount = useCounter(stats.total_contributors)
+  const dataPointsCount = useCounter(stats.total_data_points)
+  const companiesCount = useCounter(stats.companies_tracked)
 
   return (
     <div className="min-h-screen">
@@ -79,7 +94,7 @@ export function HomePage() {
 
             <p className="mt-6 text-body-lg text-on-surface-variant max-w-2xl text-balance">
               Decentralized salary benchmarks, real-time culture analytics, and verified
-              workplace data powered by {formatNumber(MOCK_GLOBAL_STATS.total_contributors)} anonymous contributors
+              workplace data powered by {formatNumber(stats.total_contributors)} anonymous contributors
               across India.
             </p>
 
@@ -229,7 +244,7 @@ export function HomePage() {
                 <MonoLabel color="tertiary">TOP COMP SCORE</MonoLabel>
               </div>
               <div className="space-y-3">
-                {MOCK_COMPANIES.sort((a, b) => b.opencomp_score - a.opencomp_score)
+                {[...companies].sort((a, b) => b.opencomp_score - a.opencomp_score)
                   .slice(0, 5)
                   .map((company, i) => (
                     <div
@@ -267,11 +282,11 @@ export function HomePage() {
               <GlassCard
                 className="p-5 h-full"
                 hover
-                accent={insight.accent as any}
+                accent={insight.accent as 'primary' | 'secondary' | 'tertiary'}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
-                    <MonoLabel color={insight.accent as any} className="mb-2 block">
+                    <MonoLabel color={insight.accent as 'primary' | 'secondary' | 'tertiary'} className="mb-2 block">
                       {insight.category}
                     </MonoLabel>
                     <div className={cn(
@@ -376,12 +391,15 @@ export function HomePage() {
           </div>
           <div className="flex gap-6 pt-2">
             {[
-              { label: 'GitHub Stars', value: '4.2k', icon: '⭐' },
-              { label: 'Contributors', value: '218', icon: '👥' },
-              { label: 'License', value: 'MIT', icon: '📄' },
+              { label: 'Contributors', value: formatNumber(stats.total_contributors), icon: Users },
+              { label: 'Tracked Companies', value: formatNumber(stats.companies_tracked), icon: Star },
+              { label: 'Data Points', value: formatNumber(stats.total_data_points), icon: FileText },
             ].map(item => (
               <div key={item.label}>
-                <div className="font-bold text-on-surface">{item.icon} {item.value}</div>
+                <div className="font-bold text-on-surface flex items-center gap-1.5">
+                  <item.icon size={14} className="text-on-surface-variant" />
+                  {item.value}
+                </div>
                 <div className="font-mono text-label-md text-on-surface-variant">{item.label}</div>
               </div>
             ))}
@@ -462,7 +480,7 @@ export function HomePage() {
           <div className="flex items-center gap-2">
             <img
               src={opencompFavicon}
-              alt=""
+              alt="OpenComp icon"
               className="h-6 w-6 rounded-md object-contain"
             />
             <img

@@ -2,16 +2,16 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Building2, Globe, Users, TrendingUp, Star, MapPin,
-  ArrowLeft, ExternalLink, Award, Shield, Clock, Coffee
+  ArrowLeft, Award, Shield, Clock, Coffee
 } from 'lucide-react'
 import {
   GlassCard, MonoLabel, Badge, StatCard, ScoreGauge,
-  RatingBar, Button, Skeleton, Divider
+  RatingBar, Button, Divider
 } from '@/components/ui'
 import { CultureRadar, SalaryDistributionChart, SalaryTrendChart } from '@/components/charts'
-import { MOCK_COMPANIES, SALARY_TREND_DATA } from '@/data/mockData'
+import { SALARY_TREND_DATA } from '@/data/mockData'
 import { formatLPA, formatNumber } from '@/utils'
-import { cn } from '@/utils'
+import { useCompany } from '@/hooks'
 
 const CULTURE_RADAR_DATA = [
   { subject: 'WLB', value: 4.2, fullMark: 5 },
@@ -63,8 +63,7 @@ const ANONYMOUS_REVIEWS = [
 export function CompanyPage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-
-  const company = MOCK_COMPANIES.find(c => c.slug === slug)
+  const { data: company } = useCompany(slug ?? '')
 
   if (!company) {
     return (

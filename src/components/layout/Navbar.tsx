@@ -73,6 +73,10 @@ export function Navbar() {
   }, [toggleCommandPalette])
 
   useEffect(() => {
+    if (!profileMenuOpen) {
+      return
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setProfileMenuOpen(false)
@@ -81,7 +85,7 @@ export function Navbar() {
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [profileMenuOpen])
 
   return (
     <>
@@ -171,7 +175,7 @@ export function Navbar() {
                     className="w-8 h-8 rounded-full overflow-hidden border border-white/20 cursor-pointer"
                     aria-haspopup="menu"
                     aria-expanded={profileMenuOpen}
-                    aria-label="Open profile menu"
+                    aria-label={profileMenuOpen ? 'Close profile menu' : 'Open profile menu'}
                   >
                     {user.avatar_url ? (
                       <img src={user.avatar_url} alt={user.display_name || 'User'} className="w-full h-full object-cover" />

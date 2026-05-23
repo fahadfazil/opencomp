@@ -141,7 +141,7 @@ export function AuthModal() {
                   className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface-container border border-outline-variant rounded-xl hover:border-primary/30 hover:bg-surface-container-high transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                    <GitHubIcon className="h-[18px] w-[18px] text-on-surface-variant group-hover:text-primary transition-colors" />
+                    <GitHubIcon className="h-[18px] w-[18px] text-on-surface-variant group-hover:text-primary transition-colors transition-transform group-hover:scale-105" />
                   </div>
                   <span className="text-body-md text-on-surface font-medium">
                     Continue with GitHub
@@ -154,7 +154,7 @@ export function AuthModal() {
                   className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface-container border border-outline-variant rounded-xl hover:border-primary/30 hover:bg-surface-container-high transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="w-8 h-8 rounded-lg bg-[#0077B5]/20 flex items-center justify-center">
-                    <LinkedInIcon className="h-[18px] w-[18px] text-[#0077B5] group-hover:text-primary transition-colors" />
+                    <LinkedInIcon className="h-[18px] w-[18px] text-[#0077B5] group-hover:text-primary transition-colors transition-transform group-hover:scale-105" />
                   </div>
                   <span className="text-body-md text-on-surface font-medium">
                     Continue with LinkedIn

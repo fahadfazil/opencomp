@@ -128,7 +128,7 @@ export function CitiesPage() {
       </div>
 
       {/* Sort controls */}
-      <div className="flex items-center gap-3 gap-y-2 mb-4 flex-wrap">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
         <MonoLabel color="muted">SORT BY:</MonoLabel>
         {(['salary', 'entries', 'rank'] as const).map(s => (
           <button

@@ -96,14 +96,23 @@ export function CityPage() {
   })).sort((a, b) => b.value - a.value)
 
   return (
-    <div className="min-h-screen pt-24 pb-16 max-w-[1440px] mx-auto px-6 md:px-8">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-8 font-mono text-label-md"
-      >
-        <ArrowLeft size={16} />
-        BACK
-      </button>
+    <div className="relative min-h-screen overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(154,210,195,0.14)_0%,rgba(17,20,23,0)_42%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(203,210,255,0.14)_0%,rgba(17,20,23,0)_36%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_75%,rgba(176,178,255,0.1)_0%,rgba(17,20,23,0)_38%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(15,17,19,0.82)_70%,#111417_100%)]" />
+        <div className="absolute inset-0 bg-noise opacity-40" />
+      </div>
+
+      <div className="relative z-10 pt-24 pb-16 max-w-[1440px] mx-auto px-6 md:px-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors mb-8 font-mono text-label-md"
+        >
+          <ArrowLeft size={16} />
+          BACK
+        </button>
 
       {/* City Header */}
       <div className="glass-card p-6 md:p-8 mb-6 relative overflow-hidden">

@@ -51,7 +51,7 @@ function upsertMeta(selector: string, attrName: 'name' | 'property', attrValue: 
   tag.setAttribute('content', content)
 }
 
-function titleFromSlug(slug?: string) {
+function slugToTitleCase(slug?: string) {
   if (!slug) return ''
   return slug
     .split('-')
@@ -64,7 +64,7 @@ function getMetaFromPath(pathname: string): MetaConfig {
   if (ROUTE_META[pathname]) return ROUTE_META[pathname]
 
   if (pathname.startsWith('/companies/')) {
-    const name = titleFromSlug(pathname.split('/')[2])
+    const name = slugToTitleCase(pathname.split('/')[2])
     return {
       title: `${name} Company Intelligence | OpenComp`,
       description: `Explore ${name} salary benchmarks, culture trends, and workplace intelligence powered by community submissions on OpenComp.`,
@@ -73,7 +73,7 @@ function getMetaFromPath(pathname: string): MetaConfig {
   }
 
   if (pathname.startsWith('/cities/')) {
-    const city = titleFromSlug(pathname.split('/')[2])
+    const city = slugToTitleCase(pathname.split('/')[2])
     return {
       title: `${city} Salary & Workplace Intelligence | OpenComp`,
       description: `Analyze salary benchmarks, cost signals, and workplace trends for ${city} with OpenComp city intelligence.`,
@@ -82,7 +82,7 @@ function getMetaFromPath(pathname: string): MetaConfig {
   }
 
   if (pathname.startsWith('/roles/')) {
-    const role = titleFromSlug(pathname.split('/')[2])
+    const role = slugToTitleCase(pathname.split('/')[2])
     return {
       title: `${role} Salary Benchmarks in India | OpenComp`,
       description: `Track ${role} salary ranges, growth, and compensation trends in India with OpenComp’s open data intelligence.`,
@@ -109,7 +109,7 @@ function getBreadcrumb(pathname: string, origin: string) {
     itemListElement.push({
       '@type': 'ListItem',
       position: index + 2,
-      name: titleFromSlug(segment),
+      name: slugToTitleCase(segment),
       item: `${origin}/${path}`,
     })
   })

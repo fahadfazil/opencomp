@@ -153,7 +153,7 @@ export function AuthModal() {
                   onClick={() => handleLogin('linkedin')}
                   className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface-container border border-outline-variant rounded-xl hover:border-primary/30 hover:bg-surface-container-high transition-all group disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-[#0077B5]/20 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#0A66C2]/20 flex items-center justify-center">
                     <LinkedInIcon className="h-[18px] w-[18px] transition-all group-hover:scale-105" />
                   </div>
                   <span className="text-body-md text-on-surface font-medium">

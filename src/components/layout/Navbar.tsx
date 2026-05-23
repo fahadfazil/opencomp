@@ -26,17 +26,25 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
+  const [signOutError, setSignOutError] = useState<string | null>(null)
 
   const handleSignOut = async () => {
+    setSignOutError(null)
     setSigningOut(true)
-    const { error } = await signOut()
-    setSigningOut(false)
+    try {
+      const { error } = await signOut()
 
-    if (error) {
-      return
+      if (error) {
+        setSignOutError(error.message || 'Failed to sign out. Please try again.')
+        return
+      }
+
+      setMobileOpen(false)
+    } catch {
+      setSignOutError('Failed to sign out. Please try again.')
+    } finally {
+      setSigningOut(false)
     }
-
-    setMobileOpen(false)
   }
 
   useEffect(() => {
@@ -186,6 +194,11 @@ export function Navbar() {
             </button>
           </div>
         </div>
+        {signOutError && (
+          <p className="max-w-[1440px] mx-auto px-6 md:px-8 pb-3 text-body-md text-error">
+            {signOutError}
+          </p>
+        )}
       </header>
 
       {/* Mobile Menu */}

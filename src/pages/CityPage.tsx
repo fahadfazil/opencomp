@@ -59,6 +59,35 @@ export function CityPage() {
   const citySalaryRanking = [...cities]
     .sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa)
   const cityRank = citySalaryRanking.findIndex(c => c.id === city.id) + 1
+  const livabilityScores = cityAreas.length > 0
+    ? [
+        {
+          label: 'Air Quality Index',
+          value: Math.round(cityAreas.reduce((sum, area) => sum + area.avg_aqi, 0) / cityAreas.length),
+          max: 200,
+          unit: 'AQI',
+          invert: true,
+        },
+        {
+          label: 'Walkability',
+          value: Math.round(cityAreas.reduce((sum, area) => sum + area.walkability_score, 0) / cityAreas.length),
+          max: 100,
+          unit: '/100',
+        },
+        {
+          label: 'Food & Dining',
+          value: Math.round(cityAreas.reduce((sum, area) => sum + area.food_score, 0) / cityAreas.length),
+          max: 100,
+          unit: '/100',
+        },
+        {
+          label: 'Safety Score',
+          value: Math.round(cityAreas.reduce((sum, area) => sum + area.safety_score, 0) / cityAreas.length),
+          max: 100,
+          unit: '/100',
+        },
+      ]
+    : content.livability_scores
 
   const comparisonData = cities.slice(0, 6).map(c => ({
     id: c.id,
@@ -325,20 +354,12 @@ export function CityPage() {
         )}
 
         {/* Air Quality & Livability */}
-        {(cityAreas.length > 0 || content.livability_scores.length > 0) && (
+        {livabilityScores.length > 0 && (
           <div className="md:col-span-6">
             <GlassCard className="p-6">
               <MonoLabel className="mb-4 block">LIVABILITY SCORES</MonoLabel>
               <div className="space-y-4">
-                {(cityAreas.length > 0
-                  ? [
-                      { label: 'Air Quality Index', value: cityAreas[0].avg_aqi, max: 200, unit: 'AQI', invert: true },
-                      { label: 'Walkability', value: cityAreas[0].walkability_score, max: 100, unit: '/100' },
-                      { label: 'Food & Dining', value: cityAreas[0].food_score, max: 100, unit: '/100' },
-                      { label: 'Safety Score', value: cityAreas[0].safety_score, max: 100, unit: '/100' },
-                    ]
-                  : content.livability_scores
-                ).map(item => {
+                {livabilityScores.map(item => {
                   const displayVal = item.invert
                     ? Math.max(0, 100 - (item.value / item.max) * 100)
                     : (item.value / item.max) * 100

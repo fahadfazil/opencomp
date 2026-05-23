@@ -21,6 +21,7 @@ const PERK_ICONS = {
   clock: Clock,
 } as const
 
+// Unknown icon keys fall back to Award so bad content rows still render safely.
 function getPerkIcon(iconKey: string) {
   if (iconKey in PERK_ICONS) {
     return PERK_ICONS[iconKey as keyof typeof PERK_ICONS]

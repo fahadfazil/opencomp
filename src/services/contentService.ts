@@ -15,7 +15,7 @@ async function getContent<T>(key: string): Promise<T | null> {
     .maybeSingle()
 
   if (error) {
-    console.warn(`Unable to load Supabase app content for key "${key}". The UI will fall back to empty state data.`, error)
+    console.warn(`Unable to load Supabase app content for key "${key}". The query will return null and the UI must handle the fallback state.`, error)
     return null
   }
 

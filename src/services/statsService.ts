@@ -35,7 +35,11 @@ export async function getGlobalStats(): Promise<GlobalStats> {
   ].filter((entry): entry is [string, NonNullable<(typeof entry)[1]>] => entry[1] !== null)
 
   if (queryErrors.length > 0) {
-    throw new Error(queryErrors.map(([label, error]) => `${label}: ${String(error)}`).join('; '))
+    throw new Error(
+      queryErrors
+        .map(([label, error]) => `${label}: ${typeof error === 'string' ? error : error.message}`)
+        .join('; ')
+    )
   }
 
   const citySalaries = (citySalaryResult.data ?? [])

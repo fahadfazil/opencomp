@@ -197,6 +197,7 @@ CREATE TABLE IF NOT EXISTS public.app_content (
 -- BACKFILL / COMPATIBILITY ALTERS
 -- ================================================
 
+-- Keep these ALTERs for existing databases that were created before the new Supabase-backed content migration.
 ALTER TABLE public.cities ADD COLUMN IF NOT EXISTS slug TEXT;
 ALTER TABLE public.cities ADD COLUMN IF NOT EXISTS tech_hub_rank INTEGER;
 ALTER TABLE public.cities ADD COLUMN IF NOT EXISTS cost_of_living_index INTEGER DEFAULT 50;

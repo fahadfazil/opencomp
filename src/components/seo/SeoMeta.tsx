@@ -53,7 +53,14 @@ function upsertMeta(selector: string, attrName: 'name' | 'property', attrValue: 
 
 function slugToTitleCase(slug?: string) {
   if (!slug) return ''
-  return slug
+  let decodedSlug: string
+  try {
+    decodedSlug = decodeURIComponent(slug)
+  } catch {
+    decodedSlug = slug
+  }
+
+  return decodedSlug
     .split('-')
     .filter(Boolean)
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
@@ -154,11 +161,6 @@ export function SeoMeta() {
           name: 'OpenComp',
           url: origin,
           inLanguage: 'en-IN',
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: `${origin}/?q={search_term_string}`,
-            'query-input': 'required name=search_term_string',
-          },
         },
         {
           '@type': 'WebPage',

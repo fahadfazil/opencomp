@@ -10,12 +10,12 @@ export async function getGlobalStats(): Promise<GlobalStats> {
   }
 
   const [
-    { count: companiesCount, error: companiesError },
-    { count: citiesCount, error: citiesError },
-    { count: contributorsCount, error: contributorsError },
-    { count: salaryEntriesCount, error: salaryEntriesError },
-    { data: citySalaryRows, error: citySalaryError },
-    { data: roleGrowthRows, error: roleGrowthError },
+    companiesResult,
+    citiesResult,
+    contributorsResult,
+    salaryEntriesResult,
+    citySalaryResult,
+    roleGrowthResult,
   ] = await Promise.all([
     supabase.from('companies').select('*', { count: 'exact', head: true }),
     supabase.from('cities').select('*', { count: 'exact', head: true }),
@@ -26,22 +26,22 @@ export async function getGlobalStats(): Promise<GlobalStats> {
   ])
 
   const queryErrors = [
-    companiesError,
-    citiesError,
-    contributorsError,
-    salaryEntriesError,
-    citySalaryError,
-    roleGrowthError,
-  ].filter((error): error is NonNullable<typeof error> => error !== null)
+    ['companies count', companiesResult.error],
+    ['cities count', citiesResult.error],
+    ['contributors count', contributorsResult.error],
+    ['salary entries count', salaryEntriesResult.error],
+    ['city salary averages', citySalaryResult.error],
+    ['role growth rates', roleGrowthResult.error],
+  ].filter((entry): entry is [string, NonNullable<(typeof entry)[1]>] => entry[1] !== null)
 
   if (queryErrors.length > 0) {
-    throw new Error(queryErrors.map((error) => error.message).join('; '))
+    throw new Error(queryErrors.map(([label, error]) => `${label}: ${String(error)}`).join('; '))
   }
 
-  const citySalaries = (citySalaryRows ?? [])
+  const citySalaries = (citySalaryResult.data ?? [])
     .map((row) => Number(row.avg_salary_lpa ?? 0))
     .filter((value) => value > 0)
-  const roleGrowthRates = (roleGrowthRows ?? [])
+  const roleGrowthRates = (roleGrowthResult.data ?? [])
     .map((row) => Number(row.yoy_growth_pct ?? 0))
     .filter((value) => value > 0)
 
@@ -53,10 +53,10 @@ export async function getGlobalStats(): Promise<GlobalStats> {
     : 0
 
   return {
-    total_contributors: contributorsCount ?? 0,
-    total_data_points: salaryEntriesCount ?? 0,
-    companies_tracked: companiesCount ?? 0,
-    cities_covered: citiesCount ?? 0,
+    total_contributors: contributorsResult.count ?? 0,
+    total_data_points: salaryEntriesResult.count ?? 0,
+    companies_tracked: companiesResult.count ?? 0,
+    cities_covered: citiesResult.count ?? 0,
     avg_salary_india: avgSalaryIndia,
     yoy_salary_growth: yoySalaryGrowth,
   }

@@ -21,6 +21,14 @@ const PERK_ICONS = {
   clock: Clock,
 } as const
 
+function getPerkIcon(iconKey: string) {
+  if (iconKey in PERK_ICONS) {
+    return PERK_ICONS[iconKey as keyof typeof PERK_ICONS]
+  }
+
+  return Award
+}
+
 const EMPTY_COMPANY_PAGE_CONTENT: CompanyPageContent = {
   avg_salary_trend: 0,
   salary_trend_badge: '0% CAGR',
@@ -260,7 +268,7 @@ export function CompanyPage() {
             <MonoLabel className="mb-4 block">PERKS & BENEFITS</MonoLabel>
             <div className="grid grid-cols-1 gap-3">
               {content.perks.map(perk => {
-                const Icon = PERK_ICONS[perk.icon_key as keyof typeof PERK_ICONS] ?? Award
+              const Icon = getPerkIcon(perk.icon_key)
                 return (
                   <div key={perk.label} className="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">

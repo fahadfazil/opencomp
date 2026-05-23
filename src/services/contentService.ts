@@ -15,12 +15,12 @@ async function getContent<T>(key: string): Promise<T | null> {
     .maybeSingle()
 
   if (error) {
-    console.warn(`Unable to load Supabase app content for key "${key}"`, error)
+    console.warn(`Unable to load Supabase app content for key "${key}". The UI will fall back to empty state data.`, error)
     return null
   }
 
   if (!data) {
-    console.warn(`Supabase app content key "${key}" was not found`)
+    console.warn(`Supabase app content key "${key}" was not found. Seed the app_content table to populate this view.`)
     return null
   }
 

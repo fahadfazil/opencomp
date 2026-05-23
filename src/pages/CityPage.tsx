@@ -401,5 +401,6 @@ export function CityPage() {
         )}
       </div>
     </div>
+    </div>
   )
 }

@@ -5,6 +5,7 @@ import {
   TrendingUp, Award, Activity, GitBranch, BookOpen, Star, Users, FileText,
   ChevronRight, Zap, PlusCircle
 } from 'lucide-react'
+import { IndiaMap } from '@/components/map/IndiaMap'
 import { SalaryTrendChart } from '@/components/charts'
 import { GlassCard, MonoLabel, Badge, LiveIndicator, Button } from '@/components/ui'
 import { TRENDING_INSIGHTS, SALARY_TREND_DATA } from '@/data/mockData'
@@ -15,7 +16,6 @@ import { useCompanies, useGlobalStats } from '@/hooks'
 import type { GlobalStats } from '@/types'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
-import indiaMapHeatmap from '@/assets/india-map-hero.png'
 
 const EMPTY_GLOBAL_STATS: GlobalStats = {
   total_contributors: 0,
@@ -24,27 +24,6 @@ const EMPTY_GLOBAL_STATS: GlobalStats = {
   cities_covered: 0,
   avg_salary_india: 0,
   yoy_salary_growth: 0,
-}
-
-const HERO_MAP_FILTER_UTILITIES = 'grayscale-[0.5] contrast-125'
-const HERO_MAP_INITIAL_OPACITY = 0.22
-const HERO_MAP_INITIAL_SCALE = 1.06
-const HERO_MAP_ANIMATION_DURATION = 22
-const HERO_MAP_EASE: [number, number, number, number] = [0.42, 0, 0.58, 1]
-const HERO_MAP_BREATHING_OPACITY_KEYFRAMES = [0.22, 0.34, 0.22]
-const HERO_MAP_BREATHING_SCALE_KEYFRAMES = [1.06, 1.1, 1.06]
-const HERO_MAP_HORIZONTAL_DRIFT_PX_KEYFRAMES = [0, -14, 0]
-const HERO_MAP_VERTICAL_DRIFT_PX_KEYFRAMES = [0, 8, 0]
-
-const HERO_MAP_ANIMATION = {
-  initial: { opacity: HERO_MAP_INITIAL_OPACITY, scale: HERO_MAP_INITIAL_SCALE },
-  animate: {
-    opacity: HERO_MAP_BREATHING_OPACITY_KEYFRAMES,
-    scale: HERO_MAP_BREATHING_SCALE_KEYFRAMES,
-    x: HERO_MAP_HORIZONTAL_DRIFT_PX_KEYFRAMES,
-    y: HERO_MAP_VERTICAL_DRIFT_PX_KEYFRAMES,
-  },
-  transition: { duration: HERO_MAP_ANIMATION_DURATION, repeat: Infinity, ease: HERO_MAP_EASE },
 }
 
 // Animated counter hook
@@ -88,14 +67,9 @@ export function HomePage() {
       <section className="relative min-h-screen flex flex-col">
         {/* Map Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <motion.img
-            src={indiaMapHeatmap}
-            alt="India salary intelligence heatmap"
-            initial={HERO_MAP_ANIMATION.initial}
-            animate={HERO_MAP_ANIMATION.animate}
-            transition={HERO_MAP_ANIMATION.transition}
-            className={cn('absolute inset-0 w-full h-full object-cover', HERO_MAP_FILTER_UTILITIES)}
-          />
+          <div className="absolute inset-0 opacity-30">
+            <IndiaMap compact />
+          </div>
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background" />

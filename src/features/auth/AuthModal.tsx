@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, GitBranch, Globe, Link, Shield, Lock } from 'lucide-react'
 import { useState } from 'react'
+import opencompFavicon from '@/assets/opencomp-favicon.png'
 const Github = GitBranch
 const Chrome = Globe
 const Linkedin = Link
@@ -47,9 +48,11 @@ export function AuthModal() {
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                    <GitBranch size={16} className="text-on-primary" strokeWidth={2.5} />
-                  </div>
+                  <img
+                    src={opencompFavicon}
+                    alt=""
+                    className="h-8 w-8 rounded-lg object-contain"
+                  />
                   <div>
                     <div className="font-bold text-on-surface">Sign In to OpenComp</div>
                     <div className="font-mono text-label-md text-on-surface-variant">

@@ -14,6 +14,8 @@ import { useUIStore } from '@/store'
 import { cn } from '@/utils'
 import { useCompanies, useGlobalStats } from '@/hooks'
 import type { GlobalStats } from '@/types'
+import opencompFavicon from '@/assets/opencomp-favicon.png'
+import opencompLogo from '@/assets/opencomp-logo.png'
 
 const EMPTY_GLOBAL_STATS: GlobalStats = {
   total_contributors: 0,
@@ -476,10 +478,16 @@ export function HomePage() {
       <footer className="border-t border-white/5 py-10 px-6 md:px-8 max-w-[1440px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="text-[8px] font-bold text-on-primary">OC</span>
-            </div>
-            <span className="font-bold text-on-surface">OpenComp</span>
+            <img
+              src={opencompFavicon}
+              alt=""
+              className="h-6 w-6 rounded-md object-contain"
+            />
+            <img
+              src={opencompLogo}
+              alt="OpenComp"
+              className="h-5 w-[6.25rem] object-cover object-center"
+            />
             <span className="text-on-surface-variant text-body-md">· Open-source workplace intelligence for India</span>
           </div>
           <div className="flex items-center gap-6">

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenComp - Bangalore Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Geist:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#212c61",
+                    "secondary": "#9ad2c3",
+                    "surface-container-low": "#191c20",
+                    "secondary-fixed": "#b6eedf",
+                    "inverse-primary": "#505b93",
+                    "on-error-container": "#ffdad6",
+                    "on-error": "#690005",
+                    "surface-tint": "#b9c3ff",
+                    "outline-variant": "#45464f",
+                    "surface-container-high": "#272a2e",
+                    "on-surface-variant": "#c6c5d1",
+                    "background": "#111417",
+                    "on-secondary-fixed-variant": "#164f44",
+                    "surface-container-highest": "#323539",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#00201a",
+                    "primary-container": "#aab5f3",
+                    "tertiary-fixed": "#e1e0ff",
+                    "secondary-fixed-dim": "#9ad2c3",
+                    "on-secondary": "#00382e",
+                    "on-primary-fixed-variant": "#384379",
+                    "primary-fixed": "#dde1ff",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "primary-fixed-dim": "#b9c3ff",
+                    "inverse-on-surface": "#2e3135",
+                    "error": "#ffb4ab",
+                    "on-background": "#e1e2e8",
+                    "on-tertiary": "#1000a9",
+                    "surface-variant": "#323539",
+                    "on-surface": "#e1e2e8",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-primary-fixed": "#08164b",
+                    "surface-container-lowest": "#0b0e12",
+                    "surface": "#111417",
+                    "on-tertiary-fixed": "#07006c",
+                    "secondary-container": "#195247",
+                    "primary": "#cbd2ff",
+                    "outline": "#90909a",
+                    "tertiary": "#d1d0ff",
+                    "surface-bright": "#36393e",
+                    "on-secondary-container": "#8cc3b5",
+                    "tertiary-container": "#b0b2ff",
+                    "on-tertiary-container": "#3131c1",
+                    "on-primary-container": "#3a457b",
+                    "inverse-surface": "#e1e2e8",
+                    "surface-container": "#1d2024",
+                    "surface-dim": "#111417"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "32px",
+                    "container-max": "1440px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "label-md": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-md": ["Geist"],
+                    "headline-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(26, 29, 33, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .active-pill {
+            background: linear-gradient(135deg, #cbd2ff 0%, #9ad2c3 100%);
+            color: #0f1113;
+        }
+        .mono-stat {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .map-gradient-overlay {
+            background: linear-gradient(to bottom, rgba(15, 17, 19, 0.9) 0%, transparent 20%, transparent 80%, rgba(15, 17, 19, 1) 100%);
+        }
+        .bottom-sheet {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bottom-sheet.collapsed {
+            transform: translateY(calc(100% - 64px));
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary selection:text-on-primary overflow-hidden">
+<!-- Top Navigation Bar (Shared Component Anchor) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-bold text-primary">OpenComp</span>
+<div class="flex items-center px-2 py-0.5 bg-primary-container/20 rounded border border-primary/20">
+<span class="font-label-md text-[10px] text-primary">BETA</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASz_5S8KH3GbddXKnyksE-ADYTsOo86_qkYwNBRTCqnGbq2qUWZnGk9xAhcDAZtdMtJobWLsWZ35OmGNfk0FqA9PEyimyMGl08VuZQByKj9mqA5xgJkVNzVOSVppjPRhbf6wEuS9Q2qyYO9ggV7GKLtRO4CJgu_-vGwStwVG05bKFTe6cVCh5flmPcBHhNkqDjd1Gn_QDmAeDlBD3gskBrL3CUWN5CRi29BoW7IEpb5LwDMK2mbhqZcadj4DQSac54pYqY-Pyj40oL"/>
+</div>
+</div>
+</header>
+<!-- Map Canvas -->
+<main class="relative h-screen w-full pt-16">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale brightness-50" data-alt="A detailed dark-themed digital map of Bangalore city with glowing neon blue and purple data overlays showing infrastructure. The aesthetic is high-tech and futuristic, utilizing a deep black base with cyan highlights for major roads. The mood is analytical and precise, evoking a high-performance workspace intelligence platform dashboard." data-location="Bangalore" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk4gcoWSgvrZHftVAZcVzdQ7asmFyF1BvDm5_JjCeWQuE8TcRFNFkhZJz2-0C8m-Tkmp-DmcLx3v25ER6aloQHPjqJgGJR0ulIx9ms7ZGUPRoiWWM8boFJ7pvi3NBHWbyvmn6LWrocp3codjly6i_R2GmISRRSblWTLKvfULgbHugqniQy29gYaVVGMfSHGyLbqJ1kEh9NJJSKByyi5SRF21IX2S_lo2Rdz3gjl9TPSmjTwmF55vFbTun8zmYKVZX-n3-GrBhZ9rfW"/>
+<div class="absolute inset-0 map-gradient-overlay pointer-events-none"></div>
+</div>
+<!-- City Selector & Layer Toggles -->
+<div class="absolute top-20 left-4 right-4 z-20 space-y-4">
+<!-- City Quick Nav -->
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="flex-none px-4 py-2 rounded-full active-pill font-label-md text-label-md whitespace-nowrap">Bangalore</button>
+<button class="flex-none px-4 py-2 rounded-full glass-panel text-on-surface-variant font-label-md text-label-md whitespace-nowrap">San Francisco</button>
+<button class="flex-none px-4 py-2 rounded-full glass-panel text-on-surface-variant font-label-md text-label-md whitespace-nowrap">Singapore</button>
+<button class="flex-none px-4 py-2 rounded-full glass-panel text-on-surface-variant font-label-md text-label-md whitespace-nowrap">London</button>
+</div>
+<!-- Layer Toggle -->
+<div class="glass-panel p-1 rounded-full flex items-center justify-between max-w-xs mx-auto">
+<button class="flex-1 py-1.5 rounded-full active-pill text-[10px] font-bold transition-all" id="btn-salary" onclick="toggleLayer('salary')">SALARY</button>
+<button class="flex-1 py-1.5 rounded-full text-on-surface-variant text-[10px] font-bold transition-all" id="btn-rent" onclick="toggleLayer('rent')">RENT</button>
+<button class="flex-1 py-1.5 rounded-full text-on-surface-variant text-[10px] font-bold transition-all" id="btn-density" onclick="toggleLayer('density')">DENSITY</button>
+</div>
+</div>
+<!-- Floating Info Cards (Stacked Pattern) -->
+<div class="absolute top-1/2 left-4 right-4 -translate-y-1/2 z-10 flex flex-col gap-3">
+<!-- Salary Card -->
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between border-l-4 border-l-primary animate-in slide-in-from-left duration-500">
+<div>
+<span class="font-label-md text-[10px] uppercase text-on-surface-variant tracking-widest">Avg Annual Salary</span>
+<h3 class="font-headline-md text-headline-md text-primary mono-stat">$24.2k</h3>
+<span class="text-[10px] text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +12.4% YoY
+                    </span>
+</div>
+<div class="w-20 h-10">
+<canvas class="opacity-50" id="miniSparkline"></canvas>
+</div>
+</div>
+<!-- Rent Card -->
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between border-l-4 border-l-secondary animate-in slide-in-from-left duration-700">
+<div>
+<span class="font-label-md text-[10px] uppercase text-on-surface-variant tracking-widest">Median Rent (2BHK)</span>
+<h3 class="font-headline-md text-headline-md text-secondary mono-stat">$480/mo</h3>
+<span class="text-[10px] text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +8.1% High Volatility
+                    </span>
+</div>
+<span class="material-symbols-outlined text-secondary-container text-4xl">home_work</span>
+</div>
+<!-- Safety Card -->
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between border-l-4 border-l-tertiary animate-in slide-in-from-left duration-1000">
+<div>
+<span class="font-label-md text-[10px] uppercase text-on-surface-variant tracking-widest">Safety Index</span>
+<h3 class="font-headline-md text-headline-md text-tertiary mono-stat">74/100</h3>
+<div class="flex gap-1 mt-1">
+<div class="h-1 w-6 rounded-full bg-tertiary"></div>
+<div class="h-1 w-6 rounded-full bg-tertiary"></div>
+<div class="h-1 w-6 rounded-full bg-tertiary"></div>
+<div class="h-1 w-6 rounded-full bg-tertiary/20"></div>
+</div>
+</div>
+<span class="material-symbols-outlined text-tertiary-container text-4xl" data-weight="fill">verified_user</span>
+</div>
+</div>
+<!-- Bottom Sheet (City Metrics) -->
+<div class="fixed inset-x-0 bottom-0 z-40 glass-panel rounded-t-[2rem] bottom-sheet collapsed shadow-[0_-20px_50px_rgba(0,0,0,0.5)]" id="bottomSheet">
+<div class="h-16 flex items-center justify-center cursor-pointer" onclick="toggleBottomSheet()">
+<div class="w-12 h-1 bg-outline-variant rounded-full mb-1"></div>
+<span class="absolute right-6 font-label-md text-primary text-[10px] uppercase">Details</span>
+</div>
+<div class="px-6 pb-24 h-[618px] overflow-y-auto space-y-8">
+<section>
+<div class="flex justify-between items-end mb-4">
+<h4 class="font-headline-md text-headline-md text-white">Market Depth</h4>
+<span class="font-label-md text-on-surface-variant">Real-time Feed</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-highest p-4 rounded-xl">
+<p class="text-[10px] text-on-surface-variant uppercase">Talent Pool</p>
+<p class="font-headline-md text-white mono-stat">1.2M</p>
+<div class="mt-2 text-[10px] text-secondary">Tech Core</div>
+</div>
+<div class="bg-surface-container-highest p-4 rounded-xl">
+<p class="text-[10px] text-on-surface-variant uppercase">Vibe Score</p>
+<p class="font-headline-md text-white mono-stat">A+</p>
+<div class="mt-2 text-[10px] text-primary">Premium Growth</div>
+</div>
+</div>
+</section>
+<section>
+<h4 class="font-headline-md text-headline-md text-white mb-4">Living Cost breakdown</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">restaurant</span>
+</div>
+<span class="font-body-md">Dining &amp; Groceries</span>
+</div>
+<span class="mono-stat text-white">$210/mo</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">commute</span>
+</div>
+<span class="font-body-md">Transportation</span>
+</div>
+<span class="mono-stat text-white">$45/mo</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">bolt</span>
+</div>
+<span class="font-body-md">Utilities (Broadband)</span>
+</div>
+<span class="mono-stat text-white">$32/mo</span>
+</div>
+</div>
+</section>
+<section>
+<h4 class="font-headline-md text-headline-md text-white mb-4">Tech Hub Density</h4>
+<div class="relative w-full h-40 rounded-xl overflow-hidden group">
+<img class="w-full h-full object-cover grayscale brightness-75 group-hover:scale-110 transition-transform duration-700" data-alt="A sleek futuristic aerial view of a corporate tech hub in Bangalore at dusk. Modern glass buildings are lit with cool white and electric blue lights. The scene is sharp and professional with a sense of high-density innovation and economic power. The image has a subtle cyan-purple tint to match the dashboard's aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlBZHxLV6G9GE_X3jJgkEsFSBiEcU6RJR5JzLk3wils4sMB7o5k3pFAYw_s1W-KrZ3LNIiZIytoctypW4-CIDwWoDu4tHR0o2yBtUlyPlnCH4FrfephwoOpCZw2T_-eQCy44FxGWoFb27fDvOqRN_yWN0d32woDkvKoX8TTXJqweyklVb6sWL1iU_CL9Mz4p7R_Awa_m_6UQM2Fl9kkfC_4-O86U6Ic8EUi508nJmGvB1HP1jHwlKrjxnphof_QNsgrF34jrS5lj55"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent flex flex-col justify-end p-4">
+<p class="font-label-md text-[10px] text-primary">MOST ACTIVE AREA</p>
+<p class="font-headline-md text-white">Whitefield IT Corridor</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Anchor) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-white/5 md:hidden h-16 flex justify-around items-center px-4">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-weight="fill">insights</span>
+<span class="font-label-md text-[10px]">Intelligence</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-md text-[10px]">Network</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-md text-[10px]">Data</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-[10px]">Analytics</span>
+</button>
+</nav>
+<script>
+        function toggleBottomSheet() {
+            const sheet = document.getElementById('bottomSheet');
+            sheet.classList.toggle('collapsed');
+        }
+
+        function toggleLayer(layer) {
+            const layers = ['salary', 'rent', 'density'];
+            layers.forEach(l => {
+                const btn = document.getElementById(`btn-${l}`);
+                if (l === layer) {
+                    btn.classList.add('active-pill');
+                    btn.classList.remove('text-on-surface-variant');
+                } else {
+                    btn.classList.remove('active-pill');
+                    btn.classList.add('text-on-surface-variant');
+                }
+            });
+            // Logic to update map layer visual would go here
+            console.log(`Switching map overlay to: ${layer}`);
+        }
+
+        // Simple Sparkline Simulation
+        function drawSparkline() {
+            const canvas = document.getElementById('miniSparkline');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.strokeStyle = '#cbd2ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, 30);
+            ctx.bezierCurveTo(20, 10, 40, 40, 60, 20);
+            ctx.bezierCurveTo(80, 0, 100, 25, 120, 15);
+            ctx.stroke();
+        }
+
+        window.onload = drawSparkline;
+    </script>
+</body></html>

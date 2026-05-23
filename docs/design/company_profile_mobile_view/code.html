@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenComp | Company Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-primary": "#212c61",
+                "secondary": "#9ad2c3",
+                "surface-container-low": "#191c20",
+                "secondary-fixed": "#b6eedf",
+                "inverse-primary": "#505b93",
+                "on-error-container": "#ffdad6",
+                "on-error": "#690005",
+                "surface-tint": "#b9c3ff",
+                "outline-variant": "#45464f",
+                "surface-container-high": "#272a2e",
+                "on-surface-variant": "#c6c5d1",
+                "background": "#111417",
+                "on-secondary-fixed-variant": "#164f44",
+                "surface-container-highest": "#323539",
+                "error-container": "#93000a",
+                "on-secondary-fixed": "#00201a",
+                "primary-container": "#aab5f3",
+                "tertiary-fixed": "#e1e0ff",
+                "secondary-fixed-dim": "#9ad2c3",
+                "on-secondary": "#00382e",
+                "on-primary-fixed-variant": "#384379",
+                "primary-fixed": "#dde1ff",
+                "tertiary-fixed-dim": "#c0c1ff",
+                "primary-fixed-dim": "#b9c3ff",
+                "inverse-on-surface": "#2e3135",
+                "error": "#ffb4ab",
+                "on-background": "#e1e2e8",
+                "on-tertiary": "#1000a9",
+                "surface-variant": "#323539",
+                "on-surface": "#e1e2e8",
+                "on-tertiary-fixed-variant": "#2f2ebe",
+                "on-primary-fixed": "#08164b",
+                "surface-container-lowest": "#0b0e12",
+                "surface": "#111417",
+                "on-tertiary-fixed": "#07006c",
+                "secondary-container": "#195247",
+                "primary": "#cbd2ff",
+                "outline": "#90909a",
+                "tertiary": "#d1d0ff",
+                "surface-bright": "#36393e",
+                "on-secondary-container": "#8cc3b5",
+                "tertiary-container": "#b0b2ff",
+                "on-tertiary-container": "#3131c1",
+                "on-primary-container": "#3a457b",
+                "inverse-surface": "#e1e2e8",
+                "surface-container": "#1d2024",
+                "surface-dim": "#111417"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "margin-desktop": "32px",
+                "container-max": "1440px",
+                "margin-mobile": "16px",
+                "unit": "4px",
+                "gutter": "16px"
+            },
+            "fontFamily": {
+                "headline-lg": ["Geist"],
+                "body-lg": ["Geist"],
+                "display-lg": ["Geist"],
+                "label-md": ["JetBrains Mono"],
+                "headline-lg-mobile": ["Geist"],
+                "body-md": ["Geist"],
+                "headline-md": ["Geist"]
+            },
+            "fontSize": {
+                "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(26, 29, 33, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .active-tab-indicator {
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #cbd2ff;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md scroll-hide overflow-x-hidden selection:bg-primary-container/30">
+<!-- Top Navigation (Shell Implementation) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 px-margin-mobile h-16 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-primary leading-none">OpenComp</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="settings">settings</span>
+</div>
+</header>
+<main class="mt-16 pb-32 px-margin-mobile">
+<!-- Summary Header Section -->
+<section class="py-6">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-surface-container-high border border-white/10 flex items-center justify-center p-2">
+<img alt="Company Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm4osCiblv23aOIyyVg5MFl54ihPKzPuFTLzvAsGWRwS4A0qugG8BKmEgVm6JhGzy5pVzyEAiYQH__QoI7UMtEkueQPhTTNKYVgXN66pTU_pziM4tMyPVQ3bQucEz0uMr98b7W-ac6ZJ3d3ywIcAbw22YY5amVG98-542dkHVajuyUozDcvQp5XfhVVXMPBb8aWPfpgN6nJfME4lMIAMUo34Bakc1qUrjxnskbjg_DDF3TWsLxG7VQi64Bp8SJlsKNYFRRCSpNoi5V"/>
+</div>
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile">Stellar Systems</h1>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Enterprise Software • San Francisco</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-secondary font-display-lg text-headline-lg leading-none">94</div>
+<span class="font-label-md text-label-md text-on-surface-variant">OS CORE</span>
+</div>
+</div>
+<!-- Profile Summary Bento -->
+<div class="grid grid-cols-2 gap-3">
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Avg. Total Comp</span>
+<div class="mt-2 font-headline-md text-headline-md font-bold text-primary">$182k</div>
+<div class="mt-1 text-secondary text-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+<span>Top 5% in Sector</span>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between">
+<span class="text-on-surface-variant font-label-md text-label-md">Equity Multiplier</span>
+<div class="mt-2 font-headline-md text-headline-md font-bold text-primary">1.4x</div>
+<div class="mt-1 text-on-surface-variant text-xs">Standard ISO Pool</div>
+</div>
+</div>
+</section>
+<!-- Tabbed Navigation -->
+<nav class="sticky top-16 z-40 bg-background/95 backdrop-blur-md -mx-margin-mobile px-margin-mobile border-b border-white/5 mb-6">
+<div class="flex overflow-x-auto scroll-hide gap-8 h-12">
+<button class="relative flex items-center h-full whitespace-nowrap text-primary font-bold border-b-2 border-primary">
+<span class="font-label-md text-label-md">Salary</span>
+</button>
+<button class="relative flex items-center h-full whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors">
+<span class="font-label-md text-label-md">Culture</span>
+</button>
+<button class="relative flex items-center h-full whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors">
+<span class="font-label-md text-label-md">Perks</span>
+</button>
+<button class="relative flex items-center h-full whitespace-nowrap text-on-surface-variant hover:text-primary transition-colors">
+<span class="font-label-md text-label-md">Insights</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="space-y-6">
+<!-- Salary Distribution Chart -->
+<div class="glass-panel rounded-xl p-5">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-body-lg font-bold">Salary Distribution</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="info">info</span>
+</div>
+<!-- Simple Bar Chart -->
+<div class="h-48 flex items-end justify-between gap-1 mb-4">
+<div class="w-full bg-primary/20 rounded-t-sm h-[30%]"></div>
+<div class="w-full bg-primary/40 rounded-t-sm h-[45%]"></div>
+<div class="w-full bg-primary/60 rounded-t-sm h-[60%]"></div>
+<div class="w-full bg-primary rounded-t-sm h-[90%] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-container-highest px-2 py-1 rounded text-[10px] font-label-md border border-primary/30">YOU</div>
+</div>
+<div class="w-full bg-primary/60 rounded-t-sm h-[70%]"></div>
+<div class="w-full bg-primary/40 rounded-t-sm h-[40%]"></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[20%]"></div>
+</div>
+<div class="flex justify-between text-[10px] font-label-md text-on-surface-variant border-t border-white/10 pt-2">
+<span>$120K</span>
+<span>$180K (MEDIAN)</span>
+<span>$300K+</span>
+</div>
+</div>
+<!-- Role Specific Data -->
+<div class="space-y-4">
+<h3 class="font-headline-md text-body-lg font-bold">Roles in Intelligence</h3>
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="p-4 border-b border-white/10 flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-body-md font-bold">Sr. Data Scientist</span>
+<span class="text-xs text-on-surface-variant">L5 Leveling</span>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-secondary">$195k - $240k</span>
+</div>
+</div>
+<div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+<div class="flex flex-col">
+<span class="font-body-md font-bold">ML Engineer</span>
+<span class="text-xs text-on-surface-variant">L4 Leveling</span>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-secondary">$170k - $210k</span>
+</div>
+</div>
+<div class="p-4 flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-body-md font-bold">Product Intelligence</span>
+<span class="text-xs text-on-surface-variant">L6 Leveling</span>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-secondary">$220k - $280k</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Insights Section -->
+<div class="glass-panel rounded-xl p-5 relative overflow-hidden group">
+<!-- Abstract Background Glow -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[80px] rounded-full"></div>
+<h3 class="font-headline-md text-body-lg font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+                    Market Sentiment
+                </h3>
+<p class="text-on-surface-variant font-body-md leading-relaxed mb-6">
+                    Compensation growth at Stellar Systems has outpaced the general AI sector by <span class="text-primary font-bold">12.4%</span> over the last two quarters. Burn rate remains optimized with a 36-month runway.
+                </p>
+<div class="flex gap-4">
+<div class="flex-1 p-3 bg-surface-container-lowest rounded-lg border border-white/5">
+<span class="text-[10px] font-label-md text-on-surface-variant block uppercase">Retention</span>
+<span class="font-headline-md text-primary">92%</span>
+</div>
+<div class="flex-1 p-3 bg-surface-container-lowest rounded-lg border border-white/5">
+<span class="text-[10px] font-label-md text-on-surface-variant block uppercase">Work Life</span>
+<span class="font-headline-md text-secondary">4.2/5</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Actions -->
+<div class="fixed bottom-0 left-0 w-full z-50 p-margin-mobile">
+<div class="flex gap-3">
+<button class="flex-1 h-14 rounded-xl glass-panel font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-2 transition-transform active:scale-95 border border-white/20">
+<span class="material-symbols-outlined text-primary" data-icon="compare_arrows">compare_arrows</span>
+                Compare
+            </button>
+<button class="flex-[1.5] h-14 rounded-xl bg-gradient-to-r from-primary to-tertiary-container text-on-primary font-label-md text-label-md font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(203,210,255,0.3)] transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="add" style="font-variation-settings: 'FILL' 1;">add</span>
+                Contribute
+            </button>
+</div>
+</div>
+<!-- Hidden Footer Links (for complete Shell visibility logic) -->
+<footer class="mt-12 mb-32 opacity-20 px-margin-mobile flex justify-center gap-4 text-[10px] font-label-md uppercase">
+<span>© 2024 OpenComp</span>
+<span>•</span>
+<span>MIT License</span>
+</footer>
+<!-- Bottom Navigation Bar (Shell Visibility) -->
+<nav class="fixed bottom-0 left-0 w-full md:hidden bg-surface/90 backdrop-blur-xl border-t border-white/5 px-6 h-20 flex justify-between items-center z-[60] pb-2">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="text-[10px] font-label-md">Intelligence</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="hub" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="text-[10px] font-label-md">Network</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+<span class="text-[10px] font-label-md">Data Streams</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="text-[10px] font-label-md">Analytics</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for tabs
+        const tabs = document.querySelectorAll('nav button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                    t.classList.add('text-on-surface-variant');
+                });
+                tab.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                tab.classList.remove('text-on-surface-variant');
+            });
+        });
+
+        // Simple scroll observer for sticky nav shadow
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav.sticky');
+            if (window.scrollY > 100) {
+                nav.classList.add('shadow-xl');
+            } else {
+                nav.classList.remove('shadow-xl');
+            }
+        });
+    </script>
+</body></html>

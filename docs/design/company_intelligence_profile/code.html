@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#212c61",
+                    "secondary": "#9ad2c3",
+                    "surface-container-low": "#191c20",
+                    "secondary-fixed": "#b6eedf",
+                    "inverse-primary": "#505b93",
+                    "on-error-container": "#ffdad6",
+                    "on-error": "#690005",
+                    "surface-tint": "#b9c3ff",
+                    "outline-variant": "#45464f",
+                    "surface-container-high": "#272a2e",
+                    "on-surface-variant": "#c6c5d1",
+                    "background": "#111417",
+                    "on-secondary-fixed-variant": "#164f44",
+                    "surface-container-highest": "#323539",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#00201a",
+                    "primary-container": "#aab5f3",
+                    "tertiary-fixed": "#e1e0ff",
+                    "secondary-fixed-dim": "#9ad2c3",
+                    "on-secondary": "#00382e",
+                    "on-primary-fixed-variant": "#384379",
+                    "primary-fixed": "#dde1ff",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "primary-fixed-dim": "#b9c3ff",
+                    "inverse-on-surface": "#2e3135",
+                    "error": "#ffb4ab",
+                    "on-background": "#e1e2e8",
+                    "on-tertiary": "#1000a9",
+                    "surface-variant": "#323539",
+                    "on-surface": "#e1e2e8",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-primary-fixed": "#08164b",
+                    "surface-container-lowest": "#0b0e12",
+                    "surface": "#111417",
+                    "on-tertiary-fixed": "#07006c",
+                    "secondary-container": "#195247",
+                    "primary": "#cbd2ff",
+                    "outline": "#90909a",
+                    "tertiary": "#d1d0ff",
+                    "surface-bright": "#36393e",
+                    "on-secondary-container": "#8cc3b5",
+                    "tertiary-container": "#b0b2ff",
+                    "on-tertiary-container": "#3131c1",
+                    "on-primary-container": "#3a457b",
+                    "inverse-surface": "#e1e2e8",
+                    "surface-container": "#1d2024",
+                    "surface-dim": "#111417"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "32px",
+                    "container-max": "1440px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "label-md": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-md": ["Geist"],
+                    "headline-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(26, 29, 33, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+        .radar-grid {
+            background-image: radial-gradient(circle, rgba(203, 210, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .curve-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s ease-out forwards;
+        }
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 flex flex-col p-unit bg-surface-container-low/60 backdrop-blur-2xl border-r border-white/10 shadow-xl hidden md:flex">
+<div class="flex items-center gap-3 px-4 py-6">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl" style="font-variation-settings: 'FILL' 1;">hub</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary leading-none">OpenComp</h1>
+<p class="font-label-md text-label-md opacity-60">Intelligence Platform</p>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-md text-label-md">Intelligence</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-primary bg-primary-container/20 rounded-lg translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-md text-label-md">Network</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-md text-label-md">Data Streams</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined">code</span>
+<span class="font-label-md text-label-md">Open Source</span>
+</a>
+</nav>
+<div class="px-4 py-6 mt-auto border-t border-white/5">
+<button class="w-full py-3 px-4 bg-primary text-on-primary rounded font-label-md text-label-md hover:brightness-110 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                Contribute Data
+            </button>
+<div class="mt-6 flex flex-col gap-3">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span>
+<span class="font-label-md text-label-md">Help</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-label-md text-label-md">Status</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm md:pl-[280px]">
+<div class="flex items-center gap-4">
+<div class="md:hidden w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-xl">hub</span>
+</div>
+<h2 class="font-headline-md text-headline-md font-bold text-primary">OpenComp</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-lowest border border-white/10 rounded-full pl-10 pr-4 py-1.5 text-body-md focus:outline-none focus:ring-1 focus:ring-primary w-64 font-label-md" placeholder="Search companies..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-white/10">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqQso_YFdWcqcC_R2CcYrjFa0wqJvSkSen3d-VH1iYvi02F09r46remietcdnm9iBY8nmOqtXVAL8hBZCIVTsqPE0a4fmD_oeRAMkXLhTC2HmtxYd0hLkwgFsEYLWT5gOhYrkqe2l-5CLVmV1fe64DNKVEKXyi4qvL5TWBFV8ljgS91g77auTuc5yx63nlqKZGWZjO_REPfKm-NISwSspINVoQx-bU4f4V_bOr--rNrjqHxvBfzinF4Andf9EBDsUUdNnbpCr5ZQ6n"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 px-margin-mobile md:pl-[288px] md:pr-margin-desktop min-h-screen">
+<!-- Header Hero Section -->
+<section class="mb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span> Verified Entity
+                        </span>
+<span class="text-on-surface-variant font-label-md text-label-md">Series D • AI &amp; Automation</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-primary">Synthetix Cloud Systems</h1>
+<p class="font-body-lg text-body-lg opacity-70 max-w-2xl mt-2">Specializing in autonomous cloud optimization and neural network infrastructure at global scale.</p>
+</div>
+<div class="glass-panel rounded-xl p-6 flex items-center gap-6 border border-white/10">
+<div class="text-center">
+<div class="font-display-lg text-display-lg text-secondary">8.4</div>
+<div class="font-label-md text-label-md opacity-60 uppercase tracking-widest">OpenComp Score</div>
+</div>
+<div class="h-12 w-[1px] bg-white/10"></div>
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-md text-label-md">Top 5% Salary Growth</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-md text-label-md">1.2x Equity Multiplier</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Main -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Salary Distribution (Large Bento) -->
+<div class="md:col-span-8 glass-panel rounded-xl p-6 inner-glow border border-white/10 flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Salary Distribution</h3>
+<p class="font-label-md text-label-md opacity-50">L4 Software Engineer (San Francisco, CA)</p>
+</div>
+<div class="text-right">
+<div class="font-headline-md text-headline-md text-secondary">$195k - $240k</div>
+<div class="font-label-md text-label-md opacity-50">Median Base Range</div>
+</div>
+</div>
+<div class="flex-1 min-h-[240px] relative mt-4">
+<!-- Bell Curve Visual -->
+<svg class="w-full h-full overflow-visible" viewbox="0 0 800 200">
+<path class="curve-path" d="M0,180 Q200,180 400,40 T800,180" fill="none" stroke="url(#gradient-blue)" stroke-width="3"></path>
+<defs>
+<lineargradient id="gradient-blue" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" style="stop-color:rgba(203, 210, 255, 0.2)"></stop>
+<stop offset="50%" style="stop-color:rgba(203, 210, 255, 1)"></stop>
+<stop offset="100%" style="stop-color:rgba(203, 210, 255, 0.2)"></stop>
+</lineargradient>
+</defs>
+<!-- Median Marker -->
+<line stroke="rgba(255,255,255,0.2)" stroke-dasharray="4" x1="400" x2="400" y1="40" y2="180"></line>
+<circle cx="400" cy="40" fill="#cbd2ff" r="4"></circle>
+<rect fill="#1d2024" height="20" rx="4" width="60" x="370" y="10"></rect>
+<text fill="#cbd2ff" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="400" y="24">P50</text>
+</svg>
+<!-- Axes -->
+<div class="absolute bottom-0 left-0 w-full flex justify-between px-2 pt-4 border-t border-white/5">
+<span class="font-label-md text-label-md opacity-30">$140k</span>
+<span class="font-label-md text-label-md opacity-30">$180k</span>
+<span class="font-label-md text-label-md text-primary">$210k</span>
+<span class="font-label-md text-label-md opacity-30">$240k</span>
+<span class="font-label-md text-label-md opacity-30">$280k</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/5">
+<div>
+<div class="font-label-md text-label-md opacity-50 mb-1">Bonus Structure</div>
+<div class="font-headline-md text-headline-md text-primary">15-25%</div>
+</div>
+<div>
+<div class="font-label-md text-label-md opacity-50 mb-1">Equity (4yr)</div>
+<div class="font-headline-md text-headline-md text-primary">$280k</div>
+</div>
+<div>
+<div class="font-label-md text-label-md opacity-50 mb-1">Total Comp</div>
+<div class="font-headline-md text-headline-md text-secondary">$315k</div>
+</div>
+</div>
+</div>
+<!-- Culture Radar (Medium Bento) -->
+<div class="md:col-span-4 glass-panel rounded-xl p-6 inner-glow border border-white/10 flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Culture DNA</h3>
+<div class="flex-1 flex items-center justify-center relative radar-grid rounded-lg border border-white/5 p-4">
+<svg class="w-full h-full max-w-[200px]" viewbox="0 0 100 100">
+<!-- Radar Concentric Circles -->
+<circle cx="50" cy="50" fill="none" r="10" stroke="rgba(255,255,255,0.05)"></circle>
+<circle cx="50" cy="50" fill="none" r="20" stroke="rgba(255,255,255,0.05)"></circle>
+<circle cx="50" cy="50" fill="none" r="30" stroke="rgba(255,255,255,0.05)"></circle>
+<circle cx="50" cy="50" fill="none" r="40" stroke="rgba(255,255,255,0.1)"></circle>
+<!-- Axis Lines -->
+<line stroke="rgba(255,255,255,0.05)" x1="50" x2="50" y1="10" y2="90"></line>
+<line stroke="rgba(255,255,255,0.05)" x1="10" x2="90" y1="50" y2="50"></line>
+<!-- Radar Polygon - Engineering -->
+<polygon fill="rgba(154, 210, 195, 0.2)" points="50,15 85,50 50,80 20,50" stroke="#9ad2c3" stroke-width="1"></polygon>
+<!-- Radar Polygon - Sales (Smaller) -->
+<polygon fill="rgba(203, 210, 255, 0.2)" points="50,30 65,50 50,60 40,50" stroke="#cbd2ff" stroke-width="1"></polygon>
+</svg>
+<!-- Labels -->
+<div class="absolute top-2 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-60 uppercase">Innovation</div>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-60 uppercase">WLB</div>
+<div class="absolute left-2 top-1/2 -translate-y-1/2 font-label-md text-[10px] opacity-60 uppercase -rotate-90">Velocity</div>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 font-label-md text-[10px] opacity-60 uppercase rotate-90">Stability</div>
+</div>
+<div class="mt-6 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded bg-secondary"></span>
+<span class="font-label-md text-label-md">Engineering</span>
+</div>
+<span class="font-label-md text-label-md text-secondary">A+</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded bg-primary"></span>
+<span class="font-label-md text-label-md">Product/Sales</span>
+</div>
+<span class="font-label-md text-label-md text-primary">B-</span>
+</div>
+</div>
+</div>
+<!-- Health Metrics (Grid within Bento) -->
+<div class="md:col-span-4 glass-panel rounded-xl p-6 inner-glow border border-white/10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Internal Metrics</h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-md text-label-md">Manager Friendliness</span>
+<span class="font-label-md text-label-md text-secondary">8.8</span>
+</div>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-md text-label-md">Learning Ops</span>
+<span class="font-label-md text-label-md text-secondary">7.5</span>
+</div>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 75%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2">
+<span class="font-label-md text-label-md">Promotion Fairness</span>
+<span class="font-label-md text-label-md text-primary">6.2</span>
+</div>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 62%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-2 text-error">
+<span class="font-label-md text-label-md">Politics/Toxicity</span>
+<span class="font-label-md text-label-md">2.1</span>
+</div>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error" style="width: 21%"></div>
+</div>
+<div class="mt-1 font-label-md text-[10px] opacity-40">Lower is better for Toxicity</div>
+</div>
+</div>
+</div>
+<!-- Perks (Grid within Bento) -->
+<div class="md:col-span-4 glass-panel rounded-xl p-6 inner-glow border border-white/10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Employee Perks</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-white/5 flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary">home_work</span>
+<div class="font-label-md text-label-md font-bold">Remote-First</div>
+<div class="font-label-md text-[11px] opacity-50">Work anywhere, $2k setup stipend.</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-white/5 flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary">health_and_safety</span>
+<div class="font-label-md text-label-md font-bold">Gold Health</div>
+<div class="font-label-md text-[11px] opacity-50">100% premium paid for family.</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-white/5 flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary">restaurant</span>
+<div class="font-label-md text-label-md font-bold">Daily Stipend</div>
+<div class="font-label-md text-[11px] opacity-50">$30/day DoorDash credit.</div>
+</div>
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-white/5 flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary">fitness_center</span>
+<div class="font-label-md text-label-md font-bold">Wellness Hub</div>
+<div class="font-label-md text-[11px] opacity-50">Equinox membership included.</div>
+</div>
+</div>
+</div>
+<!-- Employee Insights (Horizontal Carousel) -->
+<div class="md:col-span-4 glass-panel rounded-xl p-6 inner-glow border border-white/10">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface">Live Insights</h3>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:bg-white/5">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded border border-white/10 flex items-center justify-center hover:bg-white/5">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-highest/30 p-4 rounded-lg border-l-2 border-secondary">
+<p class="font-body-md text-body-md italic mb-3 opacity-90">"Engineers here are treated like partners, not resources. The stack is cutting edge (Rust/K8s) and the PPO insurance is genuinely best-in-class."</p>
+<div class="flex justify-between items-center">
+<span class="font-label-md text-[11px] opacity-40">Staff Engineer • 2y ago</span>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="font-label-md text-[11px]">42</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-highest/30 p-4 rounded-lg border-l-2 border-primary">
+<p class="font-body-md text-body-md italic mb-3 opacity-90">"Fast growth means processes can be messy. If you need a manual for everything, you won't survive. High agency is required."</p>
+<div class="flex justify-between items-center">
+<span class="font-label-md text-[11px] opacity-40">Product Lead • 8m ago</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span class="font-label-md text-[11px]">18</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Visual Section: Team Distribution -->
+<section class="mt-gutter grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="md:col-span-3 glass-panel rounded-xl p-8 border border-white/10 overflow-hidden relative">
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Workforce Map</h3>
+<p class="font-label-md text-label-md opacity-50 mb-8">Global distribution by head-count &amp; seniority</p>
+<div class="flex items-end gap-2 h-40">
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-sm relative group" style="height: 40%">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">US East</div>
+</div>
+<div class="flex-1 bg-primary/40 hover:bg-primary/60 transition-all rounded-t-sm relative group" style="height: 85%">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">US West</div>
+</div>
+<div class="flex-1 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-sm relative group" style="height: 30%">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">Europe</div>
+</div>
+<div class="flex-1 bg-secondary/30 hover:bg-secondary/50 transition-all rounded-t-sm relative group" style="height: 60%">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">APAC</div>
+</div>
+<div class="flex-1 bg-primary/10 hover:bg-primary/20 transition-all rounded-t-sm relative group" style="height: 15%">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 font-label-md text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">LATAM</div>
+</div>
+</div>
+</div>
+<!-- Abstract visual background -->
+<div class="absolute right-0 top-0 w-1/2 h-full opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="A highly detailed 3D abstract mesh network with glowing blue nodes and intricate wireframe connections, set against a deep charcoal background. The lighting is dramatic, highlighting the crystalline structure of the network. The aesthetic is futuristic and high-tech, aligning with a professional data analysis platform's dark-mode theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ1Kem_eVIhUoZfwO0AfkhFYD5dSYMOdqu1jd5NDhVTbJp_fnPaC8KeQDKLCaYfMmYn1CVDY7EFgaCTne_-IlneVFC9PLIymFX0GvVzoT991Mw38p8h2QqRANJeLO5mIRH6KeW9GHr6zfXbsW88NvXdD_GELmDPTP0p2064t3YoHJsG8CL7wsNlyenfmxyY3r3rxzOZ4-WcAyhy6Rgw2I2ewwEBIhfjE65-5NCMWlt-QNx9ylGvxY1IFRSeFkjZUqZZJMhU5VwCh5Y"/>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-8 border border-white/10 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-4xl text-secondary mb-4">analytics</span>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">Compare Data</h4>
+<p class="font-body-md text-body-md opacity-60 mb-6">See how your current offer stacks up against Synthetix Cloud.</p>
+<button class="w-full py-3 bg-surface-container-highest border border-white/10 rounded font-label-md text-label-md hover:bg-white/5 transition-all">
+                    Launch Simulator
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-gutter px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface border-t border-outline-variant md:pl-[288px]">
+<div class="flex flex-col md:flex-row items-center gap-6">
+<span class="font-label-md text-label-md text-on-surface">OpenComp</span>
+<span class="font-body-md text-body-md text-on-surface-variant opacity-60">© 2024 OpenComp Intelligence. Open Source under MIT.</span>
+</div>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-all opacity-80 hover:opacity-100" href="#">GitHub</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-all opacity-80 hover:opacity-100" href="#">Documentation</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-all opacity-80 hover:opacity-100" href="#">Privacy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-all opacity-80 hover:opacity-100" href="#">Terms</a>
+</div>
+</footer>
+<script>
+        // Micro-interactions for radar chart and hover effects
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mouseenter', () => {
+                panel.style.transform = 'translateY(-2px)';
+                panel.style.transition = 'transform 0.3s ease';
+            });
+            panel.addEventListener('mouseleave', () => {
+                panel.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Simple carousel logic placeholder
+        let currentInsight = 0;
+        const insights = document.querySelectorAll('.live-insight');
+        // Logic for navigation can be added here if multiple items are rendered
+    </script>
+</body></html>

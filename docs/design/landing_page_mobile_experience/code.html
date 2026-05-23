@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OpenComp | Mobile Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#212c61",
+                    "secondary": "#9ad2c3",
+                    "surface-container-low": "#191c20",
+                    "secondary-fixed": "#b6eedf",
+                    "inverse-primary": "#505b93",
+                    "on-error-container": "#ffdad6",
+                    "on-error": "#690005",
+                    "surface-tint": "#b9c3ff",
+                    "outline-variant": "#45464f",
+                    "surface-container-high": "#272a2e",
+                    "on-surface-variant": "#c6c5d1",
+                    "background": "#111417",
+                    "on-secondary-fixed-variant": "#164f44",
+                    "surface-container-highest": "#323539",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#00201a",
+                    "primary-container": "#aab5f3",
+                    "tertiary-fixed": "#e1e0ff",
+                    "secondary-fixed-dim": "#9ad2c3",
+                    "on-secondary": "#00382e",
+                    "on-primary-fixed-variant": "#384379",
+                    "primary-fixed": "#dde1ff",
+                    "tertiary-fixed-dim": "#c0c1ff",
+                    "primary-fixed-dim": "#b9c3ff",
+                    "inverse-on-surface": "#2e3135",
+                    "error": "#ffb4ab",
+                    "on-background": "#e1e2e8",
+                    "on-tertiary": "#1000a9",
+                    "surface-variant": "#323539",
+                    "on-surface": "#e1e2e8",
+                    "on-tertiary-fixed-variant": "#2f2ebe",
+                    "on-primary-fixed": "#08164b",
+                    "surface-container-lowest": "#0b0e12",
+                    "surface": "#111417",
+                    "on-tertiary-fixed": "#07006c",
+                    "secondary-container": "#195247",
+                    "primary": "#cbd2ff",
+                    "outline": "#90909a",
+                    "tertiary": "#d1d0ff",
+                    "surface-bright": "#36393e",
+                    "on-secondary-container": "#8cc3b5",
+                    "tertiary-container": "#b0b2ff",
+                    "on-tertiary-container": "#3131c1",
+                    "on-primary-container": "#3a457b",
+                    "inverse-surface": "#e1e2e8",
+                    "surface-container": "#1d2024",
+                    "surface-dim": "#111417"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "32px",
+                    "container-max": "1440px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "label-md": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Geist"],
+                    "body-md": ["Geist"],
+                    "headline-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(26, 29, 33, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .map-bg {
+            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .heatmap-node {
+            box-shadow: 0 0 15px currentColor;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary/30 min-h-screen overflow-x-hidden">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="font-headline-md text-headline-md font-bold text-primary">OpenComp</div>
+<div class="flex gap-4 items-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2OnzhUMfhhd39RSmyo-3Z33xRTeyvnxboHGwyy2UXy7e_tdKeSpFIB_0Bm4xWQGxBF-yUIGg66QuTG1ymSVfxaSDnu_7tCOvWo_rOHtOXd9gF0Vy77XqRH4vY8jP9w4awwkGPfvOxxzpG9GhGusM1YjlXaqvf6fIHNmONfQYF_pJsQWjxSgw596PwqiEkQuSju7agmePtB3e7LVYN49e78sIpFvX2BS7IADhoaCWzBXx3pMHR6pl5pQ_pP70_yBO4h8Qd28CLotPi"/>
+</div>
+</div>
+</header>
+<main class="pt-16 pb-24">
+<!-- Hero & Map Section -->
+<section class="relative h-[574px] w-full overflow-hidden flex flex-col items-center justify-center px-margin-mobile">
+<!-- Immersive Map Background -->
+<div class="absolute inset-0 z-0 map-bg">
+<img class="w-full h-full object-cover opacity-40 grayscale contrast-125" data-alt="A highly detailed 3D topographic digital map showing global city density with neon electric blue glowing salary heatmap nodes. The aesthetic is a premium dark-mode interface with atmospheric depth, featuring a dark graphite landscape illuminated by cyan and purple light pulses representing data flow. The scene is cinematic and precise, resembling a futuristic financial intelligence command center." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHY8CFijeZs2kqeZaAykDC66p2weIs77HH9nHYG9tJmbMj8RzRowFsoGq-e_IG-ybvn9Nr3xB9Ks-fV8IKjO86id4qVYhhrf9Ll1C4IPV4a3sKQolx7Wvbv4Ufa3qc1E7NOWWfadsJrtLebgOWjH7bbQeAXzQZX9ojnX9RL5DgKwWyBqm688kwbTFEpNIG2zrNcdYQmFA2U5aXkTSDq8kIirW-nE-lBZ_ojYItnj-3rPjMwUctbVavGry4uHSGykRMpVl7oTCyRCRe"/>
+<!-- Decorative Heatmap Overlays -->
+<div class="absolute top-1/3 left-1/4 w-3 h-3 bg-primary rounded-full heatmap-node opacity-70 animate-pulse"></div>
+<div class="absolute top-1/2 left-1/2 w-4 h-4 bg-secondary rounded-full heatmap-node opacity-60 animate-pulse delay-700"></div>
+<div class="absolute top-2/3 left-1/3 w-2 h-2 bg-tertiary rounded-full heatmap-node opacity-80 animate-pulse delay-300"></div>
+</div>
+<!-- Content Overlay -->
+<div class="relative z-10 w-full flex flex-col items-center text-center">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile mb-2 drop-shadow-lg max-w-[280px]">
+                    Community-owned workplace intelligence
+                </h1>
+<!-- Floating Search Bar -->
+<div class="w-full max-w-md mt-8 px-4">
+<div class="glass-panel rounded-full flex items-center px-5 py-3 shadow-xl ring-1 ring-white/20 focus-within:ring-primary/50 transition-all">
+<span class="material-symbols-outlined text-primary mr-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder:text-on-surface-variant/60" placeholder="Search roles, locations, or salary ranges..." type="text"/>
+<span class="material-symbols-outlined text-on-surface-variant ml-2 text-xl">tune</span>
+</div>
+</div>
+<!-- Live Stats Simplified -->
+<div class="mt-8 flex gap-6 overflow-x-auto w-full no-scrollbar px-4 justify-center">
+<div class="flex flex-col items-center min-w-[80px]">
+<span class="font-label-md text-label-md text-secondary">LIVE</span>
+<span class="font-headline-md text-headline-md font-bold tracking-tighter">1.2M</span>
+<span class="text-[10px] uppercase tracking-widest text-on-surface-variant">Data Points</span>
+</div>
+<div class="w-[1px] h-10 bg-white/10 self-center"></div>
+<div class="flex flex-col items-center min-w-[80px]">
+<span class="font-label-md text-label-md text-primary">TREND</span>
+<span class="font-headline-md text-headline-md font-bold tracking-tighter text-primary">+12%</span>
+<span class="text-[10px] uppercase tracking-widest text-on-surface-variant">Global Avg</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Vertical Analytics Content -->
+<section class="px-margin-mobile space-y-6 -mt-12 relative z-20">
+<!-- Trending Insights Card -->
+<div class="glass-panel p-gutter rounded-xl shadow-2xl relative overflow-hidden">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-headline-md text-lg text-on-surface">Trending Insights</h2>
+<span class="material-symbols-outlined text-primary">insights</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 bg-surface-container-low rounded-lg border border-white/5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">terminal</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-medium">Rust Engineers</p>
+<p class="text-xs text-on-surface-variant">Demand up 45% in Zurich</p>
+</div>
+<span class="text-secondary font-label-md">+22%</span>
+</div>
+<div class="flex items-center gap-4 p-3 bg-surface-container-low rounded-lg border border-white/5">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">palette</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-medium">Product Design</p>
+<p class="text-xs text-on-surface-variant">Hybrid shifts in London</p>
+</div>
+<span class="text-secondary font-label-md">+8%</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-white/10 flex justify-center">
+<button class="text-primary font-label-md text-label-md uppercase tracking-wider flex items-center gap-2">
+                        View Network Map <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Salary Trends (Stat Card style) -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 border-l-2 border-primary">
+<p class="font-label-md text-on-surface-variant text-[10px]">L7 STAFF SWE</p>
+<p class="font-headline-md text-primary">$340k+</p>
+<div class="h-8 w-full bg-primary/10 rounded flex items-end gap-1 px-1">
+<div class="h-3 w-full bg-primary/30 rounded-t-sm"></div>
+<div class="h-5 w-full bg-primary/30 rounded-t-sm"></div>
+<div class="h-4 w-full bg-primary/50 rounded-t-sm"></div>
+<div class="h-7 w-full bg-primary rounded-t-sm"></div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl flex flex-col gap-2 border-l-2 border-secondary">
+<p class="font-label-md text-on-surface-variant text-[10px]">REMOTE OFFSET</p>
+<p class="font-headline-md text-secondary">-12.4%</p>
+<div class="h-8 w-full bg-secondary/10 rounded flex items-end gap-1 px-1">
+<div class="h-6 w-full bg-secondary/30 rounded-t-sm"></div>
+<div class="h-4 w-full bg-secondary/50 rounded-t-sm"></div>
+<div class="h-7 w-full bg-secondary/30 rounded-t-sm"></div>
+<div class="h-3 w-full bg-secondary rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Full Width Analytics Preview -->
+<div class="glass-panel rounded-xl overflow-hidden aspect-[16/10]">
+<img class="w-full h-full object-cover" data-alt="A clean, glassmorphic data visualization panel featuring a sleek radar chart and multiple line graphs. The dashboard uses a sophisticated color palette of electric cyan and deep violet against a dark graphite background. High-precision monospaced typography labels the axes, reflecting a modern SaaS aesthetic for workplace intelligence. Subtle glowing borders and soft backdrop blur create a premium, layered feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg5dvTQj6lbX--XphlyiTnAorHNjZSW-Wufb2iv9DqqxVCmhj7KPRP9R9fjIeEqr1Uj6NZNJGcsphBf2Tg-ihbOSyNA1Nlbcy06o0Jnd0iaFrYiydS7Tup0vO9R5bP3_TSqvc0DWlMc4xs05fVcp2VxUJBzcBXcftTovKxXppkBX0kzAiCdY8iDfZmfdI151dQmqXXh3xPLv-FS1tSQ_VYQ8bnKx_FS-9mAvUNe_p4L_kj5GzcTLUWSVSAwVPeNOC1qwpDykIfvo79"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-headline-md text-lg mb-1">Global Data Streams</p>
+<p class="text-sm text-on-surface-variant">Real-time compensation adjustments across 14 markets.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 bg-surface/80 backdrop-blur-xl border-t border-white/10 flex items-center justify-around px-2 z-50">
+<button class="flex flex-col items-center justify-center text-primary font-bold transition-all duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="text-[10px] mt-1 uppercase tracking-tighter">Intelligence</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined">hub</span>
+<span class="text-[10px] mt-1 uppercase tracking-tighter">Network</span>
+</button>
+<button class="flex flex-col items-center justify-center -mt-8 bg-primary text-on-primary w-14 h-14 rounded-full shadow-lg shadow-primary/30 border-4 border-background">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined">database</span>
+<span class="text-[10px] mt-1 uppercase tracking-tighter">Streams</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="text-[10px] mt-1 uppercase tracking-tighter">Analytics</span>
+</button>
+</nav>
+<!-- Mobile Footer -->
+<footer class="w-full py-gutter px-margin-mobile flex flex-col items-center bg-surface border-t border-outline-variant mb-16">
+<div class="font-label-md text-label-md text-on-surface mb-4">OpenComp</div>
+<div class="flex gap-4 mb-6">
+<span class="text-on-surface-variant text-xs">GitHub</span>
+<span class="text-on-surface-variant text-xs">Documentation</span>
+<span class="text-on-surface-variant text-xs">Privacy</span>
+</div>
+<p class="text-secondary text-center text-[10px] opacity-80">
+            © 2024 OpenComp Intelligence. Open Source under MIT.
+        </p>
+</footer>
+<script>
+        // Micro-interactions for the cards
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple scroll parallax for the map background
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            const map = document.querySelector('.map-bg img');
+            if (map) {
+                map.style.transform = `translateY(${scroll * 0.3}px)`;
+            }
+        });
+    </script>
+</body></html>

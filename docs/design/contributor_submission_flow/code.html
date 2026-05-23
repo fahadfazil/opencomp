@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Geist:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(26, 29, 33, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .step-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: rgba(203, 210, 255, 0.1);
+            height: 4px;
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #cbd2ff;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(203, 210, 255, 0.5);
+        }
+        .map-bg {
+            filter: grayscale(1) invert(0.9) brightness(0.2) contrast(1.2);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#212c61",
+                        "secondary": "#9ad2c3",
+                        "surface-container-low": "#191c20",
+                        "secondary-fixed": "#b6eedf",
+                        "inverse-primary": "#505b93",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "surface-tint": "#b9c3ff",
+                        "outline-variant": "#45464f",
+                        "surface-container-high": "#272a2e",
+                        "on-surface-variant": "#c6c5d1",
+                        "background": "#0F1113",
+                        "on-secondary-fixed-variant": "#164f44",
+                        "surface-container-highest": "#323539",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#00201a",
+                        "primary-container": "#aab5f3",
+                        "tertiary-fixed": "#e1e0ff",
+                        "secondary-fixed-dim": "#9ad2c3",
+                        "on-secondary": "#00382e",
+                        "on-primary-fixed-variant": "#384379",
+                        "primary-fixed": "#dde1ff",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "primary-fixed-dim": "#b9c3ff",
+                        "inverse-on-surface": "#2e3135",
+                        "error": "#ffb4ab",
+                        "on-background": "#e1e2e8",
+                        "on-tertiary": "#1000a9",
+                        "surface-variant": "#323539",
+                        "on-surface": "#e1e2e8",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed": "#08164b",
+                        "surface-container-lowest": "#0b0e12",
+                        "surface": "#111417",
+                        "on-tertiary-fixed": "#07006c",
+                        "secondary-container": "#195247",
+                        "primary": "#cbd2ff",
+                        "outline": "#90909a",
+                        "tertiary": "#d1d0ff",
+                        "surface-bright": "#36393e",
+                        "on-secondary-container": "#8cc3b5",
+                        "tertiary-container": "#b0b2ff",
+                        "on-tertiary-container": "#3131c1",
+                        "on-primary-container": "#3a457b",
+                        "inverse-surface": "#e1e2e8",
+                        "surface-container": "#1d2024",
+                        "surface-dim": "#111417"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max": "1440px",
+                        "margin-mobile": "16px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "label-md": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden selection:bg-primary/30">
+<!-- Background Map Element -->
+<div class="fixed inset-0 z-0">
+<img class="w-full h-full object-cover map-bg opacity-40" data-alt="A high-contrast, dark-toned satellite map of a major urban grid, featuring intricate street patterns and geometric block layouts. The lighting is low-key with a monochromatic charcoal and deep navy color scheme, evoking a sense of technical precision and global connectivity. The overall aesthetic is minimalist, clean, and futuristic, designed as a subtle background for a high-performance data platform." data-location="San Francisco" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi5CaQkC-c4yA1mDrnIlvHHs9kh5j-fvLXjWmFD9tAK5rG8E-YVmeZis_gUN4FOHP24WRY57zb1dFKUWYj6f4vsmnZakEQDFPSjKpcx3bjn7NsX0Jqn542S2GY3Mvh7OMsmrgyaGowj-Y8xWWUTuRKYyRKx83gbooBC-NrB2_dmVmA5eldgv78SkdBHC3CHyxrz974PSzIO4hYTeq_RzlagNk9LCzduTr7iEVOs0N3SMnDnOFzWGnSPhEN0qdhKQFTQfKtMTK_ljg5"/>
+</div>
+<!-- Main Navigation (Suppressed per task context as this is a focused flow) -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="font-headline-md text-headline-md font-bold text-primary">OpenComp</div>
+<div class="flex items-center gap-gutter">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">close</button>
+</div>
+</nav>
+<!-- Modal Container -->
+<main class="relative z-10 flex items-center justify-center min-h-screen p-margin-mobile md:p-margin-desktop">
+<div class="glass-panel w-full max-width-[640px] max-w-2xl rounded-xl overflow-hidden shadow-2xl flex flex-col">
+<!-- Progress Header -->
+<div class="p-8 border-b border-white/5 bg-white/[0.02]">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Contribute Data</h1>
+<p class="font-body-md text-on-surface-variant mt-1">Strengthen the collective intelligence.</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20" id="step-counter">Step 1 of 4</span>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/4 transition-all duration-500 ease-out" id="progress-bar"></div>
+</div>
+</div>
+<!-- Steps Form -->
+<form class="flex-grow p-8" id="contribution-form">
+<!-- Step 1: Social & Privacy -->
+<div class="step-content" id="step-1">
+<h2 class="font-headline-md text-headline-md mb-6">Authentication</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-8">
+<button class="flex flex-col items-center justify-center p-6 border border-white/10 rounded-xl hover:bg-white/5 transition-all group" type="button">
+<span class="material-symbols-outlined text-4xl mb-3 text-on-surface-variant group-hover:text-primary">hub</span>
+<span class="font-label-md text-label-md">GitHub</span>
+</button>
+<button class="flex flex-col items-center justify-center p-6 border border-white/10 rounded-xl hover:bg-white/5 transition-all group" type="button">
+<span class="material-symbols-outlined text-4xl mb-3 text-on-surface-variant group-hover:text-primary">account_circle</span>
+<span class="font-label-md text-label-md">LinkedIn</span>
+</button>
+<button class="flex flex-col items-center justify-center p-6 border border-white/10 rounded-xl hover:bg-white/5 transition-all group" type="button">
+<span class="material-symbols-outlined text-4xl mb-3 text-on-surface-variant group-hover:text-primary">language</span>
+<span class="font-label-md text-label-md">Google</span>
+</button>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-secondary/10 rounded-full">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">visibility_off</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg">Anonymous Contribution</p>
+<p class="font-body-md text-on-surface-variant">Your identity will be obscured in the data pool.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Step 2: Role & Compensation (Hidden initially) -->
+<div class="step-content hidden" id="step-2">
+<h2 class="font-headline-md text-headline-md mb-6">Compensation Profile</h2>
+<div class="space-y-6">
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">JOB TITLE</label>
+<input class="w-full bg-surface-container-highest border-white/10 rounded-lg p-4 font-body-md focus:ring-1 focus:ring-primary focus:border-primary outline-none text-on-surface" placeholder="e.g. Senior Software Engineer" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">BASE SALARY (USD)</label>
+<div class="relative">
+<span class="absolute left-4 top-4 text-on-surface-variant font-label-md">$</span>
+<input class="w-full bg-surface-container-highest border-white/10 rounded-lg p-4 pl-8 font-label-md focus:ring-1 focus:ring-primary focus:border-primary outline-none text-on-surface" placeholder="180,000" type="number"/>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">EQUITY / VESTING (YR)</label>
+<div class="relative">
+<span class="absolute left-4 top-4 text-on-surface-variant font-label-md">$</span>
+<input class="w-full bg-surface-container-highest border-white/10 rounded-lg p-4 pl-8 font-label-md focus:ring-1 focus:ring-primary focus:border-primary outline-none text-on-surface" placeholder="45,000" type="number"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 3: Culture Ratings (Hidden initially) -->
+<div class="step-content hidden" id="step-3">
+<h2 class="font-headline-md text-headline-md mb-6">Analytical Culture Audit</h2>
+<div class="space-y-10">
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="font-body-lg text-body-lg">Work-Life Balance</label>
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-2 py-1 rounded">Moderate</span>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer" max="5" min="1" step="1" type="range"/>
+<div class="flex justify-between text-[10px] font-label-md text-on-surface-variant/50">
+<span>CRUNCH</span>
+<span>FLUID</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="font-body-lg text-body-lg">Management Transparency</label>
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-2 py-1 rounded">High</span>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer" max="5" min="1" step="1" type="range"/>
+<div class="flex justify-between text-[10px] font-label-md text-on-surface-variant/50">
+<span>OPAQUE</span>
+<span>RADICAL</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="font-body-lg text-body-lg">Innovation Velocity</label>
+<span class="font-label-md text-label-md text-primary bg-primary/10 px-2 py-1 rounded">Fast</span>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer" max="5" min="1" step="1" type="range"/>
+<div class="flex justify-between text-[10px] font-label-md text-on-surface-variant/50">
+<span>STAGNANT</span>
+<span>HYPER-GROWTH</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 4: Office & Perks (Hidden initially) -->
+<div class="step-content hidden" id="step-4">
+<h2 class="font-headline-md text-headline-md mb-6">Infrastructure &amp; Perks</h2>
+<div class="space-y-6">
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">OFFICE LOCATION</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-4 text-on-surface-variant">location_on</span>
+<input class="w-full bg-surface-container-highest border-white/10 rounded-lg p-4 pl-12 font-body-md focus:ring-1 focus:ring-primary focus:border-primary outline-none text-on-surface" placeholder="Search major tech hubs..." type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 border border-white/10 rounded-xl bg-white/[0.02] flex items-center gap-3 cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary">restaurant</span>
+<span class="font-body-md">Daily Lunch</span>
+</div>
+<div class="p-4 border border-white/10 rounded-xl bg-white/[0.02] flex items-center gap-3 cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary">fitness_center</span>
+<span class="font-body-md">Gym Subsidy</span>
+</div>
+<div class="p-4 border border-white/10 rounded-xl bg-white/[0.02] flex items-center gap-3 cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary">laptop_mac</span>
+<span class="font-body-md">Latest Gear</span>
+</div>
+<div class="p-4 border border-white/10 rounded-xl bg-white/[0.02] flex items-center gap-3 cursor-pointer hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-secondary">flight</span>
+<span class="font-body-md">Remote Work</span>
+</div>
+</div>
+</div>
+</div>
+</form>
+<!-- Navigation Actions -->
+<div class="p-8 border-t border-white/5 bg-white/[0.02] flex items-center justify-between">
+<button class="invisible px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2" id="prev-btn" type="button">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                    PREVIOUS
+                </button>
+<div class="flex gap-4">
+<button class="px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" type="button">SKIP</button>
+<button class="bg-gradient-to-r from-primary-container to-primary text-on-primary-container font-label-md text-label-md px-10 py-3 rounded shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-2" id="next-btn" type="button">
+                        NEXT
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Cluster -->
+<footer class="fixed bottom-0 left-0 w-full py-gutter px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface border-t border-outline-variant z-20">
+<div class="font-label-md text-label-md text-on-surface mb-2 md:mb-0">
+            © 2024 OpenComp Intelligence. Open Source under MIT.
+        </div>
+<div class="flex gap-gutter">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors opacity-80 hover:opacity-100" href="#">GitHub</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors opacity-80 hover:opacity-100" href="#">Documentation</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors opacity-80 hover:opacity-100" href="#">Privacy</a>
+</div>
+</footer>
+<script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const stepCounter = document.getElementById('step-counter');
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                document.getElementById(`step-${currentStep}`).classList.add('hidden');
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+                updateUI();
+            } else {
+                // Handle Submit
+                nextBtn.innerHTML = `SUBMITTING...`;
+                setTimeout(() => {
+                    nextBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> SUCCESS`;
+                    nextBtn.classList.remove('from-primary-container');
+                    nextBtn.classList.add('from-secondary');
+                }, 1500);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).classList.add('hidden');
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+                updateUI();
+            }
+        });
+
+        function updateUI() {
+            // Update Progress Bar
+            const progress = (currentStep / totalSteps) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            // Update Step Counter
+            stepCounter.textContent = `Step ${currentStep} of 4`;
+
+            // Toggle Previous Visibility
+            if (currentStep === 1) {
+                prevBtn.classList.add('invisible');
+            } else {
+                prevBtn.classList.remove('invisible');
+            }
+
+            // Toggle Next/Submit Button Text
+            if (currentStep === totalSteps) {
+                nextBtn.innerHTML = `COMPLETE <span class="material-symbols-outlined text-lg">verified</span>`;
+            } else {
+                nextBtn.innerHTML = `NEXT <span class="material-symbols-outlined text-lg">arrow_forward</span>`;
+            }
+        }
+
+        // Ambient pulse for active fields
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('duration-300', 'scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body></html>

@@ -55,13 +55,13 @@ export function CitiesPage() {
           {selectedCity ? (
             <>
               <GlassCard className="p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-bold">{selectedCity.name}</h2>
+                <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
+                  <div className="min-w-0">
+                    <h2 className="text-xl font-bold break-words">{selectedCity.name}</h2>
                     <div className="font-mono text-label-md text-on-surface-variant">{selectedCity.state}</div>
                   </div>
                   {selectedCity.tech_hub_rank && (
-                    <Badge variant="secondary" dot>#{selectedCity.tech_hub_rank} TECH HUB</Badge>
+                    <Badge variant="secondary" dot className="shrink-0">#{selectedCity.tech_hub_rank} TECH HUB</Badge>
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
@@ -115,11 +115,11 @@ export function CitiesPage() {
                   onClick={() => navigate(`/cities/${city.slug}`)}
                 >
                   <span className="font-mono text-label-md text-on-surface-variant w-4">{i + 1}</span>
-                  <div className="flex-1">
-                    <div className="text-body-md text-on-surface font-medium">{city.name}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-body-md text-on-surface font-medium truncate">{city.name}</div>
                   </div>
-                  <div className="font-mono text-label-md text-secondary">{formatLPA(city.avg_salary_lpa)}</div>
-                  {city.metro_available && <Train size={11} className="text-on-surface-variant" />}
+                  <div className="font-mono text-label-md text-secondary shrink-0">{formatLPA(city.avg_salary_lpa)}</div>
+                  {city.metro_available && <Train size={11} className="text-on-surface-variant shrink-0" />}
                 </button>
               ))}
             </div>
@@ -128,7 +128,7 @@ export function CitiesPage() {
       </div>
 
       {/* Sort controls */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 gap-y-2 mb-4 flex-wrap">
         <MonoLabel color="muted">SORT BY:</MonoLabel>
         {(['salary', 'entries', 'rank'] as const).map(s => (
           <button
@@ -161,9 +161,9 @@ export function CitiesPage() {
               accent="secondary"
               onClick={() => navigate(`/cities/${city.slug}`)}
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-bold text-on-surface text-lg">{city.name}</h3>
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="min-w-0">
+                  <h3 className="font-bold text-on-surface text-lg break-words">{city.name}</h3>
                   <div className="font-mono text-label-md text-on-surface-variant">{city.state}</div>
                 </div>
                 <div className="flex flex-col gap-1.5 items-end">

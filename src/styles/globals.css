@@ -1,10 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --font-sans: 'Geist', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
   * {
     box-sizing: border-box;
     margin: 0;
@@ -64,7 +67,7 @@
   }
 
   .gradient-btn {
-    @apply bg-gradient-to-r from-primary to-primary-container text-on-primary font-semibold;
+    @apply bg-gradient-to-r from-primary to-primary-container text-white font-semibold;
   }
 
   .mono-label {
@@ -166,6 +169,6 @@
 
 .recharts-text {
   fill: #90909a !important;
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: var(--font-mono) !important;
   font-size: 11px !important;
 }

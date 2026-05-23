@@ -46,6 +46,57 @@ export type Database = {
           created_at: string
         }
       }
+      cities: {
+        Row: {
+          id: string
+          slug: string | null
+          name: string
+          state: string
+          latitude: number | null
+          longitude: number | null
+          avg_salary_lpa: number | null
+          median_salary_lpa: number | null
+          total_entries: number
+          tech_hub_rank: number | null
+          cost_of_living_index: number
+          metro_available: boolean
+          created_at: string
+        }
+      }
+      roles: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          category: string
+          avg_salary_lpa: number
+          median_salary_lpa: number
+          p25_salary_lpa: number
+          p75_salary_lpa: number
+          total_entries: number
+          yoy_growth_pct: number
+          remote_premium_pct: number
+          created_at: string
+        }
+      }
+      office_areas: {
+        Row: {
+          id: string
+          city_id: string
+          name: string
+          avg_rent_1bhk: number | null
+          avg_rent_2bhk: number | null
+          commute_score: number
+          food_score: number
+          safety_score: number
+          walkability_score: number
+          metro_distance_km: number | null
+          office_density: number
+          avg_aqi: number
+          latitude: number | null
+          longitude: number | null
+        }
+      }
       salary_entries: {
         Row: {
           id: string
@@ -61,6 +112,14 @@ export type Database = {
           work_mode: string
           submitted_at: string
           is_verified: boolean
+        }
+      }
+      app_content: {
+        Row: {
+          key: string
+          description: string | null
+          value: unknown
+          updated_at: string
         }
       }
     }

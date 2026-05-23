@@ -1,73 +1,133 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<img src="https://opencomp.in/assets/opencomp-logo-sgAtSmvG.png" alt="OpenComp" height="100px" />
 
-Currently, two official plugins are available:
+# OpenComp
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Open-source workplace intelligence for India
 
-## React Compiler
+Anonymous, community-owned salary data and company culture insights — built for Indian tech professionals who are tired of negotiating in the dark.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
+[![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![Powered by Supabase](https://img.shields.io/badge/Powered%20by-Supabase-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com)
 
-## Expanding the ESLint configuration
+[Live Demo](https://opencomp.in) · [Submit Your Data](https://opencomp.in/contribute) · [Report an Issue](https://github.com/fahadfazil/opencomp/issues)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+</div>
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## The Problem
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Salary negotiation in India is broken. Job postings hide compensation. Candidates lowball themselves. Employers exploit information asymmetry. Platforms like Glassdoor exist, but they're US-centric, paywalled, and increasingly unreliable.
+
+OpenComp fixes this by putting the data in the hands of the community — free, forever.
+
+---
+
+## What You Get
+
+<table>
+<tr>
+<td width="50%">
+
+### 💰 Salary Intelligence
+Real compensation data — base, variable, and equity — broken down by company, role, city, and years of experience. No estimates. No scraping. Verified community submissions.
+
+</td>
+<td width="50%">
+
+### 🏢 Company Intelligence
+Deep dives on India's top employers. Culture ratings, work-life balance scores, anonymous reviews, and salary distribution — all in one place.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🗺️ City Intelligence
+Compare tech hubs across affordability, commute quality, and livability. Bangalore vs Hyderabad vs Pune — see where your salary actually goes further.
+
+</td>
+<td width="50%">
+
+### 📊 OpenComp Score
+A 0–100 benchmarking score that shows exactly where your CTC stands in your peer group — same role, same city, same experience band. Know your worth.
+
+</td>
+</tr>
+</table>
+
+---
+
+## How the OpenComp Score Works
+
+Your score is calculated using z-score normalization against a peer group filtered by city, role, and experience (±2 years):
+
+```
+score = clamp(50 + (z × 15), 0, 100)
+where z = (your_salary − peer_mean) / peer_stddev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Score | What it means |
+|-------|--------------|
+| < 40 | Below market — time to renegotiate |
+| 40–60 | At market rate |
+| 60–75 | Above average for your peer group |
+| 75–90 | Top quartile |
+| 90+ | Exceptional / outlier |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Privacy, By Design
+
+We built the privacy model before writing a single line of UI.
+
+- **No individual data is ever displayed.** Every stat shown is aggregated across a minimum of 5 anonymous submissions.
+- **Zero PII collected.** The contribution flow asks for no name, no email, no phone, no LinkedIn.
+- **Auth exists only to prevent spam** — not to link your identity to your submission. The connection is severed immediately after verification.
+- **No ads. No data sales. No dark patterns.** Ever.
+- **Open source.** You can read every line of code that handles your data.
+
+---
+
+## Roadmap
+
+- [x] Salary data — company, role, city, experience
+- [x] Culture ratings and anonymous reviews
+- [x] City affordability and commute intelligence
+- [x] OpenComp Score benchmarking engine
+- [x] Anonymous contribution flow
+- [ ] Interview experience database
+- [ ] Offer letter verification (community-powered)
+- [ ] Salary trend alerts — get notified when market moves
+- [ ] Public API for researchers and journalists
+- [ ] Mobile app
+
+---
+
+## Contributing
+
+OpenComp is only as good as its data. The most valuable contribution you can make is submitting your own compensation — it takes 3 minutes and helps thousands of professionals negotiate better offers.
+
+**[→ Submit your compensation anonymously](https://opencomp.onrender.com/contribute)**
+
+If you want to contribute to the codebase, pull requests are welcome. Open an issue first for significant changes.
+
+---
+
+## License
+
+MIT — free to use, fork, modify, and build on. No strings attached.
+
+---
+
+<div align="center">
+
+Built with care for India's tech community.
+
+*If this helped you get a better offer, pay it forward — submit your data.*
+
+</div>

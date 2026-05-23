@@ -1,21 +1,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Search, Building2, TrendingUp, Filter, SortAsc } from 'lucide-react'
+import { Search, Building2 } from 'lucide-react'
 import { GlassCard, MonoLabel, Badge, ScoreGauge, Button } from '@/components/ui'
-import { MOCK_COMPANIES } from '@/data/mockData'
 import { formatLPA, formatNumber, cn } from '@/utils'
-
-const INDUSTRIES = ['All', 'Fintech', 'E-Commerce', 'Food-Tech', 'Quick Commerce', 'Social Commerce']
-const COMPANY_TYPES = ['All', 'startup', 'product', 'mid_size', 'enterprise', 'mnc']
+import { useCompanies } from '@/hooks'
 
 export function CompaniesPage() {
   const navigate = useNavigate()
+  const { data: companies = [] } = useCompanies()
   const [search, setSearch] = useState('')
   const [industry, setIndustry] = useState('All')
   const [sortBy, setSortBy] = useState<'score' | 'salary' | 'reviews'>('score')
+  const industries = ['All', ...Array.from(new Set(companies.map((company) => company.industry)))]
 
-  const filtered = MOCK_COMPANIES
+  const filtered = companies
     .filter(c => {
       if (search && !c.name.toLowerCase().includes(search.toLowerCase())) return false
       if (industry !== 'All' && c.industry !== industry) return false
@@ -36,7 +35,7 @@ export function CompaniesPage() {
           <MonoLabel>COMPANY INTELLIGENCE</MonoLabel>
         </div>
         <h1 className="text-4xl font-bold tracking-tight mb-2">
-          {MOCK_COMPANIES.length} companies tracked
+          {companies.length} companies tracked
         </h1>
         <p className="text-on-surface-variant text-body-lg">
           Anonymous salary & culture data from verified contributors
@@ -60,7 +59,7 @@ export function CompaniesPage() {
             {['score', 'salary', 'reviews'].map(sort => (
               <button
                 key={sort}
-                onClick={() => setSortBy(sort as any)}
+                onClick={() => setSortBy(sort as 'score' | 'salary' | 'reviews')}
                 className={cn(
                   'px-3 py-1.5 rounded-lg font-mono text-label-md whitespace-nowrap transition-colors',
                   sortBy === sort
@@ -76,7 +75,7 @@ export function CompaniesPage() {
 
         {/* Industry filter */}
         <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1">
-          {INDUSTRIES.map(ind => (
+          {industries.map(ind => (
             <button
               key={ind}
               onClick={() => setIndustry(ind)}

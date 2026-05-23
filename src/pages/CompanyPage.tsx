@@ -2,69 +2,62 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Building2, Globe, Users, TrendingUp, Star, MapPin,
-  ArrowLeft, ExternalLink, Award, Shield, Clock, Coffee
+  ArrowLeft, Award, Shield, Clock, Coffee
 } from 'lucide-react'
 import {
   GlassCard, MonoLabel, Badge, StatCard, ScoreGauge,
-  RatingBar, Button, Skeleton, Divider
+  RatingBar, Button, Divider
 } from '@/components/ui'
 import { CultureRadar, SalaryDistributionChart, SalaryTrendChart } from '@/components/charts'
-import { MOCK_COMPANIES, SALARY_TREND_DATA } from '@/data/mockData'
 import { formatLPA, formatNumber } from '@/utils'
-import { cn } from '@/utils'
+import { useCompany, useCompanyPageContent } from '@/hooks'
+import type { CompanyPageContent } from '@/types'
 
-const CULTURE_RADAR_DATA = [
-  { subject: 'WLB', value: 4.2, fullMark: 5 },
-  { subject: 'Engineering', value: 4.6, fullMark: 5 },
-  { subject: 'Management', value: 3.9, fullMark: 5 },
-  { subject: 'Growth', value: 4.4, fullMark: 5 },
-  { subject: 'Comp', value: 4.7, fullMark: 5 },
-  { subject: 'Politics', value: 3.4, fullMark: 5 },
-]
+const PERK_ICONS = {
+  shield: Shield,
+  globe: Globe,
+  award: Award,
+  coffee: Coffee,
+  clock: Clock,
+} as const
 
-const DEPT_DATA = [
-  { dept: 'Engineering', avg: 48.2, count: 1240, culture: 4.5 },
-  { dept: 'Product', avg: 42.6, count: 380, culture: 4.3 },
-  { dept: 'Data / AI', avg: 52.1, count: 220, culture: 4.6 },
-  { dept: 'Design', avg: 36.4, count: 180, culture: 4.2 },
-  { dept: 'Sales', avg: 28.8, count: 440, culture: 3.8 },
-  { dept: 'Marketing', avg: 24.6, count: 320, culture: 3.9 },
-]
+// Unknown icon keys fall back to Award so bad content rows still render safely.
+function getPerkIcon(iconKey: string) {
+  if (iconKey in PERK_ICONS) {
+    return PERK_ICONS[iconKey as keyof typeof PERK_ICONS]
+  }
 
-const PERKS = [
-  { label: 'Health Insurance', detail: 'Family covered, ₹5L sum assured', icon: Shield },
-  { label: 'Work from Anywhere', detail: '30 days/year WFA policy', icon: Globe },
-  { label: 'Learning Budget', detail: '₹1L/year for courses & conferences', icon: Award },
-  { label: 'Meals & Snacks', detail: 'Free breakfast, lunch, dinner', icon: Coffee },
-  { label: 'Flexible Hours', detail: 'Core hours 11am–4pm only', icon: Clock },
-]
+  return Award
+}
 
-const ANONYMOUS_REVIEWS = [
-  {
-    id: '1',
-    role: 'Senior Software Engineer',
-    tenure: '2 years',
-    pros: 'Excellent engineering culture, fast career growth, smart colleagues. The tech stack is modern and we have real autonomy.',
-    cons: 'Compensation benchmarking lags behind competitors by ~20%. Equity refreshes are inconsistent.',
-    rating: 4.2,
-    period: '2024',
+const EMPTY_COMPANY_PAGE_CONTENT: CompanyPageContent = {
+  avg_salary_trend: 0,
+  salary_trend_badge: '0% CAGR',
+  industry_avg_score: 0,
+  culture_rating: 0,
+  culture_rating_trend: 0,
+  salary_distribution_multipliers: {
+    p10: 0.55,
+    p25: 0.75,
+    p50: 0.95,
+    p75: 1.25,
+    p90: 1.55,
   },
-  {
-    id: '2',
-    role: 'Product Manager',
-    tenure: '1.5 years',
-    pros: 'Great product ownership, very customer-focused. Cross-functional collaboration is real here.',
-    cons: 'High pressure to deliver without always adequate resourcing. Work-life balance variable by team.',
-    rating: 3.8,
-    period: '2024',
-  },
-]
+  culture_radar: [],
+  culture_ratings: [],
+  salary_trend: [],
+  department_breakdown: [],
+  perks: [],
+  anonymous_reviews: [],
+}
 
 export function CompanyPage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
+  const { data: company } = useCompany(slug ?? '')
+  const { data: pageContent } = useCompanyPageContent()
 
-  const company = MOCK_COMPANIES.find(c => c.slug === slug)
+  const content = pageContent ?? EMPTY_COMPANY_PAGE_CONTENT
 
   if (!company) {
     return (
@@ -77,12 +70,16 @@ export function CompanyPage() {
     )
   }
 
+  const salaryDistributionMultipliers = content.salary_distribution_multipliers
+  const departmentMaxSalary = content.department_breakdown.length > 0
+    ? Math.max(...content.department_breakdown.map((department) => department.avg))
+    : 0
   const companyPercentiles = {
-    p10: company.avg_salary_lpa * 0.55,
-    p25: company.avg_salary_lpa * 0.75,
-    p50: company.avg_salary_lpa * 0.95,
-    p75: company.avg_salary_lpa * 1.25,
-    p90: company.avg_salary_lpa * 1.55,
+    p10: company.avg_salary_lpa * salaryDistributionMultipliers.p10,
+    p25: company.avg_salary_lpa * salaryDistributionMultipliers.p25,
+    p50: company.avg_salary_lpa * salaryDistributionMultipliers.p50,
+    p75: company.avg_salary_lpa * salaryDistributionMultipliers.p75,
+    p90: company.avg_salary_lpa * salaryDistributionMultipliers.p90,
   }
 
   return (
@@ -153,7 +150,7 @@ export function CompanyPage() {
         <StatCard
           label="AVG SALARY"
           value={formatLPA(company.avg_salary_lpa)}
-          trend={12.4}
+          trend={content.avg_salary_trend}
           accentColor="#cbd2ff"
           icon={<TrendingUp size={16} />}
         />
@@ -167,13 +164,13 @@ export function CompanyPage() {
         <StatCard
           label="OPENCOMP SCORE"
           value={`${company.opencomp_score}/100`}
-          subtext="industry avg: 74"
+          subtext={`industry avg: ${content.industry_avg_score}`}
           accentColor="#d1d0ff"
         />
         <StatCard
           label="CULTURE RATING"
-          value="4.3 / 5.0"
-          trend={3.2}
+          value={`${content.culture_rating.toFixed(1)} / 5.0`}
+          trend={content.culture_rating_trend}
           accentColor="#b0b2ff"
         />
       </div>
@@ -206,16 +203,10 @@ export function CompanyPage() {
         <div className="md:col-span-5">
           <GlassCard className="p-6 h-full">
             <MonoLabel className="mb-4 block">CULTURE INTELLIGENCE</MonoLabel>
-            <CultureRadar data={CULTURE_RADAR_DATA} height={220} />
+            <CultureRadar data={content.culture_radar} height={220} />
             <Divider className="my-4" />
             <div className="space-y-3">
-              {[
-                { label: 'Work-Life Balance', value: 4.2 },
-                { label: 'Manager Friendliness', value: 3.9 },
-                { label: 'Career Growth', value: 4.4 },
-                { label: 'Comp & Benefits', value: 4.7 },
-                { label: 'Politics / Toxicity', value: 3.4 },
-              ].map(item => (
+              {content.culture_ratings.map(item => (
                 <RatingBar key={item.label} label={item.label} value={item.value} />
               ))}
             </div>
@@ -227,9 +218,9 @@ export function CompanyPage() {
           <GlassCard className="p-6">
             <div className="flex items-center justify-between mb-6">
               <MonoLabel>SALARY TREND (8 QUARTERS)</MonoLabel>
-              <Badge variant="secondary" dot size="sm">+14.2% CAGR</Badge>
+              <Badge variant="secondary" dot size="sm">{content.salary_trend_badge}</Badge>
             </div>
-            <SalaryTrendChart data={SALARY_TREND_DATA} height={180} />
+            <SalaryTrendChart data={content.salary_trend} height={180} />
           </GlassCard>
         </div>
 
@@ -237,35 +228,38 @@ export function CompanyPage() {
         <div className="md:col-span-4">
           <GlassCard className="p-6 h-full">
             <MonoLabel className="mb-4 block">BY DEPARTMENT</MonoLabel>
-            <div className="space-y-3">
-              {DEPT_DATA.map(dept => {
-                const maxSalary = Math.max(...DEPT_DATA.map(d => d.avg))
-                const pct = (dept.avg / maxSalary) * 100
-                return (
-                  <div key={dept.dept}>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-body-md text-on-surface">{dept.dept}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-label-md text-on-surface">
-                          {formatLPA(dept.avg)}
-                        </span>
-                        <span className="font-mono text-[9px] text-on-surface-variant">
-                          n={dept.count}
-                        </span>
+            {departmentMaxSalary > 0 ? (
+              <div className="space-y-3">
+                {content.department_breakdown.map(dept => {
+                  const pct = (dept.avg / departmentMaxSalary) * 100
+                  return (
+                    <div key={dept.dept}>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-body-md text-on-surface">{dept.dept}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-label-md text-on-surface">
+                            {formatLPA(dept.avg)}
+                          </span>
+                          <span className="font-mono text-[9px] text-on-surface-variant">
+                            n={dept.count}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-1 bg-surface-container-high rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${pct}%` }}
+                          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
+                        />
                       </div>
                     </div>
-                    <div className="h-1 bg-surface-container-high rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full bg-gradient-to-r from-primary/60 to-primary"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${pct}%` }}
-                        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="text-body-md text-on-surface-variant">Department analytics will appear once data is available.</div>
+            )}
           </GlassCard>
         </div>
 
@@ -274,8 +268,8 @@ export function CompanyPage() {
           <GlassCard className="p-6">
             <MonoLabel className="mb-4 block">PERKS & BENEFITS</MonoLabel>
             <div className="grid grid-cols-1 gap-3">
-              {PERKS.map(perk => {
-                const Icon = perk.icon
+              {content.perks.map(perk => {
+              const Icon = getPerkIcon(perk.icon_key)
                 return (
                   <div key={perk.label} className="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
                     <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -300,7 +294,7 @@ export function CompanyPage() {
               <Badge variant="ghost" size="sm">VERIFIED CONTRIBUTORS</Badge>
             </div>
             <div className="space-y-4">
-              {ANONYMOUS_REVIEWS.map(review => (
+              {content.anonymous_reviews.map(review => (
                 <div key={review.id} className="p-4 bg-surface-container/50 rounded-xl border border-white/5">
                   <div className="flex items-center justify-between mb-3">
                     <div>

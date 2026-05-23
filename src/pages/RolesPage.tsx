@@ -3,19 +3,35 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Briefcase, TrendingUp, Wifi, ArrowLeft } from 'lucide-react'
 import {
-  GlassCard, MonoLabel, Badge, StatCard, RatingBar, Button
+  GlassCard, MonoLabel, Badge, StatCard, Button
 } from '@/components/ui'
 import { SalaryDistributionChart, SalaryTrendChart, CityComparisonChart } from '@/components/charts'
-import { MOCK_ROLES, MOCK_CITIES, SALARY_TREND_DATA } from '@/data/mockData'
-import { formatLPA, formatPercent, cn } from '@/utils'
+import { formatLPA, cn } from '@/utils'
+import { useCities, useRole, useRolePageContent, useRoles } from '@/hooks'
+import type { RolePageContent } from '@/types'
+
+const EMPTY_ROLE_PAGE_CONTENT: RolePageContent = {
+  salary_trend_badge: '0% CAGR',
+  salary_trend: [],
+  salary_distribution_multipliers: {
+    p10: 0.75,
+    p90: 1.3,
+  },
+  city_comparison: {
+    baseline_salary: 22,
+    multiplier: 0.9,
+  },
+  experience_bands: [],
+}
 
 export function RolesPage() {
   const navigate = useNavigate()
+  const { data: roles = [] } = useRoles()
   const [category, setCategory] = useState('All')
 
-  const categories = ['All', ...Array.from(new Set(MOCK_ROLES.map(r => r.category)))]
+  const categories = ['All', ...Array.from(new Set(roles.map(r => r.category)))]
 
-  const filtered = MOCK_ROLES.filter(r => category === 'All' || r.category === category)
+  const filtered = roles.filter(r => category === 'All' || r.category === category)
     .sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa)
 
   return (
@@ -26,7 +42,7 @@ export function RolesPage() {
           <MonoLabel color="tertiary">ROLE INTELLIGENCE</MonoLabel>
         </div>
         <h1 className="text-4xl font-bold tracking-tight mb-2">
-          Salary data for {MOCK_ROLES.length} tech roles
+          Salary data for {roles.length} tech roles
         </h1>
         <p className="text-on-surface-variant text-body-lg">
           Percentile breakdowns, YoY growth, and remote premium analysis
@@ -126,8 +142,11 @@ export function RolesPage() {
 export function RolePage() {
   const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
+  const { data: role } = useRole(slug ?? '')
+  const { data: cities = [] } = useCities()
+  const { data: pageContent } = useRolePageContent()
 
-  const role = MOCK_ROLES.find(r => r.slug === slug)
+  const content = pageContent ?? EMPTY_ROLE_PAGE_CONTENT
 
   if (!role) {
     return (
@@ -140,11 +159,18 @@ export function RolePage() {
     )
   }
 
-  const cityData = MOCK_CITIES.slice(0, 6).map(c => ({
-    id: c.id,
-    name: c.name,
-    value: Math.round(role.avg_salary_lpa * (c.avg_salary_lpa / 22) * 0.85 + Math.random() * 5),
-  })).sort((a, b) => b.value - a.value)
+  const cityData = cities.slice(0, 6).map(c => {
+    const citySalary = Math.max(c.avg_salary_lpa, 1)
+    return {
+      id: c.id,
+      name: c.name,
+      value: Math.round(
+        role.avg_salary_lpa
+        * (citySalary / content.city_comparison.baseline_salary)
+        * content.city_comparison.multiplier
+      ),
+    }
+  }).sort((a, b) => b.value - a.value)
 
   return (
     <div className="min-h-screen pt-24 pb-16 max-w-[1440px] mx-auto px-6 md:px-8">
@@ -191,20 +217,20 @@ export function RolePage() {
           <GlassCard className="p-6">
             <MonoLabel className="mb-6 block">SALARY DISTRIBUTION (INDIA)</MonoLabel>
             <SalaryDistributionChart
-              p10={role.p25_salary_lpa * 0.75}
+              p10={role.p25_salary_lpa * content.salary_distribution_multipliers.p10}
               p25={role.p25_salary_lpa}
               p50={role.median_salary_lpa}
               p75={role.p75_salary_lpa}
-              p90={role.p75_salary_lpa * 1.3}
+              p90={role.p75_salary_lpa * content.salary_distribution_multipliers.p90}
               height={200}
             />
             <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-5 gap-2 text-center">
               {[
-                ['P10', formatLPA(role.p25_salary_lpa * 0.75)],
+                ['P10', formatLPA(role.p25_salary_lpa * content.salary_distribution_multipliers.p10)],
                 ['P25', formatLPA(role.p25_salary_lpa)],
                 ['Median', formatLPA(role.median_salary_lpa)],
                 ['P75', formatLPA(role.p75_salary_lpa)],
-                ['P90', formatLPA(role.p75_salary_lpa * 1.3)],
+                ['P90', formatLPA(role.p75_salary_lpa * content.salary_distribution_multipliers.p90)],
               ].map(([label, val]) => (
                 <div key={label}>
                   <div className="font-mono text-label-md text-on-surface">{val}</div>
@@ -244,12 +270,12 @@ export function RolePage() {
           <GlassCard className="p-6">
             <div className="flex items-center justify-between mb-6">
               <MonoLabel>SALARY TREND</MonoLabel>
-              <Badge variant="tertiary" dot size="sm">+{role.yoy_growth_pct}% CAGR</Badge>
+             <Badge variant="tertiary" dot size="sm">{content.salary_trend_badge}</Badge>
             </div>
             <SalaryTrendChart
-              data={SALARY_TREND_DATA.map(d => ({
-                period: d.period,
-                value: Math.round(d.value * (role.avg_salary_lpa / 24))
+              data={content.salary_trend.map((point) => ({
+                period: point.period,
+                value: Math.round(point.value * (role.avg_salary_lpa / 24))
               }))}
               height={180}
               color="#d1d0ff"
@@ -274,13 +300,7 @@ export function RolePage() {
           <GlassCard className="p-6">
             <MonoLabel className="mb-4 block">EXPERIENCE vs SALARY</MonoLabel>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {[
-                { exp: '0-1 yr', pct: 0.45 },
-                { exp: '1-3 yr', pct: 0.65 },
-                { exp: '3-5 yr', pct: 0.88 },
-                { exp: '5-8 yr', pct: 1.1 },
-                { exp: '8+ yr', pct: 1.45 },
-              ].map(item => (
+              {content.experience_bands.map(item => (
                 <div key={item.exp} className="p-4 bg-surface-container/50 rounded-xl text-center">
                   <div className="font-mono text-label-md text-on-surface-variant mb-2">{item.exp}</div>
                   <div className="text-xl font-bold text-tertiary">

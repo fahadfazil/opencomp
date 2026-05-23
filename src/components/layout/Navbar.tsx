@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Search, Bell, Menu, X, MapPin,
   Building2, Briefcase, PlusCircle, BarChart3
@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/utils'
 import { useAuthStore, useUIStore } from '@/store'
 import { Button } from '@/components/ui'
-import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
+import { signOut } from '@/services/authService'
 
 const NAV_ITEMS = [
   { label: 'Intelligence', href: '/', icon: BarChart3 },
@@ -20,10 +20,35 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const location = useLocation()
+  const navigate = useNavigate()
   const { user } = useAuthStore()
-  const { setAuthModalOpen, setContributeModalOpen, toggleCommandPalette } = useUIStore()
+  const { setAuthModalOpen, toggleCommandPalette } = useUIStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+  const [signOutError, setSignOutError] = useState<string | null>(null)
+
+  const handleSignOut = async () => {
+    setSignOutError(null)
+    setSigningOut(true)
+    try {
+      const { error } = await signOut()
+
+      if (error) {
+        setSignOutError(error.message || 'Failed to sign out. Please try again.')
+        setMobileOpen(false)
+        return
+      }
+
+      setMobileOpen(false)
+    } catch (err) {
+      console.error('Sign-out failed:', err)
+      setSignOutError('Failed to sign out. Please try again.')
+      setMobileOpen(false)
+    } finally {
+      setSigningOut(false)
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
@@ -55,11 +80,6 @@ export function Navbar() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-8 h-16 flex items-center justify-between gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img
-              src={opencompFavicon}
-              alt=""
-              className="h-8 w-8 rounded-lg object-contain"
-            />
             <img
               src={opencompLogo}
               alt="OpenComp"
@@ -119,10 +139,19 @@ export function Navbar() {
                   variant="secondary"
                   size="sm"
                   icon={<PlusCircle size={14} />}
-                  onClick={() => setContributeModalOpen(true)}
+                  onClick={() => navigate('/contribute')}
                   className="hidden md:flex"
                 >
                   Contribute
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  loading={signingOut}
+                  className="hidden md:flex"
+                >
+                  Sign Out
                 </Button>
                 <button className="text-on-surface-variant hover:text-primary transition-colors relative">
                   <Bell size={18} />
@@ -151,7 +180,8 @@ export function Navbar() {
                 <Button
                   variant="primary"
                   size="sm"
-                  onClick={() => setContributeModalOpen(true)}
+                  onClick={() => navigate('/contribute')}
+                  
                 >
                   Contribute
                 </Button>
@@ -167,6 +197,15 @@ export function Navbar() {
             </button>
           </div>
         </div>
+        {signOutError && (
+          <p
+            role="alert"
+            aria-live="polite"
+            className="max-w-[1440px] mx-auto px-6 md:px-8 pb-3 text-body-md text-error"
+          >
+            {signOutError}
+          </p>
+        )}
       </header>
 
       {/* Mobile Menu */}
@@ -202,22 +241,46 @@ export function Navbar() {
               })}
 
               <div className="pt-3 border-t border-white/8 flex gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => { setAuthModalOpen(true); setMobileOpen(false) }}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => { setContributeModalOpen(true); setMobileOpen(false) }}
-                >
-                  Contribute
-                </Button>
+                {user ? (
+                  <>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
+                    >
+                      Contribute
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={handleSignOut}
+                      loading={signingOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => { setAuthModalOpen(true); setMobileOpen(false) }}
+                    >
+                      Sign In
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => { navigate('/contribute'); setMobileOpen(false) }}
+                    >
+                      Contribute
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </motion.div>

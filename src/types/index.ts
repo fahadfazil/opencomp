@@ -147,6 +147,128 @@ export interface TrendPoint {
   value: number
 }
 
+export type InsightAccent = 'primary' | 'secondary' | 'tertiary'
+
+export interface TrendingInsight {
+  id: string
+  title: string
+  subtitle: string
+  category: string
+  value: string
+  accent: InsightAccent
+}
+
+export interface SalarySnapshotItem {
+  role: string
+  salary: string
+}
+
+export interface HomeContent {
+  quick_searches: string[]
+  featured_insight: {
+    title: string
+    subtitle: string
+    href: string
+  }
+  salary_snapshot: {
+    headline_value: string
+    headline_label: string
+    trend_label: string
+    top_roles: SalarySnapshotItem[]
+  }
+  salary_trend: TrendPoint[]
+  trending_insights: TrendingInsight[]
+}
+
+export interface SupplementalGlobalStats {
+  total_contributors: number
+  total_data_points: number
+  companies_tracked: number
+  cities_covered: number
+  avg_salary_india: number
+  yoy_salary_growth: number
+}
+
+export interface CompanyPageContent {
+  avg_salary_trend: number
+  salary_trend_badge: string
+  industry_avg_score: number
+  culture_rating: number
+  culture_rating_trend: number
+  salary_distribution_multipliers: {
+    p10: number
+    p25: number
+    p50: number
+    p75: number
+    p90: number
+  }
+  culture_radar: Array<{
+    subject: string
+    value: number
+    fullMark: number
+  }>
+  culture_ratings: Array<{
+    label: string
+    value: number
+  }>
+  salary_trend: TrendPoint[]
+  department_breakdown: Array<{
+    dept: string
+    avg: number
+    count: number
+    culture: number
+  }>
+  perks: Array<{
+    label: string
+    detail: string
+    icon_key: string
+  }>
+  anonymous_reviews: Array<{
+    id: string
+    role: string
+    tenure: string
+    pros: string
+    cons: string
+    rating: number
+    period: string
+  }>
+}
+
+export interface CityPageContent {
+  stat_trend: number
+  salary_trend_badge: string
+  salary_trend: TrendPoint[]
+  affordability_summary: {
+    avg_1bhk: string
+    avg_2bhk: string
+    rent_salary_pct: string
+  }
+  livability_scores: Array<{
+    label: string
+    value: number
+    max: number
+    unit: string
+    invert?: boolean
+  }>
+}
+
+export interface RolePageContent {
+  salary_trend_badge: string
+  salary_trend: TrendPoint[]
+  salary_distribution_multipliers: {
+    p10: number
+    p90: number
+  }
+  city_comparison: {
+    baseline_salary: number
+    multiplier: number
+  }
+  experience_bands: Array<{
+    exp: string
+    pct: number
+  }>
+}
+
 export interface CityStats {
   city: City
   top_companies: Company[]

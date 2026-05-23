@@ -2,19 +2,47 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  TrendingUp, Wifi, Award, MapPin, ArrowRight,
-  Users, Database, Activity, GitBranch, BookOpen,
+  TrendingUp, Award, Activity, GitBranch, BookOpen, Star, Users, FileText,
   ChevronRight, Zap, PlusCircle
 } from 'lucide-react'
 import { IndiaMap } from '@/components/map/IndiaMap'
 import { SalaryTrendChart } from '@/components/charts'
-import { GlassCard, MonoLabel, Badge, LiveIndicator, StatCard, Button } from '@/components/ui'
-import { MOCK_GLOBAL_STATS, MOCK_COMPANIES, TRENDING_INSIGHTS, SALARY_TREND_DATA } from '@/data/mockData'
-import { formatNumber, formatLPA } from '@/utils'
+import { GlassCard, MonoLabel, Badge, LiveIndicator, Button } from '@/components/ui'
+import { formatNumber } from '@/utils'
 import { useUIStore } from '@/store'
 import { cn } from '@/utils'
+import { useCompanies, useGlobalStats, useHomeContent } from '@/hooks'
+import type { GlobalStats, HomeContent } from '@/types'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
+
+const GITHUB_REPO_URL = 'https://github.com/fahadfazil/opencomp'
+
+const EMPTY_GLOBAL_STATS: GlobalStats = {
+  total_contributors: 0,
+  total_data_points: 0,
+  companies_tracked: 0,
+  cities_covered: 0,
+  avg_salary_india: 0,
+  yoy_salary_growth: 0,
+}
+
+const EMPTY_HOME_CONTENT: HomeContent = {
+  quick_searches: [],
+  featured_insight: {
+    title: '',
+    subtitle: '',
+    href: '/roles',
+  },
+  salary_snapshot: {
+    headline_value: '₹0L',
+    headline_label: 'No live snapshot available',
+    trend_label: '0% YoY',
+    top_roles: [],
+  },
+  salary_trend: [],
+  trending_insights: [],
+}
 
 // Animated counter hook
 function useCounter(target: number, duration = 2000) {
@@ -40,11 +68,18 @@ function useCounter(target: number, duration = 2000) {
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { toggleCommandPalette, setContributeModalOpen } = useUIStore()
+  const { toggleCommandPalette } = useUIStore()
+  const { data: globalStats } = useGlobalStats()
+  const { data: companiesData } = useCompanies()
+  const { data: homeContent } = useHomeContent()
 
-  const contributorsCount = useCounter(MOCK_GLOBAL_STATS.total_contributors)
-  const dataPointsCount = useCounter(MOCK_GLOBAL_STATS.total_data_points)
-  const companiesCount = useCounter(MOCK_GLOBAL_STATS.companies_tracked)
+  const stats = globalStats ?? EMPTY_GLOBAL_STATS
+  const companies = companiesData ?? []
+  const content = homeContent ?? EMPTY_HOME_CONTENT
+
+  const contributorsCount = useCounter(stats.total_contributors)
+  const dataPointsCount = useCounter(stats.total_data_points)
+  const companiesCount = useCounter(stats.companies_tracked)
 
   return (
     <div className="min-h-screen">
@@ -79,7 +114,7 @@ export function HomePage() {
 
             <p className="mt-6 text-body-lg text-on-surface-variant max-w-2xl text-balance">
               Decentralized salary benchmarks, real-time culture analytics, and verified
-              workplace data powered by {formatNumber(MOCK_GLOBAL_STATS.total_contributors)} anonymous contributors
+              workplace data powered by {formatNumber(stats.total_contributors)} anonymous contributors
               across India.
             </p>
 
@@ -113,7 +148,7 @@ export function HomePage() {
 
             {/* Quick search tags */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-              {['Bangalore', 'SDE-2 at CRED', 'Remote ML Engineer', 'Senior PM Mumbai'].map(q => (
+              {content.quick_searches.map(q => (
                 <button
                   key={q}
                   onClick={toggleCommandPalette}
@@ -154,7 +189,7 @@ export function HomePage() {
               className="p-6 h-full flex flex-col justify-between"
               hover
               accent="primary"
-              onClick={() => navigate('/roles/senior-software-engineer')}
+              onClick={() => navigate(content.featured_insight.href)}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -162,15 +197,15 @@ export function HomePage() {
                   <TrendingUp size={18} className="text-primary" />
                 </div>
                 <h3 className="text-headline-md font-semibold text-on-surface mb-2">
-                  Remote-first companies are offering ₹8L more in equity grants this year.
+                  {content.featured_insight.title}
                 </h3>
                 <p className="text-body-md text-on-surface-variant">
-                  ML Engineers saw 28% YoY growth — highest of any tech role in FY2024
+                  {content.featured_insight.subtitle}
                 </p>
               </div>
               <div className="mt-6 h-24">
                 <SalaryTrendChart
-                  data={SALARY_TREND_DATA.slice(-6)}
+                  data={content.salary_trend.slice(-6)}
                   height={96}
                   showAxis={false}
                 />
@@ -192,21 +227,17 @@ export function HomePage() {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 <div className="text-4xl font-bold text-on-surface mb-1 tracking-tight">
-                  ₹42.5L
+                  {content.salary_snapshot.headline_value}
                 </div>
                 <div className="font-mono text-label-md text-on-surface-variant mb-4">
-                  Sr. Frontend (Remote)
+                  {content.salary_snapshot.headline_label}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" dot size="sm">+12% YoY</Badge>
+                  <Badge variant="secondary" dot size="sm">{content.salary_snapshot.trend_label}</Badge>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
-                {[
-                  { role: 'ML Engineer', salary: '₹48L' },
-                  { role: 'EM', salary: '₹62L' },
-                  { role: 'Sr. PM', salary: '₹38L' },
-                ].map(item => (
+                {content.salary_snapshot.top_roles.map(item => (
                   <div key={item.role} className="flex justify-between items-center">
                     <span className="text-body-md text-on-surface-variant">{item.role}</span>
                     <span className="font-mono text-body-md text-on-surface">{item.salary}</span>
@@ -229,7 +260,7 @@ export function HomePage() {
                 <MonoLabel color="tertiary">TOP COMP SCORE</MonoLabel>
               </div>
               <div className="space-y-3">
-                {MOCK_COMPANIES.sort((a, b) => b.opencomp_score - a.opencomp_score)
+                {[...companies].sort((a, b) => b.opencomp_score - a.opencomp_score)
                   .slice(0, 5)
                   .map((company, i) => (
                     <div
@@ -256,7 +287,7 @@ export function HomePage() {
           </motion.div>
 
           {/* Trending City Intelligence */}
-          {TRENDING_INSIGHTS.map((insight, i) => (
+          {content.trending_insights.map((insight, i) => (
             <motion.div
               key={insight.id}
               initial={{ opacity: 0, y: 20 }}
@@ -267,11 +298,11 @@ export function HomePage() {
               <GlassCard
                 className="p-5 h-full"
                 hover
-                accent={insight.accent as any}
+                accent={insight.accent as 'primary' | 'secondary' | 'tertiary'}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
-                    <MonoLabel color={insight.accent as any} className="mb-2 block">
+                    <MonoLabel color={insight.accent as 'primary' | 'secondary' | 'tertiary'} className="mb-2 block">
                       {insight.category}
                     </MonoLabel>
                     <div className={cn(
@@ -362,7 +393,7 @@ export function HomePage() {
               variant="outline"
               size="lg"
               icon={<GitBranch size={18} />}
-              onClick={() => window.open('https://github.com', '_blank')}
+              onClick={() => window.open(GITHUB_REPO_URL, '_blank', 'noopener,noreferrer')}
             >
               View on GitHub
             </Button>
@@ -376,12 +407,15 @@ export function HomePage() {
           </div>
           <div className="flex gap-6 pt-2">
             {[
-              { label: 'GitHub Stars', value: '4.2k', icon: '⭐' },
-              { label: 'Contributors', value: '218', icon: '👥' },
-              { label: 'License', value: 'MIT', icon: '📄' },
+              { label: 'Contributors', value: formatNumber(stats.total_contributors), icon: Users },
+              { label: 'Tracked Companies', value: formatNumber(stats.companies_tracked), icon: Star },
+              { label: 'Data Points', value: formatNumber(stats.total_data_points), icon: FileText },
             ].map(item => (
               <div key={item.label}>
-                <div className="font-bold text-on-surface">{item.icon} {item.value}</div>
+                <div className="font-bold text-on-surface flex items-center gap-1.5">
+                  <item.icon size={14} className="text-on-surface-variant" />
+                  {item.value}
+                </div>
                 <div className="font-mono text-label-md text-on-surface-variant">{item.label}</div>
               </div>
             ))}
@@ -448,7 +482,8 @@ export function HomePage() {
               variant="primary"
               size="lg"
               icon={<PlusCircle size={18} />}
-              onClick={() => setContributeModalOpen(true)}
+              
+              onClick={() => navigate('/contribute')}
             >
               Contribute Salary Data
             </Button>
@@ -459,24 +494,23 @@ export function HomePage() {
       {/* Footer */}
       <footer className="border-t border-white/5 py-10 px-6 md:px-8 max-w-[1440px] mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 md:justify-start">
             <img
               src={opencompFavicon}
-              alt=""
-              className="h-6 w-6 rounded-md object-contain"
+              alt="OpenComp icon"
+              className="h-6 w-6 shrink-0 rounded-md object-contain"
             />
-            <img
-              src={opencompLogo}
-              alt="OpenComp"
-              className="h-5 w-[6.25rem] object-cover object-center"
-            />
-            <span className="text-on-surface-variant text-body-md">· Open-source workplace intelligence for India</span>
+            <span className="text-center text-body-md text-on-surface-variant md:text-left">
+              · Open-source workplace intelligence for India
+            </span>
           </div>
           <div className="flex items-center gap-6">
             {['About', 'Privacy', 'Open Data', 'API', 'GitHub'].map(item => (
               <a
                 key={item}
-                href="#"
+                href={item === 'GitHub' ? GITHUB_REPO_URL : '#'}
+                target={item === 'GitHub' ? '_blank' : undefined}
+                rel={item === 'GitHub' ? 'noopener noreferrer' : undefined}
                 className="font-mono text-label-md text-on-surface-variant hover:text-primary transition-colors"
               >
                 {item}

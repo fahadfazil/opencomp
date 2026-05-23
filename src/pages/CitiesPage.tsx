@@ -1,19 +1,20 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { MapPin, TrendingUp, Train } from 'lucide-react'
-import { GlassCard, MonoLabel, Badge, StatCard, Button } from '@/components/ui'
+import { MapPin, Train } from 'lucide-react'
+import { GlassCard, MonoLabel, Badge, Button } from '@/components/ui'
 import { IndiaMap } from '@/components/map/IndiaMap'
-import { MOCK_CITIES } from '@/data/mockData'
 import { formatLPA, formatNumber, cn } from '@/utils'
 import type { City } from '@/types'
+import { useCities } from '@/hooks'
 
 export function CitiesPage() {
   const navigate = useNavigate()
+  const { data: cities = [] } = useCities()
   const [selectedCity, setSelectedCity] = useState<City | null>(null)
   const [sortBy, setSortBy] = useState<'salary' | 'entries' | 'rank'>('salary')
 
-  const sorted = [...MOCK_CITIES].sort((a, b) => {
+  const sorted = [...cities].sort((a, b) => {
     if (sortBy === 'salary') return b.avg_salary_lpa - a.avg_salary_lpa
     if (sortBy === 'entries') return b.total_entries - a.total_entries
     return (a.tech_hub_rank || 99) - (b.tech_hub_rank || 99)
@@ -31,7 +32,7 @@ export function CitiesPage() {
           India Salary Heatmap
         </h1>
         <p className="text-on-surface-variant text-body-lg">
-          Interactive geographic salary intelligence across {MOCK_CITIES.length} cities
+          Interactive geographic salary intelligence across {cities.length} cities
         </p>
       </div>
 
@@ -54,13 +55,13 @@ export function CitiesPage() {
           {selectedCity ? (
             <>
               <GlassCard className="p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-bold">{selectedCity.name}</h2>
+                <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
+                  <div className="min-w-0">
+                    <h2 className="text-xl font-bold break-words">{selectedCity.name}</h2>
                     <div className="font-mono text-label-md text-on-surface-variant">{selectedCity.state}</div>
                   </div>
                   {selectedCity.tech_hub_rank && (
-                    <Badge variant="secondary" dot>#{selectedCity.tech_hub_rank} TECH HUB</Badge>
+                    <Badge variant="secondary" dot className="shrink-0">#{selectedCity.tech_hub_rank} TECH HUB</Badge>
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
@@ -107,18 +108,18 @@ export function CitiesPage() {
           <GlassCard className="p-4">
             <MonoLabel className="mb-3 block" color="secondary">TOP SALARY CITIES</MonoLabel>
             <div className="space-y-2">
-              {MOCK_CITIES.sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (
+              {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (
                 <button
                   key={city.id}
                   className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container transition-colors text-left"
                   onClick={() => navigate(`/cities/${city.slug}`)}
                 >
                   <span className="font-mono text-label-md text-on-surface-variant w-4">{i + 1}</span>
-                  <div className="flex-1">
-                    <div className="text-body-md text-on-surface font-medium">{city.name}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-body-md text-on-surface font-medium truncate">{city.name}</div>
                   </div>
-                  <div className="font-mono text-label-md text-secondary">{formatLPA(city.avg_salary_lpa)}</div>
-                  {city.metro_available && <Train size={11} className="text-on-surface-variant" />}
+                  <div className="font-mono text-label-md text-secondary shrink-0">{formatLPA(city.avg_salary_lpa)}</div>
+                  {city.metro_available && <Train size={11} className="text-on-surface-variant shrink-0" />}
                 </button>
               ))}
             </div>
@@ -127,7 +128,7 @@ export function CitiesPage() {
       </div>
 
       {/* Sort controls */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-4 flex-wrap">
         <MonoLabel color="muted">SORT BY:</MonoLabel>
         {(['salary', 'entries', 'rank'] as const).map(s => (
           <button
@@ -160,9 +161,9 @@ export function CitiesPage() {
               accent="secondary"
               onClick={() => navigate(`/cities/${city.slug}`)}
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-bold text-on-surface text-lg">{city.name}</h3>
+              <div className="flex items-start justify-between gap-3 mb-4">
+                <div className="min-w-0">
+                  <h3 className="font-bold text-on-surface text-lg break-words">{city.name}</h3>
                   <div className="font-mono text-label-md text-on-surface-variant">{city.state}</div>
                 </div>
                 <div className="flex flex-col gap-1.5 items-end">

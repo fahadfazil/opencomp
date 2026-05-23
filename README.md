@@ -1,6 +1,7 @@
 <div align="center">
 
 <img src="https://opencomp.in/assets/opencomp-logo-sgAtSmvG.png" alt="OpenComp" height="100px" />
+
 # OpenComp
 
 ### Open-source workplace intelligence for India

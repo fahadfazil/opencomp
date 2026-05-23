@@ -1,14 +1,11 @@
 import { supabase } from '@/lib/supabase'
-import { MOCK_CITIES } from '@/data/mockData'
 import type { City } from '@/types'
-import { generateSlug } from '@/utils'
 
 function toCity(record: Record<string, unknown>): City {
-  const name = String(record.name ?? '')
   return {
     id: String(record.id ?? ''),
-    name,
-    slug: String(record.slug ?? generateSlug(name)),
+    name: String(record.name ?? ''),
+    slug: String(record.slug ?? ''),
     state: String(record.state ?? ''),
     latitude: Number(record.latitude ?? 0),
     longitude: Number(record.longitude ?? 0),
@@ -27,14 +24,23 @@ export async function getCities(): Promise<City[]> {
     .select('*')
     .order('avg_salary_lpa', { ascending: false })
 
-  if (error || !data || data.length === 0) {
-    return MOCK_CITIES
+  if (error) {
+    throw error
   }
 
-  return data.map((row) => toCity(row as Record<string, unknown>))
+  return (data ?? []).map((row) => toCity(row as Record<string, unknown>))
 }
 
 export async function getCityBySlug(slug: string): Promise<City | null> {
-  const cities = await getCities()
-  return cities.find((city) => city.slug === slug) ?? null
+  const { data, error } = await supabase
+    .from('cities')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  if (error) {
+    throw error
+  }
+
+  return data ? toCity(data as Record<string, unknown>) : null
 }

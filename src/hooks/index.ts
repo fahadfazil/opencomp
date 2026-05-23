@@ -1,4 +1,5 @@
 export * from './useAuthSession'
+export * from './useAppContent'
 export * from './useCities'
 export * from './useCompanies'
 export * from './useGlobalStats'

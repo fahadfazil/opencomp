@@ -6,14 +6,23 @@ import {
   GlassCard, MonoLabel, Badge, StatCard, Button
 } from '@/components/ui'
 import { SalaryDistributionChart, SalaryTrendChart, CityComparisonChart } from '@/components/charts'
-import { SALARY_TREND_DATA } from '@/data/mockData'
 import { formatLPA, cn } from '@/utils'
-import { useCities, useRole, useRoles } from '@/hooks'
+import { useCities, useRole, useRolePageContent, useRoles } from '@/hooks'
+import type { RolePageContent } from '@/types'
 
-// Baseline city salary (LPA) used to normalize cross-city role estimates.
-const CITY_BASELINE_SALARY = 22
-// Conservative city adjustment multiplier to avoid over-estimating city-transformed salaries.
-const ROLE_CITY_SALARY_MULTIPLIER = 0.9
+const EMPTY_ROLE_PAGE_CONTENT: RolePageContent = {
+  salary_trend_badge: '0% CAGR',
+  salary_trend: [],
+  salary_distribution_multipliers: {
+    p10: 0.75,
+    p90: 1.3,
+  },
+  city_comparison: {
+    baseline_salary: 22,
+    multiplier: 0.9,
+  },
+  experience_bands: [],
+}
 
 export function RolesPage() {
   const navigate = useNavigate()
@@ -135,6 +144,9 @@ export function RolePage() {
   const navigate = useNavigate()
   const { data: role } = useRole(slug ?? '')
   const { data: cities = [] } = useCities()
+  const { data: pageContent } = useRolePageContent()
+
+  const content = pageContent ?? EMPTY_ROLE_PAGE_CONTENT
 
   if (!role) {
     return (
@@ -153,7 +165,9 @@ export function RolePage() {
       id: c.id,
       name: c.name,
       value: Math.round(
-        role.avg_salary_lpa * (citySalary / CITY_BASELINE_SALARY) * ROLE_CITY_SALARY_MULTIPLIER
+        role.avg_salary_lpa
+        * (citySalary / content.city_comparison.baseline_salary)
+        * content.city_comparison.multiplier
       ),
     }
   }).sort((a, b) => b.value - a.value)
@@ -203,20 +217,20 @@ export function RolePage() {
           <GlassCard className="p-6">
             <MonoLabel className="mb-6 block">SALARY DISTRIBUTION (INDIA)</MonoLabel>
             <SalaryDistributionChart
-              p10={role.p25_salary_lpa * 0.75}
+              p10={role.p25_salary_lpa * content.salary_distribution_multipliers.p10}
               p25={role.p25_salary_lpa}
               p50={role.median_salary_lpa}
               p75={role.p75_salary_lpa}
-              p90={role.p75_salary_lpa * 1.3}
+              p90={role.p75_salary_lpa * content.salary_distribution_multipliers.p90}
               height={200}
             />
             <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-5 gap-2 text-center">
               {[
-                ['P10', formatLPA(role.p25_salary_lpa * 0.75)],
+                ['P10', formatLPA(role.p25_salary_lpa * content.salary_distribution_multipliers.p10)],
                 ['P25', formatLPA(role.p25_salary_lpa)],
                 ['Median', formatLPA(role.median_salary_lpa)],
                 ['P75', formatLPA(role.p75_salary_lpa)],
-                ['P90', formatLPA(role.p75_salary_lpa * 1.3)],
+                ['P90', formatLPA(role.p75_salary_lpa * content.salary_distribution_multipliers.p90)],
               ].map(([label, val]) => (
                 <div key={label}>
                   <div className="font-mono text-label-md text-on-surface">{val}</div>
@@ -256,12 +270,12 @@ export function RolePage() {
           <GlassCard className="p-6">
             <div className="flex items-center justify-between mb-6">
               <MonoLabel>SALARY TREND</MonoLabel>
-              <Badge variant="tertiary" dot size="sm">+{role.yoy_growth_pct}% CAGR</Badge>
+             <Badge variant="tertiary" dot size="sm">{content.salary_trend_badge}</Badge>
             </div>
             <SalaryTrendChart
-              data={SALARY_TREND_DATA.map(d => ({
-                period: d.period,
-                value: Math.round(d.value * (role.avg_salary_lpa / 24))
+              data={content.salary_trend.map((point) => ({
+                period: point.period,
+                value: Math.round(point.value * (role.avg_salary_lpa / 24))
               }))}
               height={180}
               color="#d1d0ff"
@@ -286,13 +300,7 @@ export function RolePage() {
           <GlassCard className="p-6">
             <MonoLabel className="mb-4 block">EXPERIENCE vs SALARY</MonoLabel>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {[
-                { exp: '0-1 yr', pct: 0.45 },
-                { exp: '1-3 yr', pct: 0.65 },
-                { exp: '3-5 yr', pct: 0.88 },
-                { exp: '5-8 yr', pct: 1.1 },
-                { exp: '8+ yr', pct: 1.45 },
-              ].map(item => (
+              {content.experience_bands.map(item => (
                 <div key={item.exp} className="p-4 bg-surface-container/50 rounded-xl text-center">
                   <div className="font-mono text-label-md text-on-surface-variant mb-2">{item.exp}</div>
                   <div className="text-xl font-bold text-tertiary">

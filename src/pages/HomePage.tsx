@@ -8,12 +8,11 @@ import {
 import { IndiaMap } from '@/components/map/IndiaMap'
 import { SalaryTrendChart } from '@/components/charts'
 import { GlassCard, MonoLabel, Badge, LiveIndicator, Button } from '@/components/ui'
-import { TRENDING_INSIGHTS, SALARY_TREND_DATA } from '@/data/mockData'
 import { formatNumber } from '@/utils'
 import { useUIStore } from '@/store'
 import { cn } from '@/utils'
-import { useCompanies, useGlobalStats } from '@/hooks'
-import type { GlobalStats } from '@/types'
+import { useCompanies, useGlobalStats, useHomeContent } from '@/hooks'
+import type { GlobalStats, HomeContent } from '@/types'
 import opencompFavicon from '@/assets/opencomp-favicon.png'
 import opencompLogo from '@/assets/opencomp-logo.png'
 
@@ -26,6 +25,23 @@ const EMPTY_GLOBAL_STATS: GlobalStats = {
   cities_covered: 0,
   avg_salary_india: 0,
   yoy_salary_growth: 0,
+}
+
+const EMPTY_HOME_CONTENT: HomeContent = {
+  quick_searches: [],
+  featured_insight: {
+    title: '',
+    subtitle: '',
+    href: '/roles',
+  },
+  salary_snapshot: {
+    headline_value: '₹0L',
+    headline_label: 'No live snapshot available',
+    trend_label: '0% YoY',
+    top_roles: [],
+  },
+  salary_trend: [],
+  trending_insights: [],
 }
 
 // Animated counter hook
@@ -55,9 +71,11 @@ export function HomePage() {
   const { toggleCommandPalette, setContributeModalOpen } = useUIStore()
   const { data: globalStats } = useGlobalStats()
   const { data: companiesData } = useCompanies()
+  const { data: homeContent } = useHomeContent()
 
   const stats = globalStats ?? EMPTY_GLOBAL_STATS
   const companies = companiesData ?? []
+  const content = homeContent ?? EMPTY_HOME_CONTENT
 
   const contributorsCount = useCounter(stats.total_contributors)
   const dataPointsCount = useCounter(stats.total_data_points)
@@ -130,7 +148,7 @@ export function HomePage() {
 
             {/* Quick search tags */}
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-              {['Bangalore', 'SDE-2 at CRED', 'Remote ML Engineer', 'Senior PM Mumbai'].map(q => (
+              {content.quick_searches.map(q => (
                 <button
                   key={q}
                   onClick={toggleCommandPalette}
@@ -171,7 +189,7 @@ export function HomePage() {
               className="p-6 h-full flex flex-col justify-between"
               hover
               accent="primary"
-              onClick={() => navigate('/roles/senior-software-engineer')}
+              onClick={() => navigate(content.featured_insight.href)}
             >
               <div>
                 <div className="flex justify-between items-start mb-6">
@@ -179,15 +197,15 @@ export function HomePage() {
                   <TrendingUp size={18} className="text-primary" />
                 </div>
                 <h3 className="text-headline-md font-semibold text-on-surface mb-2">
-                  Remote-first companies are offering ₹8L more in equity grants this year.
+                  {content.featured_insight.title}
                 </h3>
                 <p className="text-body-md text-on-surface-variant">
-                  ML Engineers saw 28% YoY growth — highest of any tech role in FY2024
+                  {content.featured_insight.subtitle}
                 </p>
               </div>
               <div className="mt-6 h-24">
                 <SalaryTrendChart
-                  data={SALARY_TREND_DATA.slice(-6)}
+                  data={content.salary_trend.slice(-6)}
                   height={96}
                   showAxis={false}
                 />
@@ -209,21 +227,17 @@ export function HomePage() {
               </div>
               <div className="flex-1 flex flex-col justify-center">
                 <div className="text-4xl font-bold text-on-surface mb-1 tracking-tight">
-                  ₹42.5L
+                  {content.salary_snapshot.headline_value}
                 </div>
                 <div className="font-mono text-label-md text-on-surface-variant mb-4">
-                  Sr. Frontend (Remote)
+                  {content.salary_snapshot.headline_label}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary" dot size="sm">+12% YoY</Badge>
+                  <Badge variant="secondary" dot size="sm">{content.salary_snapshot.trend_label}</Badge>
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
-                {[
-                  { role: 'ML Engineer', salary: '₹48L' },
-                  { role: 'EM', salary: '₹62L' },
-                  { role: 'Sr. PM', salary: '₹38L' },
-                ].map(item => (
+                {content.salary_snapshot.top_roles.map(item => (
                   <div key={item.role} className="flex justify-between items-center">
                     <span className="text-body-md text-on-surface-variant">{item.role}</span>
                     <span className="font-mono text-body-md text-on-surface">{item.salary}</span>
@@ -273,7 +287,7 @@ export function HomePage() {
           </motion.div>
 
           {/* Trending City Intelligence */}
-          {TRENDING_INSIGHTS.map((insight, i) => (
+          {content.trending_insights.map((insight, i) => (
             <motion.div
               key={insight.id}
               initial={{ opacity: 0, y: 20 }}

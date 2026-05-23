@@ -6,14 +6,13 @@ import { GlassCard, MonoLabel, Badge, ScoreGauge, Button } from '@/components/ui
 import { formatLPA, formatNumber, cn } from '@/utils'
 import { useCompanies } from '@/hooks'
 
-const INDUSTRIES = ['All', 'Fintech', 'E-Commerce', 'Food-Tech', 'Quick Commerce', 'Social Commerce']
-
 export function CompaniesPage() {
   const navigate = useNavigate()
   const { data: companies = [] } = useCompanies()
   const [search, setSearch] = useState('')
   const [industry, setIndustry] = useState('All')
   const [sortBy, setSortBy] = useState<'score' | 'salary' | 'reviews'>('score')
+  const industries = ['All', ...Array.from(new Set(companies.map((company) => company.industry)))]
 
   const filtered = companies
     .filter(c => {
@@ -76,7 +75,7 @@ export function CompaniesPage() {
 
         {/* Industry filter */}
         <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1">
-          {INDUSTRIES.map(ind => (
+          {industries.map(ind => (
             <button
               key={ind}
               onClick={() => setIndustry(ind)}

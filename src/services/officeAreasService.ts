@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase'
-import { MOCK_OFFICE_AREAS } from '@/data/mockData'
 import type { OfficeArea } from '@/types'
 
 export async function getOfficeAreas(): Promise<OfficeArea[]> {
@@ -7,9 +6,9 @@ export async function getOfficeAreas(): Promise<OfficeArea[]> {
     .from('office_areas')
     .select('*')
 
-  if (error || !data || data.length === 0) {
-    return MOCK_OFFICE_AREAS
+  if (error) {
+    throw error
   }
 
-  return data as OfficeArea[]
+  return (data ?? []) as OfficeArea[]
 }

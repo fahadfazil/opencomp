@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {
-  Search, Bell, Settings, Menu, X, GitBranch,
-  TrendingUp, MapPin, Building2, Briefcase, PlusCircle,
-  ChevronDown, Star, Users, BarChart3
+  Search, Bell, Menu, X, MapPin,
+  Building2, Briefcase, PlusCircle, BarChart3
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/utils'
 import { useAuthStore, useUIStore } from '@/store'
-import { Button, Badge } from '@/components/ui'
+import { Button } from '@/components/ui'
+import opencompFavicon from '@/assets/opencomp-favicon.png'
+import opencompLogo from '@/assets/opencomp-logo.png'
 
 const NAV_ITEMS = [
   { label: 'Intelligence', href: '/', icon: BarChart3 },
@@ -19,7 +20,6 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const location = useLocation()
-  const navigate = useNavigate()
   const { user } = useAuthStore()
   const { setAuthModalOpen, setContributeModalOpen, toggleCommandPalette } = useUIStore()
   const [scrolled, setScrolled] = useState(false)
@@ -55,12 +55,16 @@ export function Navbar() {
         <div className="max-w-[1440px] mx-auto px-6 md:px-8 h-16 flex items-center justify-between gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <GitBranch size={14} className="text-on-primary" strokeWidth={2.5} />
-            </div>
-            <span className="font-bold text-lg tracking-tight text-on-surface">
-              Open<span className="text-primary">Comp</span>
-            </span>
+            <img
+              src={opencompFavicon}
+              alt=""
+              className="h-8 w-8 rounded-lg object-contain"
+            />
+            <img
+              src={opencompLogo}
+              alt="OpenComp"
+              className="h-7 w-[8.75rem] object-cover object-center"
+            />
           </Link>
 
           {/* Desktop Nav */}

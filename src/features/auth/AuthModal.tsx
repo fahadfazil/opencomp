@@ -42,9 +42,10 @@ export function AuthModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] w-full max-w-md px-4"
+            className="fixed inset-0 z-[201] flex items-center justify-center px-4 py-6"
           >
-            <div className="glass-card border border-white/10 p-8">
+            <div className="w-full max-w-md">
+              <div className="glass-card border border-white/10 p-8">
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2">
@@ -144,6 +145,7 @@ export function AuthModal() {
                   By signing in, you agree to our anonymous contribution policy.
                   No personal data is ever made public.
                 </p>
+              </div>
               </div>
             </div>
           </motion.div>

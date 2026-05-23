@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Building2, Briefcase, DollarSign, Star, MessageSquare, CheckCircle, ChevronRight, ChevronLeft, Shield, Loader2 } from 'lucide-react'
 import { GlassCard, Button, MonoLabel, Badge } from '../components/ui'
-import { useContributionStore, useAuthStore } from '../store'
+import { useContributionStore, useAuthStore, useUIStore } from '../store'
 import { cn } from '../utils'
 import { useCompanies, useRoles } from '@/hooks'
 import { submitContribution } from '@/services/contributionsService'
@@ -447,6 +447,7 @@ function Step6({ onBack }: { onBack: () => void }) {
 
 export function ContributePage() {
   const { user } = useAuthStore()
+  const { setAuthModalOpen } = useUIStore()
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
 
@@ -459,7 +460,7 @@ export function ContributePage() {
           <p className="text-on-surface-variant text-sm">
             You need to be signed in to submit salary data. Your identity remains anonymous.
           </p>
-          <Button variant="primary" onClick={() => navigate('/')}>Go to Homepage</Button>
+          <Button variant="primary" onClick={() => setAuthModalOpen(true)}>Sign In</Button>
         </GlassCard>
       </div>
     )

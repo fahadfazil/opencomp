@@ -5,10 +5,13 @@ import type { FooterModalKey } from '@/store'
 
 // ─── Content ────────────────────────────────────────────────────────────────
 
-const MODAL_CONTENT: Record<
+function buildModalContent(
+  setFooterModal: (modal: FooterModalKey) => void
+): Record<
   Exclude<FooterModalKey, null>,
   { icon: React.ReactNode; title: string; body: React.ReactNode }
-> = {
+> {
+  return {
   about: {
     icon: <Info size={18} className="text-primary" />,
     title: 'About OpenComp',
@@ -110,9 +113,7 @@ const MODAL_CONTENT: Record<
             Bulk CSV exports are available via the API. See the{' '}
             <button
               className="text-primary hover:underline"
-              onClick={() => {
-                /* handled by parent modal switcher */
-              }}
+              onClick={() => setFooterModal('api')}
             >
               API docs
             </button>{' '}
@@ -188,6 +189,7 @@ const MODAL_CONTENT: Record<
       </div>
     ),
   },
+  }
 }
 
 function Section({
@@ -211,6 +213,7 @@ export function FooterModal() {
   const { footerModal, setFooterModal } = useUIStore()
   const close = () => setFooterModal(null)
 
+  const MODAL_CONTENT = buildModalContent(setFooterModal)
   const content = footerModal ? MODAL_CONTENT[footerModal] : null
 
   return (

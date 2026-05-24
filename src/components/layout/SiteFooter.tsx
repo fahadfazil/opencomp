@@ -4,7 +4,11 @@ import type { FooterModalKey } from '@/store'
 
 const GITHUB_REPO_URL = 'https://github.com/fahadfazil/opencomp'
 
-const FOOTER_LINKS: { label: string; modal?: Exclude<FooterModalKey, null>; href?: string }[] = [
+type FooterLink =
+  | { label: string; modal: Exclude<FooterModalKey, null> }
+  | { label: string; href: string }
+
+const FOOTER_LINKS: FooterLink[] = [
   { label: 'About', modal: 'about' },
   { label: 'Privacy', modal: 'privacy' },
   { label: 'Open Data', modal: 'open-data' },
@@ -29,27 +33,30 @@ export function SiteFooter() {
           </span>
         </div>
         <div className="flex items-center gap-6">
-          {FOOTER_LINKS.map(({ label, modal, href }) =>
-            href ? (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-label-md text-on-surface-variant hover:text-primary transition-colors"
-              >
-                {label}
-              </a>
-            ) : (
+          {FOOTER_LINKS.map((link) => {
+            if ('href' in link) {
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-label-md text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            }
+            return (
               <button
-                key={label}
-                onClick={() => setFooterModal(modal!)}
+                key={link.label}
+                onClick={() => setFooterModal(link.modal)}
                 className="font-mono text-label-md text-on-surface-variant hover:text-primary transition-colors"
               >
-                {label}
+                {link.label}
               </button>
             )
-          )}
+          })}
         </div>
       </div>
     </footer>

@@ -318,12 +318,12 @@ export function AreaScoreHeatmap({ areas }: AreaScoreHeatmapProps) {
             <th className="font-mono text-[10px] text-on-surface-variant tracking-widest pb-3 pr-6 min-w-[130px]">
               AREA
             </th>
-            {HEATMAP_METRICS.map(m => (
+            {HEATMAP_METRICS.map(metric => (
               <th
-                key={m.key}
+                key={metric.key}
                 className="font-mono text-[10px] text-on-surface-variant tracking-widest pb-3 px-1.5 text-center"
               >
-                {m.label}
+                {metric.label}
               </th>
             ))}
           </tr>
@@ -334,11 +334,11 @@ export function AreaScoreHeatmap({ areas }: AreaScoreHeatmapProps) {
               <td className="py-2.5 pr-6 font-mono text-[11px] text-on-surface whitespace-nowrap">
                 {area.name}
               </td>
-              {HEATMAP_METRICS.map(m => {
-                const val = area[m.key]
-                const color = getHeatmapCellColor(val)
+              {HEATMAP_METRICS.map(metric => {
+                const metricValue = area[metric.key]
+                const color = getHeatmapCellColor(metricValue)
                 return (
-                  <td key={m.key} className="px-1.5 py-2.5 text-center">
+                  <td key={metric.key} className="px-1.5 py-2.5 text-center">
                     <div
                       className="rounded-md inline-flex items-center justify-center font-mono text-[10px] font-bold"
                       style={{
@@ -349,7 +349,7 @@ export function AreaScoreHeatmap({ areas }: AreaScoreHeatmapProps) {
                         border: `1px solid ${color}40`,
                       }}
                     >
-                      {val}
+                      {metricValue}
                     </div>
                   </td>
                 )

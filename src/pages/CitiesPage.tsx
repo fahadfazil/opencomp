@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { MapPin, Train } from 'lucide-react'
-import { GlassCard, MonoLabel, Badge, Button } from '@/components/ui'
+import { GlassCard, MonoLabel, Badge } from '@/components/ui'
 import { IndiaMap } from '@/components/map/IndiaMap'
 import { formatLPA, formatNumber, cn } from '@/utils'
 import type { City } from '@/types'
@@ -11,7 +11,6 @@ import { useCities } from '@/hooks'
 export function CitiesPage() {
   const navigate = useNavigate()
   const { data: cities = [] } = useCities()
-  const [selectedCity, setSelectedCity] = useState<City | null>(null)
   const [sortBy, setSortBy] = useState<'salary' | 'entries' | 'rank'>('salary')
 
   const sorted = [...cities].sort((a, b) => {
@@ -41,73 +40,15 @@ export function CitiesPage() {
         <div className="lg:col-span-7">
           <GlassCard className="p-2 h-[480px]">
             <IndiaMap
-              onCityClick={(city) => {
-                setSelectedCity(city)
-                navigate(`/cities/${city.slug}`)
-              }}
-              highlightCityId={selectedCity?.id}
+              onCityClick={(city) => navigate(`/cities/${city.slug}`)}
             />
           </GlassCard>
         </div>
 
-        {/* City Detail Panel */}
-        <div className="lg:col-span-5 space-y-4 relative z-10">
-          {selectedCity ? (
-            <>
-              <GlassCard className="p-5">
-                <div className="flex items-start justify-between gap-3 mb-4 flex-wrap">
-                  <div className="min-w-0">
-                    <h2 className="text-xl font-bold break-words">{selectedCity.name}</h2>
-                    <div className="font-mono text-label-md text-on-surface-variant">{selectedCity.state}</div>
-                  </div>
-                  {selectedCity.tech_hub_rank && (
-                    <Badge variant="secondary" dot className="shrink-0">#{selectedCity.tech_hub_rank} TECH HUB</Badge>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="p-3 bg-surface-container/60 rounded-lg">
-                    <div className="font-mono text-[9px] text-on-surface-variant mb-1">AVG SALARY</div>
-                    <div className="text-2xl font-bold text-secondary">{formatLPA(selectedCity.avg_salary_lpa)}</div>
-                  </div>
-                  <div className="p-3 bg-surface-container/60 rounded-lg">
-                    <div className="font-mono text-[9px] text-on-surface-variant mb-1">DATA POINTS</div>
-                    <div className="text-2xl font-bold text-primary">{formatNumber(selectedCity.total_entries)}</div>
-                  </div>
-                  <div className="p-3 bg-surface-container/60 rounded-lg">
-                    <div className="font-mono text-[9px] text-on-surface-variant mb-1">COST INDEX</div>
-                    <div className="text-xl font-bold text-on-surface">{selectedCity.cost_of_living_index}/100</div>
-                  </div>
-                  <div className="p-3 bg-surface-container/60 rounded-lg">
-                    <div className="font-mono text-[9px] text-on-surface-variant mb-1">METRO</div>
-                    <div className={cn('text-xl font-bold', selectedCity.metro_available ? 'text-secondary' : 'text-on-surface-variant')}>
-                      {selectedCity.metro_available ? 'YES' : 'NO'}
-                    </div>
-                  </div>
-                </div>
-                <Button
-                  variant="primary"
-                  className="w-full"
-                  onClick={() => navigate(`/cities/${selectedCity.slug}`)}
-                >
-                  View Full City Dashboard
-                </Button>
-              </GlassCard>
-            </>
-          ) : (
-            <GlassCard className="p-5 min-h-[280px] flex items-center justify-center text-center">
-              <div>
-                <MapPin size={32} className="text-outline mx-auto mb-3" />
-                <div className="text-on-surface-variant text-body-md">
-                  Click on a city marker<br />to see salary intelligence
-                </div>
-              </div>
-            </GlassCard>
-          )}
-
-          {/* Top cities quick stats */}
-          <GlassCard className="p-4">
+        <div className="lg:col-span-5 relative z-10">
+          <GlassCard className="p-4 h-[480px] flex flex-col">
             <MonoLabel className="mb-3 block" color="secondary">TOP SALARY CITIES</MonoLabel>
-            <div className="space-y-2">
+            <div className="flex-1 space-y-2 overflow-y-auto pr-1">
               {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (
                 <button
                   key={city.id}

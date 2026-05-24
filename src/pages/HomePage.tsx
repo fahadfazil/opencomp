@@ -13,7 +13,6 @@ import { useUIStore } from '@/store'
 import { cn } from '@/utils'
 import { useCompanies, useGlobalStats, useHomeContent } from '@/hooks'
 import type { GlobalStats, HomeContent } from '@/types'
-import opencompLogo from '@/assets/opencomp-logo.png'
 
 const GITHUB_REPO_URL = 'https://github.com/fahadfazil/opencomp'
 

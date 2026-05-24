@@ -28,16 +28,19 @@ function hasAreaSalary(area: OfficeArea): area is OfficeArea & { avg_salary_lpa:
   return area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
 }
 
+function parseDensityValue(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const [mapHasError, setMapHasError] = useState(false)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
   const validAreas = areas.filter((area) => hasValidCoordinates(area.latitude, area.longitude))
-  const densityValues = validAreas.map((area) => (
-    typeof area.office_density === 'number' && Number.isFinite(area.office_density)
-      ? area.office_density
-      : 0
-  ))
+  const areasWithDensity = validAreas.filter((area) => parseDensityValue(area.office_density) !== null)
+  const densityValues = areasWithDensity
+    .map((area) => parseDensityValue(area.office_density))
+    .filter((value): value is number => value !== null)
   const hasDensityData = densityValues.length > 0
   const densityRange = {
     min: hasDensityData ? Math.min(...densityValues) : 0,
@@ -102,7 +105,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         <NavigationControl position="top-right" showCompass={false} />
 
         {/* City centre marker when no office areas are available */}
-        {validAreas.length === 0 && hasCityCoordinates && (
+        {areasWithDensity.length === 0 && hasCityCoordinates && (
           <Marker longitude={mapCenter.longitude} latitude={mapCenter.latitude}>
             <div className="relative cursor-default">
               <span
@@ -129,12 +132,8 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         )}
 
         {/* Office area heatmap markers */}
-        {validAreas.map(area => {
-          const areaDensity = (
-            typeof area.office_density === 'number' && Number.isFinite(area.office_density)
-              ? area.office_density
-              : 0
-          )
+        {areasWithDensity.map(area => {
+          const areaDensity = parseDensityValue(area.office_density) ?? 0
           const densityRawRange = densityRange.max - densityRange.min
           const densityNormalized = densityRawRange <= 0
             ? 0.5

@@ -47,6 +47,41 @@ function buildModalContent(
           </a>
           .
         </p>
+        <div className="border-t border-white/5 pt-4 space-y-2">
+          <div className="font-semibold text-on-surface text-sm">Built with</div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { label: 'Supabase', href: 'https://supabase.com' },
+              { label: 'Render', href: 'https://render.com' },
+              { label: 'Google Stitch', href: 'https://stitch.withgoogle.com' },
+              { label: 'ChatGPT', href: 'https://openai.com/chatgpt' },
+              { label: 'Claude', href: 'https://claude.ai' },
+            ].map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1 rounded-md bg-surface-container border border-white/10 font-mono text-xs text-on-surface-variant hover:text-primary hover:border-primary/40 transition-colors"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <div className="border-t border-white/5 pt-4 space-y-1.5">
+          <div className="font-semibold text-on-surface text-sm">Contact</div>
+          <div className="font-mono text-sm text-on-surface-variant">
+            <a href="mailto:fahad.fazil007@gmail.com" className="hover:text-primary transition-colors">
+              fahad.fazil007@gmail.com
+            </a>
+          </div>
+          <div className="font-mono text-sm text-on-surface-variant">
+            <a href="tel:+919535251197" className="hover:text-primary transition-colors">
+              +91 9535251197
+            </a>
+          </div>
+        </div>
       </div>
     ),
   },

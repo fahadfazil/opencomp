@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 
 declare global {
@@ -9,6 +9,7 @@ declare global {
 }
 
 const GOOGLE_TAG_SCRIPT_ID = 'opencomp-google-tag'
+const GA_MEASUREMENT_ID_PATTERN = /^G-[A-Z0-9]+$/i
 
 function setupGoogleTag(measurementId: string) {
   if (!document.getElementById(GOOGLE_TAG_SCRIPT_ID)) {
@@ -32,11 +33,17 @@ function setupGoogleTag(measurementId: string) {
 
 export function GoogleAnalytics() {
   const location = useLocation()
-  const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim()
+  const initializedMeasurementId = useRef<string | null>(null)
+  const measurementId = useMemo(() => {
+    const rawMeasurementId = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim()
+    if (!rawMeasurementId) return null
+    return GA_MEASUREMENT_ID_PATTERN.test(rawMeasurementId) ? rawMeasurementId : null
+  }, [])
 
   useEffect(() => {
-    if (!measurementId) return
+    if (!measurementId || initializedMeasurementId.current === measurementId) return
     setupGoogleTag(measurementId)
+    initializedMeasurementId.current = measurementId
   }, [measurementId])
 
   useEffect(() => {

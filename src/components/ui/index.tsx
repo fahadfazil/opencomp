@@ -296,52 +296,57 @@ export function ScoreGauge({ score, size = 'md', label, showNumber = true }: Sco
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <svg
-        width={dims}
-        height={dims}
-        className="score-ring"
-        style={{ transform: 'rotate(-90deg)' }}
-      >
-        {/* Background ring */}
-        <circle
-          cx={dims / 2}
-          cy={dims / 2}
-          r={radius}
-          fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth={strokeWidth}
-        />
-        {/* Score arc */}
-        <motion.circle
-          cx={dims / 2}
-          cy={dims / 2}
-          r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={`${circumference} ${circumference}`}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: gap }}
-          transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
-        />
-      </svg>
-      {showNumber && (
-        <div style={{ marginTop: `-${dims / 2 + 12}px`, color }} className="font-bold text-center">
-          <div className={cn({
-            'text-xl': size === 'sm',
-            'text-2xl': size === 'md',
-            'text-4xl': size === 'lg',
-          })}>
-            {score}
-          </div>
-          {label && (
-            <div className="font-mono text-[9px] text-on-surface-variant tracking-widest uppercase mt-0.5">
-              {label}
+      <div className="relative flex items-center justify-center" style={{ width: dims, height: dims }}>
+        <svg
+          width={dims}
+          height={dims}
+          className="score-ring absolute inset-0"
+          style={{ transform: 'rotate(-90deg)' }}
+        >
+          {/* Background ring */}
+          <circle
+            cx={dims / 2}
+            cy={dims / 2}
+            r={radius}
+            fill="none"
+            stroke="rgba(255,255,255,0.08)"
+            strokeWidth={strokeWidth}
+          />
+          {/* Score arc */}
+          <motion.circle
+            cx={dims / 2}
+            cy={dims / 2}
+            r={radius}
+            fill="none"
+            stroke={color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={`${circumference} ${circumference}`}
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset: gap }}
+            transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
+          />
+        </svg>
+        {showNumber && (
+          <div
+            style={{ color }}
+            className="absolute inset-0 flex flex-col items-center justify-center font-bold text-center pointer-events-none"
+          >
+            <div className={cn({
+              'text-xl': size === 'sm',
+              'text-2xl': size === 'md',
+              'text-4xl': size === 'lg',
+            })}>
+              {score}
             </div>
-          )}
-        </div>
-      )}
+            {label && (
+              <div className="font-mono text-[9px] text-on-surface-variant tracking-widest uppercase mt-0.5">
+                {label}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

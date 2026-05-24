@@ -42,6 +42,10 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
     min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
     max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
   }
+  const densityRange = {
+    min: validAreas.length > 0 ? Math.min(...validAreas.map((area) => area.office_density)) : 0,
+    max: validAreas.length > 0 ? Math.max(...validAreas.map((area) => area.office_density)) : 0,
+  }
   const [indiaCenterLongitude, indiaCenterLatitude] = INDIA_MAP_CENTER
   const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
   const mapCenter = hasCityCoordinates
@@ -136,7 +140,11 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
           const normalized = rawRange <= 0
             ? 0.5
             : (metricValue - metricRange.min) / rawRange
-          const color = getHeatColor(normalized)
+          const densityRawRange = densityRange.max - densityRange.min
+          const densityNormalized = densityRawRange <= 0
+            ? 0.5
+            : (area.office_density - densityRange.min) / densityRawRange
+          const color = getHeatColor(densityNormalized)
           const dotSize = 6 + normalized * 10
           const heatSize = 26 + normalized * 42
           const isHovered = hoveredArea?.id === area.id
@@ -236,15 +244,15 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         style={{ zIndex: 1 }}
       >
         <span className="font-mono text-[9px] text-on-surface-variant tracking-widest block mb-1.5">
-          {hasSalaryData ? 'AREA AVG SALARY' : 'OFFICE DENSITY'}
+          OFFICE DENSITY
         </span>
         <div
           className="w-20 h-2 rounded-full"
           style={{ background: 'linear-gradient(to right, #505b93, #cbd2ff, #9ad2c3)' }}
         />
         <div className="flex justify-between font-mono text-[9px] text-on-surface-variant mt-1">
-          <span>{hasSalaryData ? formatLPA(metricRange.min) : 'LOW'}</span>
-          <span>{hasSalaryData ? formatLPA(metricRange.max) : 'HIGH'}</span>
+          <span>{Math.round(densityRange.min)}%</span>
+          <span>{Math.round(densityRange.max)}%</span>
         </div>
       </div>
     </div>

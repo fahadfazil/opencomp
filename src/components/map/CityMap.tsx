@@ -28,19 +28,23 @@ function hasAreaSalary(area: OfficeArea): area is OfficeArea & { avg_salary_lpa:
   return area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
 }
 
+function parseDensityValue(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const [mapHasError, setMapHasError] = useState(false)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
   const validAreas = areas.filter((area) => hasValidCoordinates(area.latitude, area.longitude))
-  const salaryAreas = validAreas.filter(hasAreaSalary)
-  const hasSalaryData = salaryAreas.length > 0
-  const metricValues = hasSalaryData
-    ? salaryAreas.map((area) => area.avg_salary_lpa ?? 0)
-    : validAreas.map((area) => area.office_density)
-  const metricRange = {
-    min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
-    max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
+  const areasWithDensity = validAreas.filter((area) => parseDensityValue(area.office_density) !== null)
+  const densityValues = areasWithDensity
+    .map((area) => parseDensityValue(area.office_density))
+    .filter((value): value is number => value !== null)
+  const hasDensityData = densityValues.length > 0
+  const densityRange = {
+    min: hasDensityData ? Math.min(...densityValues) : 0,
+    max: hasDensityData ? Math.max(...densityValues) : 0,
   }
   const [indiaCenterLongitude, indiaCenterLatitude] = INDIA_MAP_CENTER
   const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
@@ -101,26 +105,26 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         <NavigationControl position="top-right" showCompass={false} />
 
         {/* City centre marker when no office areas are available */}
-        {validAreas.length === 0 && hasCityCoordinates && (
+        {areasWithDensity.length === 0 && hasCityCoordinates && (
           <Marker longitude={mapCenter.longitude} latitude={mapCenter.latitude}>
             <div className="relative cursor-default">
               <span
                 className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
                 style={{
-                  width: '80px',
-                  height: '80px',
+                  width: '60px',
+                  height: '60px',
                   background: '#9ad2c3',
                   opacity: 0.25,
-                  filter: 'blur(14px)',
+                  filter: 'blur(10px)',
                 }}
               />
               <span
                 className="relative block rounded-full border-2 border-white/60"
                 style={{
-                  width: '16px',
-                  height: '16px',
+                  width: '12px',
+                  height: '12px',
                   background: '#9ad2c3',
-                  boxShadow: '0 0 24px #9ad2c3',
+                  boxShadow: '0 0 14px #9ad2c3',
                 }}
               />
             </div>
@@ -128,17 +132,15 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         )}
 
         {/* Office area heatmap markers */}
-        {validAreas.map(area => {
-          const metricValue = hasSalaryData && hasAreaSalary(area)
-            ? area.avg_salary_lpa
-            : area.office_density
-          const rawRange = metricRange.max - metricRange.min
-          const normalized = rawRange <= 0
+        {areasWithDensity.map(area => {
+          const areaDensity = parseDensityValue(area.office_density) ?? 0
+          const densityRawRange = densityRange.max - densityRange.min
+          const densityNormalized = densityRawRange <= 0
             ? 0.5
-            : (metricValue - metricRange.min) / rawRange
-          const color = getHeatColor(normalized)
-          const dotSize = 8 + normalized * 14
-          const heatSize = 36 + normalized * 56
+            : (areaDensity - densityRange.min) / densityRawRange
+          const color = getHeatColor(densityNormalized)
+          const dotSize = 6 + densityNormalized * 10
+          const heatSize = 26 + densityNormalized * 42
           const isHovered = hoveredArea?.id === area.id
 
           return (
@@ -162,18 +164,18 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
                     width: `${heatSize}px`,
                     height: `${heatSize}px`,
                     background: color,
-                    opacity: isHovered ? 0.35 : 0.22,
-                    filter: 'blur(12px)',
+                    opacity: isHovered ? 0.28 : 0.18,
+                    filter: 'blur(9px)',
                     transition: 'opacity 0.2s ease',
                   }}
                 />
                 <span
                   className="relative block rounded-full border border-white/60"
                   style={{
-                    width: `${isHovered ? dotSize + 3 : dotSize}px`,
-                    height: `${isHovered ? dotSize + 3 : dotSize}px`,
+                    width: `${isHovered ? dotSize + 2 : dotSize}px`,
+                    height: `${isHovered ? dotSize + 2 : dotSize}px`,
                     background: color,
-                    boxShadow: `0 0 ${isHovered ? 24 : 16}px ${color}`,
+                    boxShadow: `0 0 ${isHovered ? 14 : 10}px ${color}`,
                     transition: 'all 0.15s ease',
                   }}
                 />
@@ -236,15 +238,24 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         style={{ zIndex: 1 }}
       >
         <span className="font-mono text-[9px] text-on-surface-variant tracking-widest block mb-1.5">
-          {hasSalaryData ? 'AREA AVG SALARY' : 'OFFICE DENSITY'}
+          OFFICE DENSITY
         </span>
         <div
           className="w-20 h-2 rounded-full"
           style={{ background: 'linear-gradient(to right, #505b93, #cbd2ff, #9ad2c3)' }}
         />
         <div className="flex justify-between font-mono text-[9px] text-on-surface-variant mt-1">
-          <span>{hasSalaryData ? formatLPA(metricRange.min) : 'LOW'}</span>
-          <span>{hasSalaryData ? formatLPA(metricRange.max) : 'HIGH'}</span>
+          {hasDensityData ? (
+            <>
+              <span>{Math.round(densityRange.min)}%</span>
+              <span>{Math.round(densityRange.max)}%</span>
+            </>
+          ) : (
+            <>
+              <span>N/A</span>
+              <span>N/A</span>
+            </>
+          )}
         </div>
       </div>
     </div>

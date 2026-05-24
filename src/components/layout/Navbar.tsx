@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   Search, Bell, Menu, X, MapPin,
@@ -25,8 +25,11 @@ export function Navbar() {
   const { setAuthModalOpen, toggleCommandPalette } = useUIStore()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
+  const profileMenuRef = useRef<HTMLDivElement>(null)
+  const profileMenuTriggerRef = useRef<HTMLButtonElement>(null)
 
   const handleSignOut = async () => {
     setSignOutError(null)
@@ -37,14 +40,17 @@ export function Navbar() {
       if (error) {
         setSignOutError(error.message || 'Failed to sign out. Please try again.')
         setMobileOpen(false)
+        setProfileMenuOpen(false)
         return
       }
 
       setMobileOpen(false)
+      setProfileMenuOpen(false)
     } catch (err) {
       console.error('Sign-out failed:', err)
       setSignOutError('Failed to sign out. Please try again.')
       setMobileOpen(false)
+      setProfileMenuOpen(false)
     } finally {
       setSigningOut(false)
     }
@@ -66,6 +72,43 @@ export function Navbar() {
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
   }, [toggleCommandPalette])
+
+  useEffect(() => {
+    if (!profileMenuOpen) {
+      return
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setProfileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [profileMenuOpen])
+
+  useEffect(() => {
+    if (profileMenuOpen) {
+      const menuItem = profileMenuRef.current?.querySelector('[data-menuitem="signout"]') as HTMLButtonElement | null
+      menuItem?.focus()
+    }
+  }, [profileMenuOpen])
+
+  const handleProfileMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      setProfileMenuOpen(false)
+      profileMenuTriggerRef.current?.focus()
+      return
+    }
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      const menuItem = profileMenuRef.current?.querySelector('[data-menuitem="signout"]') as HTMLButtonElement | null
+      menuItem?.focus()
+    }
+  }
 
   return (
     <>
@@ -144,27 +187,54 @@ export function Navbar() {
                 >
                   Contribute
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSignOut}
-                  loading={signingOut}
-                  className="hidden md:flex"
-                >
-                  Sign Out
-                </Button>
                 <button className="text-on-surface-variant hover:text-primary transition-colors relative">
                   <Bell size={18} />
                   <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-secondary rounded-full" />
                 </button>
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 cursor-pointer">
-                  {user.avatar_url ? (
-                    <img src={user.avatar_url} alt={user.display_name || 'User'} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
-                      {(user.display_name || user.email)[0].toUpperCase()}
-                    </div>
-                  )}
+                <div className="relative" ref={profileMenuRef}>
+                  <button
+                    ref={profileMenuTriggerRef}
+                    type="button"
+                    onClick={() => setProfileMenuOpen((prev) => !prev)}
+                    className="w-8 h-8 rounded-full overflow-hidden border border-white/20 cursor-pointer"
+                    aria-haspopup="true"
+                    aria-expanded={profileMenuOpen}
+                    aria-label={profileMenuOpen ? 'Close profile menu' : 'Open profile menu'}
+                  >
+                    {user.avatar_url ? (
+                      <img src={user.avatar_url} alt={user.display_name || 'User'} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                        {(user.display_name || user.email)[0].toUpperCase()}
+                      </div>
+                    )}
+                  </button>
+                  <AnimatePresence>
+                    {profileMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
+                        role="menu"
+                        onKeyDown={handleProfileMenuKeyDown}
+                        className="absolute right-0 mt-2 w-44 rounded-xl border border-white/10 bg-surface-container shadow-lg p-2 z-50"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleSignOut}
+                          loading={signingOut}
+                          role="menuitem"
+                          tabIndex={0}
+                          data-menuitem="signout"
+                          className="w-full justify-start"
+                        >
+                          Sign Out
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </>
             ) : (

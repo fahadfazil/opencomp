@@ -47,7 +47,11 @@ export function CitiesPage() {
         <div className="lg:col-span-5 relative z-10">
           <GlassCard className="p-4 h-[480px] flex flex-col">
             <MonoLabel className="mb-3 block" color="secondary">TOP SALARY CITIES</MonoLabel>
-            <div className="flex-1 space-y-2 overflow-y-auto pr-1">
+            <div
+              className="flex-1 space-y-2 overflow-y-auto pr-1"
+              tabIndex={0}
+              aria-label="Top salary cities list"
+            >
               {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (
                 <button
                   key={city.id}

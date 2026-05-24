@@ -68,7 +68,7 @@ export function RolesPage() {
       </div>
 
       {/* Roles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {filtered.map((role, i) => (
           <motion.div
             key={role.id}

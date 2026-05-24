@@ -36,7 +36,7 @@ export function CitiesPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 relative z-10">
         {/* Map */}
         <div className="lg:col-span-7">
           <GlassCard className="p-2 h-[480px]">

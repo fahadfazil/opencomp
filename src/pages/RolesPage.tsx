@@ -42,7 +42,7 @@ export function RolesPage() {
           <MonoLabel color="tertiary">ROLE INTELLIGENCE</MonoLabel>
         </div>
         <h1 className="text-4xl font-bold tracking-tight mb-2">
-          Salary data for {roles.length} tech roles
+          Salary data for {roles.length} roles
         </h1>
         <p className="text-on-surface-variant text-body-lg">
           Percentile breakdowns, YoY growth, and remote premium analysis

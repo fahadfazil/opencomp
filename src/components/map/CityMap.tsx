@@ -107,20 +107,20 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
               <span
                 className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
                 style={{
-                  width: '80px',
-                  height: '80px',
+                  width: '60px',
+                  height: '60px',
                   background: '#9ad2c3',
                   opacity: 0.25,
-                  filter: 'blur(14px)',
+                  filter: 'blur(10px)',
                 }}
               />
               <span
                 className="relative block rounded-full border-2 border-white/60"
                 style={{
-                  width: '16px',
-                  height: '16px',
+                  width: '12px',
+                  height: '12px',
                   background: '#9ad2c3',
-                  boxShadow: '0 0 24px #9ad2c3',
+                  boxShadow: '0 0 14px #9ad2c3',
                 }}
               />
             </div>
@@ -137,8 +137,8 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
             ? 0.5
             : (metricValue - metricRange.min) / rawRange
           const color = getHeatColor(normalized)
-          const dotSize = 8 + normalized * 14
-          const heatSize = 36 + normalized * 56
+          const dotSize = 6 + normalized * 10
+          const heatSize = 26 + normalized * 42
           const isHovered = hoveredArea?.id === area.id
 
           return (
@@ -162,18 +162,18 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
                     width: `${heatSize}px`,
                     height: `${heatSize}px`,
                     background: color,
-                    opacity: isHovered ? 0.35 : 0.22,
-                    filter: 'blur(12px)',
+                    opacity: isHovered ? 0.28 : 0.18,
+                    filter: 'blur(9px)',
                     transition: 'opacity 0.2s ease',
                   }}
                 />
                 <span
                   className="relative block rounded-full border border-white/60"
                   style={{
-                    width: `${isHovered ? dotSize + 3 : dotSize}px`,
-                    height: `${isHovered ? dotSize + 3 : dotSize}px`,
+                    width: `${isHovered ? dotSize + 2 : dotSize}px`,
+                    height: `${isHovered ? dotSize + 2 : dotSize}px`,
                     background: color,
-                    boxShadow: `0 0 ${isHovered ? 24 : 16}px ${color}`,
+                    boxShadow: `0 0 ${isHovered ? 14 : 10}px ${color}`,
                     transition: 'all 0.15s ease',
                   }}
                 />

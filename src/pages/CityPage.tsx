@@ -212,7 +212,7 @@ export function CityPage() {
           <GlassCard className="p-6 h-full">
             <MonoLabel className="mb-4 block">AFFORDABILITY</MonoLabel>
             {cityAreas.length > 0 ? (
-              <div className="space-y-4">
+              <div className="max-h-72 overflow-y-auto pr-1 space-y-4">
                 {cityAreas.map(area => (
                   <div key={area.id} className="p-3 bg-surface-container/60 rounded-lg">
                     <div className="font-medium text-on-surface mb-2">{area.name}</div>
@@ -282,7 +282,7 @@ export function CityPage() {
           <div className="md:col-span-6 flex flex-col">
             <GlassCard className="p-6 flex-1">
               <MonoLabel className="mb-4 block">AREA INTELLIGENCE</MonoLabel>
-              <div className="space-y-4">
+              <div className="max-h-72 overflow-y-auto pr-1 space-y-4">
                 {cityAreas.map(area => (
                   <div key={area.id} className="p-4 bg-surface-container/50 rounded-xl border border-white/5">
                     <div className="flex items-center justify-between mb-3">

@@ -41,7 +41,7 @@ export function GoogleAnalytics() {
     if (!rawMeasurementId) return null
     if (GA_MEASUREMENT_ID_PATTERN.test(rawMeasurementId)) return rawMeasurementId
     if (import.meta.env.DEV) {
-      console.warn('Google Analytics disabled: VITE_GA_MEASUREMENT_ID is not in GA4 format (expected G-XXXXXXXXXX).')
+      console.warn('Google Analytics disabled: VITE_GA_MEASUREMENT_ID is not in GA4 format (expected G-[alphanumeric]).')
     }
     return null
   }, [])

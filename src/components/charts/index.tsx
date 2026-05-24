@@ -279,7 +279,14 @@ export function CityComparisonChart({ cities, maxValue, height = 200 }: CityComp
 // ============================================================
 // Area Score Heatmap
 // ============================================================
-const HEATMAP_METRICS: { key: keyof OfficeArea; label: string }[] = [
+type HeatmapMetricKey =
+  | 'office_density'
+  | 'commute_score'
+  | 'food_score'
+  | 'safety_score'
+  | 'walkability_score'
+
+const HEATMAP_METRICS: { key: HeatmapMetricKey; label: string }[] = [
   { key: 'office_density', label: 'DENSITY' },
   { key: 'commute_score', label: 'COMMUTE' },
   { key: 'food_score', label: 'FOOD' },
@@ -324,7 +331,7 @@ export function AreaScoreHeatmap({ areas }: AreaScoreHeatmapProps) {
                 {area.name}
               </td>
               {HEATMAP_METRICS.map(m => {
-                const val = area[m.key] as number
+                const val = area[m.key]
                 const color = getHeatmapCellColor(val)
                 return (
                   <td key={m.key} className="px-1.5 py-2.5 text-center">

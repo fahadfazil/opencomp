@@ -114,7 +114,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
                 className="relative cursor-pointer"
                 title={area.name}
                 aria-label={
-                  area.avg_salary_lpa
+                  area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
                     ? `${area.name} average salary ${formatLPA(area.avg_salary_lpa)}`
                     : `${area.name} office density ${area.office_density}%`
                 }
@@ -173,7 +173,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', rowGap: '4px', columnGap: '12px' }}>
                 {[
-                  hoveredArea.avg_salary_lpa !== null
+                  hoveredArea.avg_salary_lpa !== null && hoveredArea.avg_salary_lpa > 0
                     ? { label: 'AVG SALARY', value: formatLPA(hoveredArea.avg_salary_lpa), color: '#9ad2c3' }
                     : { label: 'DENSITY', value: `${hoveredArea.office_density}%`, color: '#9ad2c3' },
                   { label: 'SAFETY', value: `${hoveredArea.safety_score}/100`, color: '#cbd2ff' },

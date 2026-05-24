@@ -226,7 +226,7 @@ export function Navbar() {
                           onClick={handleSignOut}
                           loading={signingOut}
                           role="menuitem"
-                          tabIndex={-1}
+                          tabIndex={0}
                           data-menuitem="signout"
                           className="w-full justify-start"
                         >

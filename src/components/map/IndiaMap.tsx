@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Map, Marker, NavigationControl } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useNavigate } from 'react-router-dom'
-import { formatLPA } from '@/utils'
+import { formatLPA, hasValidCoordinates } from '@/utils'
 import { useCities } from '@/hooks'
 import { INDIA_MAP_CENTER, INDIA_MAP_STYLE, INDIA_MAP_ZOOM } from '@/constants/map'
 import type { City } from '@/types'
@@ -18,13 +18,6 @@ function getHeatColor(score: number) {
   if (score >= 0.5) return '#cbd2ff'
   if (score >= 0.25) return '#b0b2ff'
   return '#505b93'
-}
-
-function hasValidCoordinates(latitude: number, longitude: number) {
-  return Number.isFinite(latitude)
-    && Number.isFinite(longitude)
-    && Math.abs(latitude) <= 90
-    && Math.abs(longitude) <= 180
 }
 
 export function IndiaMap({ onCityClick, highlightCityId, compact = false }: IndiaMapProps) {

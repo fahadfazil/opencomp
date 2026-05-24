@@ -3,7 +3,7 @@ import { Map, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { INDIA_MAP_CENTER, INDIA_MAP_STYLE } from '@/constants/map'
 import type { City, OfficeArea } from '@/types'
-import { formatLPA, formatMonthlyRent } from '@/utils'
+import { formatLPA, formatMonthlyRent, hasValidCoordinates } from '@/utils'
 
 interface CityMapProps {
   city: City
@@ -28,13 +28,6 @@ function hasAreaSalary(area: OfficeArea): area is OfficeArea & { avg_salary_lpa:
   return area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
 }
 
-function hasValidCoordinates(latitude: number, longitude: number) {
-  return Number.isFinite(latitude)
-    && Number.isFinite(longitude)
-    && Math.abs(latitude) <= 90
-    && Math.abs(longitude) <= 180
-}
-
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const [mapHasError, setMapHasError] = useState(false)
@@ -49,10 +42,11 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
     min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
     max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
   }
+  const [defaultLongitude, defaultLatitude] = INDIA_MAP_CENTER
   const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
   const mapCenter = hasCityCoordinates
     ? { latitude: city.latitude, longitude: city.longitude }
-    : { latitude: INDIA_MAP_CENTER[1], longitude: INDIA_MAP_CENTER[0] }
+    : { latitude: defaultLatitude, longitude: defaultLongitude }
 
   if (!token) {
     return (

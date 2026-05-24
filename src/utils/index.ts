@@ -257,6 +257,13 @@ export function validateRating(rating: number): boolean {
   return rating >= 1 && rating <= 5
 }
 
+export function hasValidCoordinates(latitude: number, longitude: number): boolean {
+  return Number.isFinite(latitude)
+    && Number.isFinite(longitude)
+    && Math.abs(latitude) <= 90
+    && Math.abs(longitude) <= 180
+}
+
 // ============================================================
 // Company slug helpers
 // ============================================================

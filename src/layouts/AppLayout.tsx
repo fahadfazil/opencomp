@@ -4,6 +4,7 @@ import { CommandPalette } from '@/components/layout/CommandPalette'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { SeoMeta } from '@/components/seo/SeoMeta'
 import { AuthModal } from '@/features/auth/AuthModal'
+import { FooterModal } from '@/features/footer/FooterModal'
 import { HomePage } from '@/pages/HomePage'
 import { CompaniesPage } from '@/pages/CompaniesPage'
 import { CompanyPage } from '@/pages/CompanyPage'
@@ -19,6 +20,7 @@ export function AppLayout() {
       <Navbar />
       <CommandPalette />
       <AuthModal />
+      <FooterModal />
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />

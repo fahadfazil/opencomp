@@ -32,15 +32,19 @@ export const useAuthStore = create<AuthState>()(
 // ============================================================
 // UI Store
 // ============================================================
+export type FooterModalKey = 'about' | 'privacy' | 'open-data' | 'api' | null
+
 interface UIState {
   commandPaletteOpen: boolean
   authModalOpen: boolean
   contributeModalOpen: boolean
+  footerModal: FooterModalKey
   sidebarCollapsed: boolean
   mapStyle: 'dark' | 'satellite' | 'terrain'
   toggleCommandPalette: () => void
   setAuthModalOpen: (open: boolean) => void
   setContributeModalOpen: (open: boolean) => void
+  setFooterModal: (modal: FooterModalKey) => void
   setSidebarCollapsed: (collapsed: boolean) => void
   setMapStyle: (style: UIState['mapStyle']) => void
 }
@@ -49,12 +53,14 @@ export const useUIStore = create<UIState>((set) => ({
   commandPaletteOpen: false,
   authModalOpen: false,
   contributeModalOpen: false,
+  footerModal: null,
   sidebarCollapsed: false,
   mapStyle: 'dark',
   toggleCommandPalette: () =>
     set((state) => ({ commandPaletteOpen: !state.commandPaletteOpen })),
   setAuthModalOpen: (open) => set({ authModalOpen: open }),
   setContributeModalOpen: (open) => set({ contributeModalOpen: open }),
+  setFooterModal: (modal) => set({ footerModal: modal }),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
   setMapStyle: (mapStyle) => set({ mapStyle }),
 }))

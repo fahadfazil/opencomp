@@ -3,6 +3,7 @@ import { Map, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { INDIA_MAP_STYLE } from '@/constants/map'
 import type { City, OfficeArea } from '@/types'
+import { formatLPA } from '@/utils'
 
 interface CityMapProps {
   city: City
@@ -10,16 +11,25 @@ interface CityMapProps {
   height?: number
 }
 
-function getDensityColor(density: number): string {
-  if (density >= 80) return '#9ad2c3'
-  if (density >= 60) return '#cbd2ff'
-  if (density >= 40) return '#b0b2ff'
+function getHeatColor(normalized: number): string {
+  if (normalized >= 0.75) return '#9ad2c3'
+  if (normalized >= 0.5) return '#cbd2ff'
+  if (normalized >= 0.25) return '#b0b2ff'
   return '#505b93'
 }
 
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
+  const salaryAreas = areas.filter((area) => area.avg_salary_lpa !== null && area.avg_salary_lpa > 0)
+  const hasSalaryData = salaryAreas.length > 0
+  const metricValues = hasSalaryData
+    ? salaryAreas.map((area) => area.avg_salary_lpa ?? 0)
+    : areas.map((area) => area.office_density)
+  const metricRange = {
+    min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
+    max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
+  }
 
   if (!token) {
     return (
@@ -85,9 +95,16 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
 
         {/* Office area heatmap markers */}
         {areas.map(area => {
-          const color = getDensityColor(area.office_density)
-          const dotSize = 8 + (area.office_density / 100) * 14
-          const heatSize = 36 + (area.office_density / 100) * 56
+          const metricValue = hasSalaryData && area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
+            ? area.avg_salary_lpa
+            : area.office_density
+          const rawRange = metricRange.max - metricRange.min
+          const normalized = rawRange <= 0
+            ? 0.5
+            : (metricValue - metricRange.min) / rawRange
+          const color = getHeatColor(normalized)
+          const dotSize = 8 + normalized * 14
+          const heatSize = 36 + normalized * 56
           const isHovered = hoveredArea?.id === area.id
 
           return (
@@ -96,6 +113,12 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
                 type="button"
                 className="relative cursor-pointer"
                 title={area.name}
+                aria-label={
+                  area.avg_salary_lpa
+                    ? `${area.name} average salary ${formatLPA(area.avg_salary_lpa)}`
+                    : `${area.name} office density ${area.office_density}%`
+                }
+                onClick={() => setHoveredArea(area)}
                 onMouseEnter={() => setHoveredArea(area)}
                 onMouseLeave={() => setHoveredArea(null)}
               >
@@ -150,7 +173,9 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', rowGap: '4px', columnGap: '12px' }}>
                 {[
-                  { label: 'DENSITY', value: `${hoveredArea.office_density}%`, color: '#9ad2c3' },
+                  hoveredArea.avg_salary_lpa !== null
+                    ? { label: 'AVG SALARY', value: formatLPA(hoveredArea.avg_salary_lpa), color: '#9ad2c3' }
+                    : { label: 'DENSITY', value: `${hoveredArea.office_density}%`, color: '#9ad2c3' },
                   { label: 'SAFETY', value: `${hoveredArea.safety_score}/100`, color: '#cbd2ff' },
                   { label: 'COMMUTE', value: `${hoveredArea.commute_score}/100`, color: '#b0b2ff' },
                   { label: 'FOOD', value: `${hoveredArea.food_score}/100`, color: '#d1d0ff' },
@@ -177,15 +202,15 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         style={{ zIndex: 1 }}
       >
         <span className="font-mono text-[9px] text-on-surface-variant tracking-widest block mb-1.5">
-          OFFICE DENSITY
+          {hasSalaryData ? 'AREA AVG SALARY' : 'OFFICE DENSITY'}
         </span>
         <div
           className="w-20 h-2 rounded-full"
           style={{ background: 'linear-gradient(to right, #505b93, #cbd2ff, #9ad2c3)' }}
         />
         <div className="flex justify-between font-mono text-[9px] text-on-surface-variant mt-1">
-          <span>LOW</span>
-          <span>HIGH</span>
+          <span>{hasSalaryData ? formatLPA(metricRange.min) : 'LOW'}</span>
+          <span>{hasSalaryData ? formatLPA(metricRange.max) : 'HIGH'}</span>
         </div>
       </div>
     </div>

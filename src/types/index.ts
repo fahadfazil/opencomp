@@ -102,6 +102,7 @@ export interface OfficeArea {
   id: string
   city_id: string
   name: string
+  avg_salary_lpa: number | null
   avg_rent_1bhk: number
   avg_rent_2bhk: number
   commute_score: number

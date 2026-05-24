@@ -5,7 +5,6 @@ import { MapPin, Train } from 'lucide-react'
 import { GlassCard, MonoLabel, Badge } from '@/components/ui'
 import { IndiaMap } from '@/components/map/IndiaMap'
 import { formatLPA, formatNumber, cn } from '@/utils'
-import type { City } from '@/types'
 import { useCities } from '@/hooks'
 
 export function CitiesPage() {

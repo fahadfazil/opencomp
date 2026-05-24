@@ -7,7 +7,8 @@ import {
 import {
   GlassCard, MonoLabel, Badge, StatCard, Button
 } from '@/components/ui'
-import { SalaryTrendChart, CityComparisonChart } from '@/components/charts'
+import { SalaryTrendChart, CityComparisonChart, AreaScoreHeatmap } from '@/components/charts'
+import { CityMap } from '@/components/map/CityMap'
 import { formatLPA, formatMonthlyRent } from '@/utils'
 import { cn } from '@/utils'
 import { useCities, useCity, useCityPageContent, useCompanies, useOfficeAreas } from '@/hooks'
@@ -181,6 +182,17 @@ export function CityPage() {
           accentColor="#b0b2ff"
         />
       </div>
+
+      {/* Salary Intelligence Map */}
+      <GlassCard className="p-4 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <MonoLabel>SALARY INTELLIGENCE MAP — {city.name.toUpperCase()}</MonoLabel>
+          <Badge variant="ghost" size="sm">
+            {cityAreas.length > 0 ? `${cityAreas.length} AREA${cityAreas.length > 1 ? 'S' : ''}` : 'CITY VIEW'}
+          </Badge>
+        </div>
+        <CityMap city={city} areas={cityAreas} height={420} />
+      </GlassCard>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
@@ -396,6 +408,19 @@ export function CityPage() {
                   )
                 })}
               </div>
+            </GlassCard>
+          </div>
+        )}
+
+        {/* Area Score Heatmap */}
+        {cityAreas.length > 0 && (
+          <div className="md:col-span-12 flex flex-col">
+            <GlassCard className="p-6 flex-1">
+              <div className="flex items-center justify-between mb-4">
+                <MonoLabel>AREA SCORE HEATMAP</MonoLabel>
+                <Badge variant="ghost" size="sm">{cityAreas.length} AREAS</Badge>
+              </div>
+              <AreaScoreHeatmap areas={cityAreas} />
             </GlassCard>
           </div>
         )}

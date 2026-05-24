@@ -408,18 +408,19 @@ ON CONFLICT (id) DO UPDATE SET
   created_at = EXCLUDED.created_at;
 
 INSERT INTO public.office_areas (
-  id, city_id, name, avg_rent_1bhk, avg_rent_2bhk, commute_score, food_score,
+  id, city_id, name, avg_salary_lpa, avg_rent_1bhk, avg_rent_2bhk, commute_score, food_score,
   safety_score, walkability_score, metro_distance_km, office_density, avg_aqi,
   latitude, longitude
 )
 VALUES
-  ('koro', 'blr', 'Koramangala', 28000, 42000, 72, 95, 88, 82, 2.4, 94, 68, 12.935200, 77.624500),
-  ('indo', 'blr', 'Indiranagar', 32000, 48000, 68, 98, 92, 88, 0.8, 76, 72, 12.978400, 77.640800),
-  ('whit', 'blr', 'Whitefield', 20000, 32000, 52, 74, 86, 58, 8.2, 98, 82, 12.969800, 77.749900),
-  ('elte', 'blr', 'Electronic City', 16000, 24000, 48, 65, 82, 45, NULL, 96, 78, 12.848400, 77.660600)
+  ('koro', 'blr', 'Koramangala', 29.8, 28000, 42000, 72, 95, 88, 82, 2.4, 94, 68, 12.935200, 77.624500),
+  ('indo', 'blr', 'Indiranagar', 31.4, 32000, 48000, 68, 98, 92, 88, 0.8, 76, 72, 12.978400, 77.640800),
+  ('whit', 'blr', 'Whitefield', 25.9, 20000, 32000, 52, 74, 86, 58, 8.2, 98, 82, 12.969800, 77.749900),
+  ('elte', 'blr', 'Electronic City', 22.7, 16000, 24000, 48, 65, 82, 45, NULL, 96, 78, 12.848400, 77.660600)
 ON CONFLICT (id) DO UPDATE SET
   city_id = EXCLUDED.city_id,
   name = EXCLUDED.name,
+  avg_salary_lpa = EXCLUDED.avg_salary_lpa,
   avg_rent_1bhk = EXCLUDED.avg_rent_1bhk,
   avg_rent_2bhk = EXCLUDED.avg_rent_2bhk,
   commute_score = EXCLUDED.commute_score,

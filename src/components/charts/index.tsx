@@ -3,7 +3,7 @@ import {
   PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
   XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, Cell
 } from 'recharts'
-import type { TrendPoint } from '@/types'
+import type { TrendPoint, OfficeArea } from '@/types'
 
 const CHART_MONO_FONT = 'var(--font-mono)'
 
@@ -273,5 +273,109 @@ export function CityComparisonChart({ cities, maxValue, height = 200 }: CityComp
         </Bar>
       </BarChart>
     </ResponsiveContainer>
+  )
+}
+
+// ============================================================
+// Area Score Heatmap
+// ============================================================
+type HeatmapMetricKey =
+  | 'office_density'
+  | 'commute_score'
+  | 'food_score'
+  | 'safety_score'
+  | 'walkability_score'
+
+const HEATMAP_METRICS: { key: HeatmapMetricKey; label: string }[] = [
+  { key: 'office_density', label: 'DENSITY' },
+  { key: 'commute_score', label: 'COMMUTE' },
+  { key: 'food_score', label: 'FOOD' },
+  { key: 'safety_score', label: 'SAFETY' },
+  { key: 'walkability_score', label: 'WALK' },
+]
+
+const HEATMAP_SCORE_EXCELLENT = 75
+const HEATMAP_SCORE_GOOD = 55
+const HEATMAP_SCORE_FAIR = 35
+
+function getHeatmapCellColor(score: number): string {
+  if (score >= HEATMAP_SCORE_EXCELLENT) return '#9ad2c3'
+  if (score >= HEATMAP_SCORE_GOOD) return '#cbd2ff'
+  if (score >= HEATMAP_SCORE_FAIR) return '#b0b2ff'
+  return '#ffb4ab'
+}
+
+interface AreaScoreHeatmapProps {
+  areas: OfficeArea[]
+}
+
+export function AreaScoreHeatmap({ areas }: AreaScoreHeatmapProps) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr>
+            <th className="font-mono text-[10px] text-on-surface-variant tracking-widest pb-3 pr-6 min-w-[130px]">
+              AREA
+            </th>
+            {HEATMAP_METRICS.map(metric => (
+              <th
+                key={metric.key}
+                className="font-mono text-[10px] text-on-surface-variant tracking-widest pb-3 px-1.5 text-center"
+              >
+                {metric.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {areas.map((area, rowIdx) => (
+            <tr key={area.id} className={rowIdx > 0 ? 'border-t border-white/5' : ''}>
+              <td className="py-2.5 pr-6 font-mono text-[11px] text-on-surface whitespace-nowrap">
+                {area.name}
+              </td>
+              {HEATMAP_METRICS.map(metric => {
+                const metricValue = area[metric.key]
+                const color = getHeatmapCellColor(metricValue)
+                return (
+                  <td key={metric.key} className="px-1.5 py-2.5 text-center">
+                    <div
+                      className="rounded-md inline-flex items-center justify-center font-mono text-[10px] font-bold"
+                      style={{
+                        width: '52px',
+                        height: '28px',
+                        background: `${color}20`,
+                        color,
+                        border: `1px solid ${color}40`,
+                      }}
+                    >
+                      {metricValue}
+                    </div>
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Legend */}
+      <div className="flex items-center gap-6 mt-4 flex-wrap">
+        {[
+          { color: '#9ad2c3', label: '75–100' },
+          { color: '#cbd2ff', label: '55–74' },
+          { color: '#b0b2ff', label: '35–54' },
+          { color: '#ffb4ab', label: '0–34' },
+        ].map(({ color, label }) => (
+          <div key={label} className="flex items-center gap-1.5">
+            <div
+              className="w-3 h-3 rounded-sm"
+              style={{ background: `${color}30`, border: `1px solid ${color}60` }}
+            />
+            <span className="font-mono text-[9px] text-on-surface-variant">{label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }

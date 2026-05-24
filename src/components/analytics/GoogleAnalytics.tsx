@@ -16,7 +16,9 @@ function setupGoogleTag(measurementId: string) {
     const script = document.createElement('script')
     script.id = GOOGLE_TAG_SCRIPT_ID
     script.async = true
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`
+    const scriptUrl = new URL('https://www.googletagmanager.com/gtag/js')
+    scriptUrl.searchParams.set('id', measurementId)
+    script.src = scriptUrl.toString()
     document.head.appendChild(script)
   }
 
@@ -37,7 +39,11 @@ export function GoogleAnalytics() {
   const measurementId = useMemo(() => {
     const rawMeasurementId = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim()
     if (!rawMeasurementId) return null
-    return GA_MEASUREMENT_ID_PATTERN.test(rawMeasurementId) ? rawMeasurementId : null
+    if (GA_MEASUREMENT_ID_PATTERN.test(rawMeasurementId)) return rawMeasurementId
+    if (import.meta.env.DEV) {
+      console.warn('Google Analytics disabled: VITE_GA_MEASUREMENT_ID is not in GA4 format (expected G-XXXXXXXXXX).')
+    }
+    return null
   }, [])
 
   useEffect(() => {

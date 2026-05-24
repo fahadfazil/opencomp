@@ -33,18 +33,10 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [mapHasError, setMapHasError] = useState(false)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
   const validAreas = areas.filter((area) => hasValidCoordinates(area.latitude, area.longitude))
-  const salaryAreas = validAreas.filter(hasAreaSalary)
-  const hasSalaryData = salaryAreas.length > 0
-  const metricValues = hasSalaryData
-    ? salaryAreas.map((area) => area.avg_salary_lpa ?? 0)
-    : validAreas.map((area) => area.office_density)
-  const metricRange = {
-    min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
-    max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
-  }
+  const densityValues = validAreas.map((area) => area.office_density)
   const densityRange = {
-    min: validAreas.length > 0 ? Math.min(...validAreas.map((area) => area.office_density)) : 0,
-    max: validAreas.length > 0 ? Math.max(...validAreas.map((area) => area.office_density)) : 0,
+    min: densityValues.length > 0 ? Math.min(...densityValues) : 0,
+    max: densityValues.length > 0 ? Math.max(...densityValues) : 0,
   }
   const [indiaCenterLongitude, indiaCenterLatitude] = INDIA_MAP_CENTER
   const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
@@ -133,20 +125,13 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
 
         {/* Office area heatmap markers */}
         {validAreas.map(area => {
-          const metricValue = hasSalaryData && hasAreaSalary(area)
-            ? area.avg_salary_lpa
-            : area.office_density
-          const rawRange = metricRange.max - metricRange.min
-          const normalized = rawRange <= 0
-            ? 0.5
-            : (metricValue - metricRange.min) / rawRange
           const densityRawRange = densityRange.max - densityRange.min
           const densityNormalized = densityRawRange <= 0
             ? 0.5
             : (area.office_density - densityRange.min) / densityRawRange
           const color = getHeatColor(densityNormalized)
-          const dotSize = 6 + normalized * 10
-          const heatSize = 26 + normalized * 42
+          const dotSize = 6 + densityNormalized * 10
+          const heatSize = 26 + densityNormalized * 42
           const isHovered = hoveredArea?.id === area.id
 
           return (

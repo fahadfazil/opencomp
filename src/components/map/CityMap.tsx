@@ -33,10 +33,15 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [mapHasError, setMapHasError] = useState(false)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
   const validAreas = areas.filter((area) => hasValidCoordinates(area.latitude, area.longitude))
-  const densityValues = validAreas.map((area) => area.office_density)
+  const densityValues = validAreas.map((area) => (
+    typeof area.office_density === 'number' && Number.isFinite(area.office_density)
+      ? area.office_density
+      : 0
+  ))
+  const hasDensityData = densityValues.length > 0
   const densityRange = {
-    min: densityValues.length > 0 ? Math.min(...densityValues) : 0,
-    max: densityValues.length > 0 ? Math.max(...densityValues) : 0,
+    min: hasDensityData ? Math.min(...densityValues) : 0,
+    max: hasDensityData ? Math.max(...densityValues) : 0,
   }
   const [indiaCenterLongitude, indiaCenterLatitude] = INDIA_MAP_CENTER
   const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
@@ -125,10 +130,15 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
 
         {/* Office area heatmap markers */}
         {validAreas.map(area => {
+          const areaDensity = (
+            typeof area.office_density === 'number' && Number.isFinite(area.office_density)
+              ? area.office_density
+              : 0
+          )
           const densityRawRange = densityRange.max - densityRange.min
           const densityNormalized = densityRawRange <= 0
             ? 0.5
-            : (area.office_density - densityRange.min) / densityRawRange
+            : (areaDensity - densityRange.min) / densityRawRange
           const color = getHeatColor(densityNormalized)
           const dotSize = 6 + densityNormalized * 10
           const heatSize = 26 + densityNormalized * 42
@@ -236,8 +246,17 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
           style={{ background: 'linear-gradient(to right, #505b93, #cbd2ff, #9ad2c3)' }}
         />
         <div className="flex justify-between font-mono text-[9px] text-on-surface-variant mt-1">
-          <span>{Math.round(densityRange.min)}%</span>
-          <span>{Math.round(densityRange.max)}%</span>
+          {hasDensityData ? (
+            <>
+              <span>{Math.round(densityRange.min)}%</span>
+              <span>{Math.round(densityRange.max)}%</span>
+            </>
+          ) : (
+            <>
+              <span>N/A</span>
+              <span>N/A</span>
+            </>
+          )}
         </div>
       </div>
     </div>

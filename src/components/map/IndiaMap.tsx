@@ -58,7 +58,7 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
   }
 
   return (
-    <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/5">
+    <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/5 isolate">
       <Map
         mapboxAccessToken={token}
         initialViewState={{

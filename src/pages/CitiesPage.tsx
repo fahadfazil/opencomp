@@ -51,7 +51,7 @@ export function CitiesPage() {
         </div>
 
         {/* City Detail Panel */}
-        <div className="lg:col-span-5 space-y-4">
+        <div className="lg:col-span-5 space-y-4 relative z-10">
           {selectedCity ? (
             <>
               <GlassCard className="p-5">

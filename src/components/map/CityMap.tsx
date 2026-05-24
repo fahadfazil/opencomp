@@ -42,11 +42,11 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
     min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
     max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
   }
-  const [defaultLongitude, defaultLatitude] = INDIA_MAP_CENTER
+  const [indiaCenterLongitude, indiaCenterLatitude] = INDIA_MAP_CENTER
   const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
   const mapCenter = hasCityCoordinates
     ? { latitude: city.latitude, longitude: city.longitude }
-    : { latitude: defaultLatitude, longitude: defaultLongitude }
+    : { latitude: indiaCenterLatitude, longitude: indiaCenterLongitude }
 
   if (!token) {
     return (
@@ -102,7 +102,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
 
         {/* City centre marker when no office areas are available */}
         {validAreas.length === 0 && hasCityCoordinates && (
-          <Marker longitude={city.longitude} latitude={city.latitude}>
+          <Marker longitude={mapCenter.longitude} latitude={mapCenter.latitude}>
             <div className="relative cursor-default">
               <span
                 className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"

@@ -49,6 +49,7 @@ export function CitiesPage() {
             <MonoLabel className="mb-3 block" color="secondary">TOP SALARY CITIES</MonoLabel>
             <div
               className="flex-1 space-y-2 overflow-y-auto pr-1"
+              role="region"
               tabIndex={0}
               aria-label="Top salary cities list"
             >

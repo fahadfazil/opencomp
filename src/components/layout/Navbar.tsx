@@ -29,6 +29,7 @@ export function Navbar() {
   const [signingOut, setSigningOut] = useState(false)
   const [signOutError, setSignOutError] = useState<string | null>(null)
   const profileMenuRef = useRef<HTMLDivElement>(null)
+  const profileMenuTriggerRef = useRef<HTMLButtonElement>(null)
 
   const handleSignOut = async () => {
     setSignOutError(null)
@@ -86,6 +87,28 @@ export function Navbar() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [profileMenuOpen])
+
+  useEffect(() => {
+    if (profileMenuOpen) {
+      const menuItem = profileMenuRef.current?.querySelector('[data-menuitem="signout"]') as HTMLButtonElement | null
+      menuItem?.focus()
+    }
+  }, [profileMenuOpen])
+
+  const handleProfileMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      setProfileMenuOpen(false)
+      profileMenuTriggerRef.current?.focus()
+      return
+    }
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      const menuItem = profileMenuRef.current?.querySelector('[data-menuitem="signout"]') as HTMLButtonElement | null
+      menuItem?.focus()
+    }
+  }
 
   return (
     <>
@@ -170,6 +193,7 @@ export function Navbar() {
                 </button>
                 <div className="relative" ref={profileMenuRef}>
                   <button
+                    ref={profileMenuTriggerRef}
                     type="button"
                     onClick={() => setProfileMenuOpen((prev) => !prev)}
                     className="w-8 h-8 rounded-full overflow-hidden border border-white/20 cursor-pointer"
@@ -193,6 +217,7 @@ export function Navbar() {
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.15 }}
                         role="menu"
+                        onKeyDown={handleProfileMenuKeyDown}
                         className="absolute right-0 mt-2 w-44 rounded-xl border border-white/10 bg-surface-container shadow-lg p-2 z-50"
                       >
                         <Button
@@ -201,6 +226,8 @@ export function Navbar() {
                           onClick={handleSignOut}
                           loading={signingOut}
                           role="menuitem"
+                          tabIndex={-1}
+                          data-menuitem="signout"
                           className="w-full justify-start"
                         >
                           Sign Out

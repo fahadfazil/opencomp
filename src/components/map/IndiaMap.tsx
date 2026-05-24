@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Map, Marker, NavigationControl } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useNavigate } from 'react-router-dom'
@@ -20,19 +20,32 @@ function getHeatColor(score: number) {
   return '#505b93'
 }
 
+function hasValidCoordinates(latitude: number, longitude: number) {
+  return Number.isFinite(latitude)
+    && Number.isFinite(longitude)
+    && Math.abs(latitude) <= 90
+    && Math.abs(longitude) <= 180
+}
+
 export function IndiaMap({ onCityClick, highlightCityId, compact = false }: IndiaMapProps) {
   const navigate = useNavigate()
   const { data: cities = [] } = useCities()
+  const [mapHasError, setMapHasError] = useState(false)
+
+  const validCities = useMemo(
+    () => cities.filter((city) => hasValidCoordinates(city.latitude, city.longitude)),
+    [cities]
+  )
 
   const salaryRange = useMemo(() => {
-    const values = cities.map((city) => city.avg_salary_lpa)
+    const values = validCities.map((city) => city.avg_salary_lpa)
     const min = Math.min(...values)
     const max = Math.max(...values)
     return {
       min: Number.isFinite(min) ? min : 0,
       max: Number.isFinite(max) ? max : 0,
     }
-  }, [cities])
+  }, [validCities])
 
   const token = import.meta.env.VITE_MAPBOX_TOKEN
 
@@ -57,6 +70,19 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
     )
   }
 
+  if (mapHasError) {
+    return (
+      <div className="w-full h-full rounded-xl border border-outline-variant/50 bg-surface-container-lowest flex items-center justify-center p-6 text-center">
+        <div>
+          <p className="font-mono text-label-md text-primary mb-2">MAP TEMPORARILY UNAVAILABLE</p>
+          <p className="text-body-md text-on-surface-variant">
+            We couldn&apos;t render the interactive map right now. Please refresh or try again shortly.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/5 isolate">
       <Map
@@ -71,10 +97,11 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
         keyboard
         dragRotate={false}
         touchPitch={false}
+        onError={() => setMapHasError(true)}
       >
         <NavigationControl position="top-right" showCompass={false} />
 
-        {cities.map((city) => {
+        {validCities.map((city) => {
           const rawRange = salaryRange.max - salaryRange.min
           const normalized = rawRange <= 0
             ? 0.5

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Map, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { INDIA_MAP_STYLE } from '@/constants/map'
+import { INDIA_MAP_CENTER, INDIA_MAP_STYLE } from '@/constants/map'
 import type { City, OfficeArea } from '@/types'
 import { formatLPA, formatMonthlyRent } from '@/utils'
 
@@ -28,18 +28,31 @@ function hasAreaSalary(area: OfficeArea): area is OfficeArea & { avg_salary_lpa:
   return area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
 }
 
+function hasValidCoordinates(latitude: number, longitude: number) {
+  return Number.isFinite(latitude)
+    && Number.isFinite(longitude)
+    && Math.abs(latitude) <= 90
+    && Math.abs(longitude) <= 180
+}
+
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
+  const [mapHasError, setMapHasError] = useState(false)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
-  const salaryAreas = areas.filter(hasAreaSalary)
+  const validAreas = areas.filter((area) => hasValidCoordinates(area.latitude, area.longitude))
+  const salaryAreas = validAreas.filter(hasAreaSalary)
   const hasSalaryData = salaryAreas.length > 0
   const metricValues = hasSalaryData
     ? salaryAreas.map((area) => area.avg_salary_lpa ?? 0)
-    : areas.map((area) => area.office_density)
+    : validAreas.map((area) => area.office_density)
   const metricRange = {
     min: metricValues.length > 0 ? Math.min(...metricValues) : 0,
     max: metricValues.length > 0 ? Math.max(...metricValues) : 0,
   }
+  const hasCityCoordinates = hasValidCoordinates(city.latitude, city.longitude)
+  const mapCenter = hasCityCoordinates
+    ? { latitude: city.latitude, longitude: city.longitude }
+    : { latitude: INDIA_MAP_CENTER[1], longitude: INDIA_MAP_CENTER[0] }
 
   if (!token) {
     return (
@@ -57,15 +70,31 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
     )
   }
 
-  const zoom = getCityMapZoom(areas.length)
+  if (mapHasError) {
+    return (
+      <div
+        className="w-full rounded-xl border border-outline-variant/50 bg-surface-container-lowest flex items-center justify-center p-6 text-center"
+        style={{ height }}
+      >
+        <div>
+          <p className="font-mono text-label-md text-primary mb-2">MAP TEMPORARILY UNAVAILABLE</p>
+          <p className="text-body-md text-on-surface-variant">
+            We couldn&apos;t render this city map right now. Please refresh or try again shortly.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  const zoom = getCityMapZoom(validAreas.length)
 
   return (
     <div className="relative w-full rounded-xl overflow-hidden border border-white/5" style={{ height }}>
       <Map
         mapboxAccessToken={token}
         initialViewState={{
-          longitude: city.longitude,
-          latitude: city.latitude,
+          longitude: mapCenter.longitude,
+          latitude: mapCenter.latitude,
           zoom,
         }}
         style={{ width: '100%', height: '100%' }}
@@ -73,11 +102,12 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         keyboard
         dragRotate={false}
         touchPitch={false}
+        onError={() => setMapHasError(true)}
       >
         <NavigationControl position="top-right" showCompass={false} />
 
         {/* City centre marker when no office areas are available */}
-        {areas.length === 0 && (
+        {validAreas.length === 0 && hasCityCoordinates && (
           <Marker longitude={city.longitude} latitude={city.latitude}>
             <div className="relative cursor-default">
               <span
@@ -104,7 +134,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
         )}
 
         {/* Office area heatmap markers */}
-        {areas.map(area => {
+        {validAreas.map(area => {
           const metricValue = hasSalaryData && hasAreaSalary(area)
             ? area.avg_salary_lpa
             : area.office_density

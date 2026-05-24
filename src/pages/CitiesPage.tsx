@@ -7,11 +7,12 @@ import { IndiaMap } from '@/components/map/IndiaMap'
 import { formatLPA, formatNumber, cn } from '@/utils'
 import { useCities } from '@/hooks'
 
+const TOP_CITIES_DISPLAY_LIMIT = 15
+
 export function CitiesPage() {
   const navigate = useNavigate()
   const { data: cities = [] } = useCities()
   const [sortBy, setSortBy] = useState<'salary' | 'entries' | 'rank'>('salary')
-  const topCitiesDisplayLimit = 15
 
   const sorted = [...cities].sort((a, b) => {
     if (sortBy === 'salary') return b.avg_salary_lpa - a.avg_salary_lpa
@@ -53,7 +54,7 @@ export function CitiesPage() {
               role="region"
               aria-label="Top salary cities list"
             >
-              {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, topCitiesDisplayLimit).map((city, i) => (
+              {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, TOP_CITIES_DISPLAY_LIMIT).map((city, i) => (
                 <button
                   key={city.id}
                   className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container transition-colors text-left"

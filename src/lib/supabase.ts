@@ -84,6 +84,7 @@ export type Database = {
           id: string
           city_id: string
           name: string
+          avg_salary_lpa: number | null
           avg_rent_1bhk: number | null
           avg_rent_2bhk: number | null
           commute_score: number

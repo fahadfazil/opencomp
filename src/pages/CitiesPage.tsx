@@ -94,7 +94,7 @@ export function CitiesPage() {
               </GlassCard>
             </>
           ) : (
-            <GlassCard className="p-5 h-full flex items-center justify-center text-center">
+            <GlassCard className="p-5 min-h-[280px] flex items-center justify-center text-center">
               <div>
                 <MapPin size={32} className="text-outline mx-auto mb-3" />
                 <div className="text-on-surface-variant text-body-md">

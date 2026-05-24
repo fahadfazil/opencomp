@@ -18,6 +18,12 @@ function getHeatColor(normalized: number): string {
   return '#505b93'
 }
 
+function getCityMapZoom(areaCount: number): number {
+  if (areaCount > 1) return 11
+  if (areaCount === 1) return 12
+  return 10
+}
+
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
@@ -47,7 +53,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
     )
   }
 
-  const zoom = areas.length > 1 ? 11 : areas.length === 1 ? 12 : 10
+  const zoom = getCityMapZoom(areas.length)
 
   return (
     <div className="relative w-full rounded-xl overflow-hidden border border-white/5" style={{ height }}>

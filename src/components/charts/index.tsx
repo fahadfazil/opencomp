@@ -294,10 +294,14 @@ const HEATMAP_METRICS: { key: HeatmapMetricKey; label: string }[] = [
   { key: 'walkability_score', label: 'WALK' },
 ]
 
+const HEATMAP_SCORE_EXCELLENT = 75
+const HEATMAP_SCORE_GOOD = 55
+const HEATMAP_SCORE_FAIR = 35
+
 function getHeatmapCellColor(score: number): string {
-  if (score >= 75) return '#9ad2c3'
-  if (score >= 55) return '#cbd2ff'
-  if (score >= 35) return '#b0b2ff'
+  if (score >= HEATMAP_SCORE_EXCELLENT) return '#9ad2c3'
+  if (score >= HEATMAP_SCORE_GOOD) return '#cbd2ff'
+  if (score >= HEATMAP_SCORE_FAIR) return '#b0b2ff'
   return '#ffb4ab'
 }
 

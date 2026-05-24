@@ -50,7 +50,6 @@ export function CitiesPage() {
             <div
               className="flex-1 space-y-2 overflow-y-auto pr-1"
               role="region"
-              tabIndex={0}
               aria-label="Top salary cities list"
             >
               {[...cities].sort((a, b) => b.avg_salary_lpa - a.avg_salary_lpa).slice(0, 4).map((city, i) => (

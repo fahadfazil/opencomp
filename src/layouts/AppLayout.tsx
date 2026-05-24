@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { CommandPalette } from '@/components/layout/CommandPalette'
+import { SiteFooter } from '@/components/layout/SiteFooter'
 import { SeoMeta } from '@/components/seo/SeoMeta'
 import { AuthModal } from '@/features/auth/AuthModal'
 import { HomePage } from '@/pages/HomePage'
@@ -31,6 +32,7 @@ export function AppLayout() {
           <Route path="*" element={<HomePage />} />
         </Routes>
       </main>
+      <SiteFooter />
     </div>
   )
 }

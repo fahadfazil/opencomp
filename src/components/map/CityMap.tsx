@@ -3,7 +3,7 @@ import { Map, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { INDIA_MAP_STYLE } from '@/constants/map'
 import type { City, OfficeArea } from '@/types'
-import { formatLPA } from '@/utils'
+import { formatLPA, formatMonthlyRent } from '@/utils'
 
 interface CityMapProps {
   city: City
@@ -24,10 +24,14 @@ function getCityMapZoom(areaCount: number): number {
   return 10
 }
 
+function hasAreaSalary(area: OfficeArea): area is OfficeArea & { avg_salary_lpa: number } {
+  return area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
+}
+
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const token = import.meta.env.VITE_MAPBOX_TOKEN
-  const salaryAreas = areas.filter((area) => area.avg_salary_lpa !== null && area.avg_salary_lpa > 0)
+  const salaryAreas = areas.filter(hasAreaSalary)
   const hasSalaryData = salaryAreas.length > 0
   const metricValues = hasSalaryData
     ? salaryAreas.map((area) => area.avg_salary_lpa ?? 0)
@@ -101,7 +105,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
 
         {/* Office area heatmap markers */}
         {areas.map(area => {
-          const metricValue = hasSalaryData && area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
+          const metricValue = hasSalaryData && hasAreaSalary(area)
             ? area.avg_salary_lpa
             : area.office_density
           const rawRange = metricRange.max - metricRange.min
@@ -120,7 +124,7 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
                 className="relative cursor-pointer"
                 title={area.name}
                 aria-label={
-                  area.avg_salary_lpa !== null && area.avg_salary_lpa > 0
+                  hasAreaSalary(area)
                     ? `${area.name} average salary ${formatLPA(area.avg_salary_lpa)}`
                     : `${area.name} office density ${area.office_density}%`
                 }
@@ -179,13 +183,13 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', rowGap: '4px', columnGap: '12px' }}>
                 {[
-                  hoveredArea.avg_salary_lpa !== null && hoveredArea.avg_salary_lpa > 0
+                  hasAreaSalary(hoveredArea)
                     ? { label: 'AVG SALARY', value: formatLPA(hoveredArea.avg_salary_lpa), color: '#9ad2c3' }
                     : { label: 'DENSITY', value: `${hoveredArea.office_density}%`, color: '#9ad2c3' },
                   { label: 'SAFETY', value: `${hoveredArea.safety_score}/100`, color: '#cbd2ff' },
                   { label: 'COMMUTE', value: `${hoveredArea.commute_score}/100`, color: '#b0b2ff' },
                   { label: 'FOOD', value: `${hoveredArea.food_score}/100`, color: '#d1d0ff' },
-                  { label: '1 BHK', value: `₹${Math.round(hoveredArea.avg_rent_1bhk / 1000)}k/mo`, color: '#c6c5d1' },
+                  { label: '1 BHK', value: formatMonthlyRent(hoveredArea.avg_rent_1bhk), color: '#c6c5d1' },
                 ].map(({ label, value, color }) => (
                   <React.Fragment key={label}>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: '#90909a' }}>

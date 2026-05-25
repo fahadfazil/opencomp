@@ -85,12 +85,12 @@ export function HomePage() {
       <section className="relative min-h-screen flex flex-col">
         {/* Map Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 opacity-70">
             <IndiaMap compact />
           </div>
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/30 to-background/90" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-transparent to-background/85" />
         </div>
 
         {/* Hero Content */}

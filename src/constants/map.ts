@@ -2,6 +2,8 @@ import type { StyleSpecification } from 'maplibre-gl'
 
 export const INDIA_MAP_CENTER: [number, number] = [78.9629, 22.5937]
 export const INDIA_MAP_ZOOM = 3.8
+// Keep style inline so map rendering has no external style-service dependency.
+// Tiles are from CARTO's OpenStreetMap-based dark basemap to stay cost-efficient and dark-mode aligned.
 export const INDIA_MAP_STYLE: StyleSpecification = {
   version: 8,
   sources: {

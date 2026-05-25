@@ -1,6 +1,8 @@
+import type { StyleSpecification } from 'maplibre-gl'
+
 export const INDIA_MAP_CENTER: [number, number] = [78.9629, 22.5937]
 export const INDIA_MAP_ZOOM = 3.8
-export const INDIA_MAP_STYLE = {
+export const INDIA_MAP_STYLE: StyleSpecification = {
   version: 8,
   sources: {
     osm: {
@@ -19,4 +21,4 @@ export const INDIA_MAP_STYLE = {
       maxzoom: 19,
     },
   ],
-} as const
+}

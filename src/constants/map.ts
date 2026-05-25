@@ -5,18 +5,22 @@ export const INDIA_MAP_ZOOM = 3.8
 export const INDIA_MAP_STYLE: StyleSpecification = {
   version: 8,
   sources: {
-    osm: {
+    cartoDark: {
       type: 'raster',
-      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tiles: [
+        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      ],
       tileSize: 256,
-      attribution: '© OpenStreetMap contributors',
+      attribution: '© OpenStreetMap contributors © CARTO',
     },
   },
   layers: [
     {
-      id: 'osm-raster',
+      id: 'carto-dark-raster',
       type: 'raster',
-      source: 'osm',
+      source: 'cartoDark',
       minzoom: 0,
       maxzoom: 19,
     },

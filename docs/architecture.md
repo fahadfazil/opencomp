@@ -29,7 +29,7 @@ src/
 - Contribution route requires authenticated user state.
 
 ## Map Layer
-- Interactive India map uses Mapbox GL (`mapbox-gl` + `react-map-gl`).
+- Interactive India map uses OpenStreetMap tiles via MapLibre (`maplibre-gl` + `react-map-gl`).
 - City markers are rendered from data layer, with salary-intensity heat representation.
 
 ## Database

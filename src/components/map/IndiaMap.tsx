@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Map, Marker, NavigationControl } from 'react-map-gl/mapbox'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import { Map, Marker, NavigationControl } from 'react-map-gl/maplibre'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { useNavigate } from 'react-router-dom'
 import { formatLPA, hasValidCoordinates } from '@/utils'
 import { useCities } from '@/hooks'
@@ -40,27 +40,12 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
     }
   }, [validCities])
 
-  const token = import.meta.env.VITE_MAPBOX_TOKEN
-
   const handleCityClick = (city: City) => {
     if (onCityClick) {
       onCityClick(city)
       return
     }
     navigate(`/cities/${city.slug}`)
-  }
-
-  if (!token) {
-    return (
-      <div className="w-full h-full rounded-xl border border-outline-variant/50 bg-surface-container-lowest flex items-center justify-center p-6 text-center">
-        <div>
-          <p className="font-mono text-label-md text-primary mb-2">MAPBOX TOKEN REQUIRED</p>
-          <p className="text-body-md text-on-surface-variant">
-            Add VITE_MAPBOX_TOKEN in your environment (see `.env.example`) to render the interactive India map.
-          </p>
-        </div>
-      </div>
-    )
   }
 
   if (mapHasError) {
@@ -79,7 +64,6 @@ export function IndiaMap({ onCityClick, highlightCityId, compact = false }: Indi
   return (
     <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/5 isolate">
       <Map
-        mapboxAccessToken={token}
         initialViewState={{
           longitude: INDIA_MAP_CENTER[0],
           latitude: INDIA_MAP_CENTER[1],

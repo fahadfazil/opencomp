@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Map, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import { Map, Marker, NavigationControl, Popup } from 'react-map-gl/maplibre'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import { INDIA_MAP_CENTER, INDIA_MAP_STYLE } from '@/constants/map'
 import type { City, OfficeArea } from '@/types'
 import { formatLPA, formatMonthlyRent, hasValidCoordinates } from '@/utils'
@@ -35,7 +35,6 @@ function parseDensityValue(value: unknown): number | null {
 export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const [hoveredArea, setHoveredArea] = useState<OfficeArea | null>(null)
   const [mapHasError, setMapHasError] = useState(false)
-  const token = import.meta.env.VITE_MAPBOX_TOKEN
   const validAreas = areas.filter((area) => hasValidCoordinates(area.latitude, area.longitude))
   const areasWithDensity = validAreas.filter((area) => parseDensityValue(area.office_density) !== null)
   const densityValues = areasWithDensity
@@ -51,22 +50,6 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   const mapCenter = hasCityCoordinates
     ? { latitude: city.latitude, longitude: city.longitude }
     : { latitude: indiaCenterLatitude, longitude: indiaCenterLongitude }
-
-  if (!token) {
-    return (
-      <div
-        className="w-full rounded-xl border border-outline-variant/50 bg-surface-container-lowest flex items-center justify-center p-6 text-center"
-        style={{ height }}
-      >
-        <div>
-          <p className="font-mono text-label-md text-primary mb-2">MAPBOX TOKEN REQUIRED</p>
-          <p className="text-body-md text-on-surface-variant">
-            Add VITE_MAPBOX_TOKEN in your environment to render the city map.
-          </p>
-        </div>
-      </div>
-    )
-  }
 
   if (mapHasError) {
     return (
@@ -89,7 +72,6 @@ export function CityMap({ city, areas, height = 420 }: CityMapProps) {
   return (
     <div className="relative w-full rounded-xl overflow-hidden border border-white/5" style={{ height }}>
       <Map
-        mapboxAccessToken={token}
         initialViewState={{
           longitude: mapCenter.longitude,
           latitude: mapCenter.latitude,
